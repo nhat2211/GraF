@@ -49,14 +49,14 @@ public class Controller implements Initializable {
 		   System.out.println("clicked");
 		   Circle circle = new Circle();
 			// Setting the position of the circle
-			circle.setCenterX(event.getSceneX());
-			circle.setCenterY(event.getSceneY());
+			circle.setCenterX(event.getX());
+			circle.setCenterY(event.getY());
 			circle.setRadius(15);
 			circle.setFill(Color.BLUE);
 
 			// Setting the stroke width of the circle
 			circle.setStrokeWidth(20);
-			circle.setFill(Color.DARKSLATEBLUE);
+			//circle.setFill(Color.DARKSLATEBLUE);
 			rightPane.getChildren().add(circle);
 	      
 	      
