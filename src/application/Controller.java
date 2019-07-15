@@ -19,7 +19,8 @@ import javafx.scene.layout.AnchorPane;
 public class Controller implements Initializable {
 	 
 	 
-	   
+	   @FXML
+	   private AnchorPane parentPane;
 	   @FXML
 	   private SplitPane splitPane;
 	   @FXML
@@ -41,7 +42,9 @@ public class Controller implements Initializable {
 	   }
 	 
 	  
-	   public void showDateTime(ActionEvent event) {
+	   public void createVertice(ActionEvent event) {
+		   System.out.println("clicked");
+		   
 	      
 	      
 	   }
