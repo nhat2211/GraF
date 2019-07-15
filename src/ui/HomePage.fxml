@@ -5,13 +5,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="anchoPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
-   <children>
-      <RadioButton fx:id="rbVertice" layoutX="14.0" layoutY="31.0" mnemonicParsing="false" text="Vertice">
-         <toggleGroup>
-            <ToggleGroup fx:id="toggleGroup1" />
-         </toggleGroup></RadioButton>
-      <RadioButton fx:id="rbEdge" layoutX="14.0" layoutY="82.0" mnemonicParsing="false" text="Edge" toggleGroup="$toggleGroup1" />
-      <Separator fx:id="seLine" layoutX="132.0" layoutY="3.0" orientation="VERTICAL" prefHeight="393.0" prefWidth="0.0" />
-   </children>
-</AnchorPane>
+<SplitPane fx:id="splitPane" dividerPositions="0.24012474012474014" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="673.0" prefWidth="964.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+  <items>
+    <AnchorPane fx:id="leftPane" minHeight="0.0" minWidth="0.0" prefHeight="671.0" prefWidth="125.0">
+         <children>
+            <RadioButton fx:id="rbEdge" layoutX="21.0" layoutY="121.0" mnemonicParsing="false" text="Edge">
+               <toggleGroup>
+                  <ToggleGroup fx:id="group1" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rbVertice" layoutX="21.0" layoutY="74.0" mnemonicParsing="false" text="Vertice" toggleGroup="$group1" />
+         </children></AnchorPane>
+    <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" prefHeight="783.0" prefWidth="804.0" />
+  </items>
+</SplitPane>

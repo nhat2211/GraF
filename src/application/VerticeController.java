@@ -21,7 +21,6 @@ public class VerticeController implements Initializable {
 	public void createVertice(Vertice vertice) {
 		// Drawing a Circle
 		
-
 		System.out.println("Create Circle");
 		Circle circle = new Circle();
 		// Setting the position of the circle

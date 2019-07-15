@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
@@ -20,13 +21,16 @@ public class Controller implements Initializable {
 	 
 	   
 	   @FXML
-	   private AnchorPane anchoPane;
+	   private SplitPane splitPane;
+	   @FXML
+	   private AnchorPane leftPane;
+	   @FXML
+	   private AnchorPane rightPane;
 	   @FXML
 	   private RadioButton rbVertice;
 	   @FXML
 	   private RadioButton rbEdge;
-	   @FXML
-	   private Separator seLine;
+	   
 	   
 	  
 	   @Override
