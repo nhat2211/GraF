@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="836.0" prefWidth="1069.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="836.0" prefWidth="1069.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
       <SplitPane fx:id="splitPane" dividerPositions="0.29797979797979796" layoutX="51.0" layoutY="67.0" prefHeight="836.0" prefWidth="1069.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -16,7 +16,7 @@
                   <RadioButton fx:id="rbEdge" layoutX="47.0" layoutY="207.0" mnemonicParsing="false" text="Edge" />
                </children>
             </AnchorPane>
-          <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" prefHeight="834.0" prefWidth="838.0" />
+          <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#createVertice" prefHeight="834.0" prefWidth="849.0"  />
         </items>
       </SplitPane>
    </children>

@@ -14,7 +14,10 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class Controller implements Initializable {
 	 
@@ -41,10 +44,20 @@ public class Controller implements Initializable {
 	      
 	   }
 	 
-	  
-	   public void createVertice(ActionEvent event) {
+	  @FXML
+	   public void createVertice(MouseEvent  event) {
 		   System.out.println("clicked");
-		   
+		   Circle circle = new Circle();
+			// Setting the position of the circle
+			circle.setCenterX(event.getSceneX());
+			circle.setCenterY(event.getSceneY());
+			circle.setRadius(15);
+			circle.setFill(Color.BLUE);
+
+			// Setting the stroke width of the circle
+			circle.setStrokeWidth(20);
+			circle.setFill(Color.DARKSLATEBLUE);
+			rightPane.getChildren().add(circle);
 	      
 	      
 	   }
