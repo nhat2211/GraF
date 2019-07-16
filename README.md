@@ -12,15 +12,15 @@ represented by a circle and an edge by a straight line.
 
 3- Give the possibility to move vertices.
 
-3- Give the possibility to change the form of the vertices and the edges 
+4- Give the possibility to change the form of the vertices and the edges 
 (arc, or segments with intermediate points movable by the user), and to 
 have oriented edges.
 
-4- Give the possibility to suppress a vertex or an edge.
+5- Give the possibility to suppress a vertex or an edge.
 
-5- Add labels to vertices and edges.
+6- Add labels to vertices and edges.
 
-6- Give the possibility to the user to change the position of the 
+7- Give the possibility to the user to change the position of the 
 labels, and the value of the labels.
 
 Remark : I propose that you provide a toolbar on the left side of the 
