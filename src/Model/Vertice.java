@@ -53,11 +53,4 @@ public class Vertice {
 		this.color = color;
 	}
 	
-	
-	
-	
-	
-
-	
-
 }
