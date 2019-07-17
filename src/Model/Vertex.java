@@ -4,24 +4,27 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-public class Vertice extends Circle {
-	
+public class Vertex extends Circle{
 	private double x;
 	private double y;
 	private double r;
 	private Paint color;
 	private Text label;
 	
-	public Vertice() {
+	public Vertex() {
 		
 	}
 
-	public Vertice(double x, double y, double r, Paint color) {
+	public Vertex(double x, double y, double r, Paint color) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.r = r;
 		this.color = color;
+		super.setCenterX(x);
+		super.setCenterY(y);
+		super.setRadius(r);
+		super.setFill(color);
 	}
 
 	public double getX() {
@@ -67,7 +70,4 @@ public class Vertice extends Circle {
 	public void setLabel(Text label) {
 		this.label = label;
 	}
-	
-	
-	
 }
