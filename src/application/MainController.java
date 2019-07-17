@@ -2,22 +2,35 @@ package application;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import Enum.StateOnLeftPane;
+import GeneralController.AbstractController;
 import Model.*;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-public class Controller implements Initializable {
+public class MainController extends AbstractController implements Initializable {
 
 	@FXML
 	private AnchorPane parentPane;
@@ -31,11 +44,14 @@ public class Controller implements Initializable {
 	private RadioButton rbVertex;
 	@FXML
 	private RadioButton rbEdge;
+	
+	
+	
 
 	private List<Vertex> vertices = new ArrayList<>();
 	private List<Edge> edges = new ArrayList<>();
 	private List<Text> labels = new ArrayList<Text>();
-	private String eventOnLeftPane = "vertex";
+	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
 	private Vertex currentVertex = null;
 	private Text currentLabel = null;
@@ -48,17 +64,23 @@ public class Controller implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rbVertex.setSelected(true);
+		
 
 	}
 
 	public void handleVertexPress() {
 		System.out.println("Vertex is pressed");
-		eventOnLeftPane = "vertex"; 
+		eventOnLeftPane = StateOnLeftPane.VERTEX;
 	}
 	
 	public void handleEdgePress() {
 		System.out.println("Edge is pressed");
-		eventOnLeftPane = "edge";
+		eventOnLeftPane = StateOnLeftPane.EDGE;
+	}
+	
+	public void handleRemoveObjPress() {
+		System.out.println("Remove Object is pressed");
+		eventOnLeftPane = StateOnLeftPane.REMOVE;
 	}
 	
 	@FXML
@@ -69,7 +91,7 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void pressMouse(MouseEvent event) {
-		if(eventOnLeftPane == "vertex") {//draw vertice
+		if(eventOnLeftPane == StateOnLeftPane.VERTEX) {//draw vertice
 			//System.out.println("clicked");
 			if(isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else create a new vertice
 				isClickedInsideVertex = true;
@@ -82,20 +104,26 @@ public class Controller implements Initializable {
 				vertices.add(vertex);
 				
 				Text label = new Text();
-				label.setX(event.getX());
-				label.setY(event.getY());
+				label.setX(event.getX()-5);
+				label.setY(event.getY()+5);
+				
 				label.setText(Integer.toString(++indexVertex));
+				label.setStyle("-fx-fill: yellow");
 				labels.add(label);
 				vertex.setLabel(label);
 
 				// Setting the stroke width of the circle
 				rightPane.getChildren().add(vertex);
 				rightPane.getChildren().add(label);
+				
+				
 			}
 			
-		} else if (eventOnLeftPane == "edge") {//get starting point
+		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {//get starting point
 			if(isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else create a new vertice
 				Edge edge = new Edge(currentVertex.getX(), currentVertex.getY(), event.getX(),event.getY(),Color.BLUEVIOLET);
+				// set line height
+				edge.setStrokeWidth(5);
 				edges.add(edge);
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
@@ -103,7 +131,16 @@ public class Controller implements Initializable {
 			} else {
 				System.out.println("You should click inside the Vertex for drawing the line");
 			}
-		} else {
+		} else if(eventOnLeftPane == StateOnLeftPane.REMOVE) {
+			System.out.println("Remove Object Start");
+			removeObject(event.getX(), event.getY());
+			System.out.println("Remove Object End");
+			
+			
+		}
+		
+		
+		else {
 			//do nothing
 		}
 	}
@@ -149,15 +186,22 @@ public class Controller implements Initializable {
 			currentEdge.SetY2(event.getY());
 		}
 	}
-
+	
+    
 	public void releaseMouse(MouseEvent event) {
 		isClickedInsideVertex = false;
-		if(eventOnLeftPane == "vertex") {
+		
+		if(eventOnLeftPane == StateOnLeftPane.VERTEX) {
 			
-		} else if (eventOnLeftPane == "edge") {
+		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
 			if(!isOnAVertex(event.getX(),event.getY())) {
 				rightPane.getChildren().remove(currentEdge);
 			} else {//is on a vertex -> set the ending point of edge is the central of Vertex
+				String typeEdge = "";
+				String weightEdge ="";
+				HashMap<String, Object> resultMap = showPopupEdge();
+				typeEdge = (String) resultMap.get("typeEdge");
+				weightEdge = (String) resultMap.get("typeEdge");
 				currentEdge.setX2(currentVertex.getX());
 				currentEdge.SetY2(currentVertex.getY());
 			}
@@ -178,5 +222,46 @@ public class Controller implements Initializable {
 		firstX = newX;
 		firstY = newY;
 	}
+	
+	public void removeObject(double cX, double cY) {
+		ObservableList<Node> elementsOnPane = rightPane.getChildren();
+		for(Node n: elementsOnPane) {
+			if(n.contains(cX, cY)) {
+				elementsOnPane.remove(n);
+				return;
+			}
+		}
+		
+		
+		
+	}
+	
+	 private HashMap<String, Object> showPopupEdge() {
+         HashMap<String, Object> resultMap = new HashMap<String, Object>();
+
+         FXMLLoader loader = new FXMLLoader();
+         loader.setLocation(getClass().getResource("/ui/Popup.fxml"));
+         // initializing the controller
+         PopupEdgeController popupEdgeController = new PopupEdgeController();
+         loader.setController(popupEdgeController);
+         Parent layout;
+         try {
+             layout = loader.load();
+             Scene scene = new Scene(layout);
+             // this is the popup stage
+             Stage popupStage = new Stage();
+             // Giving the popup controller access to the popup stage (to allow the controller to close the stage) 
+             popupEdgeController.setStage(popupStage);
+             if(this.main!=null) {
+                 popupStage.initOwner(main.getPrimaryStage());
+             }
+             popupStage.initModality(Modality.WINDOW_MODAL);
+             popupStage.setScene(scene);
+             popupStage.showAndWait();
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         return popupEdgeController.getResult();
+     }
 
 }

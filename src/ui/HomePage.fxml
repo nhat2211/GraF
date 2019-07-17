@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <SplitPane fx:id="splitPane" dividerPositions="0.29797979797979796" layoutX="51.0" layoutY="67.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane fx:id="leftPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0">
+          <AnchorPane fx:id="leftPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" style="-fx-background-color: #dff0d8;">
                <children>
-                  <RadioButton fx:id="rbVertex" layoutX="47.0" layoutY="137.0" mnemonicParsing="false" onAction="#handleVertexPress" text="Vertex">
+                  <RadioButton fx:id="rbVertex" layoutX="47.0" layoutY="137.0" mnemonicParsing="false" onAction="#handleVertexPress" text="Add Vertex">
                      <toggleGroup>
                         <ToggleGroup fx:id="group1" />
                      </toggleGroup></RadioButton>
-                  <RadioButton fx:id="rbEdge" layoutX="47.0" layoutY="207.0" mnemonicParsing="false" onAction="#handleEdgePress" text="Edge" toggleGroup="$group1" />
+                  <RadioButton fx:id="rbEdge" layoutX="47.0" layoutY="207.0" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
+                  <RadioButton fx:id="rbRemoveObj" layoutX="47.0" layoutY="272.0" mnemonicParsing="false" onAction="#handleRemoveObjPress" text="Remove Object" toggleGroup="$group1" />
                </children>
             </AnchorPane>
-          <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveVertex" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" />
+          <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveVertex" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" style="-fx-background-color: white;" />
         </items>
       </SplitPane>
    </children>
