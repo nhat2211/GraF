@@ -38,7 +38,9 @@ public class Controller implements Initializable {
 	private boolean isClickedInsideVertex = false;
 	private Vertex currentVertex = null;
 	private Text currentLabel = null;
+	private Edge currentEdge = null;
 	private int indexVertex =-1;
+	private boolean isDrawingEdge = false;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -88,6 +90,11 @@ public class Controller implements Initializable {
 		} else if (eventOnLeftPane == "edge") {//get starting point
 			x1 = event.getX();
 			x2 = event.getY();
+			Edge edge = new Edge(x1, x2, event.getX(),event.getY(),Color.BLUEVIOLET);
+			edges.add(edge);
+			currentEdge = edge;
+			rightPane.getChildren().add(edge);
+			isDrawingEdge = true;
 		} else {
 			//do nothing
 		}
@@ -124,6 +131,10 @@ public class Controller implements Initializable {
 			currentLabel.setX(event.getX());
 			currentLabel.setY(event.getY());
 		}
+		if(isDrawingEdge) {
+			currentEdge.setX2(event.getX());
+			currentEdge.SetY2(event.getY());
+		}
 	}
 
 	public void releaseMouse(MouseEvent event) {
@@ -131,9 +142,7 @@ public class Controller implements Initializable {
 		if(eventOnLeftPane == "vertex") {
 			
 		} else if (eventOnLeftPane == "edge") {
-			Edge edge = new Edge(x1, x2, event.getX(),event.getY(),Color.BLUEVIOLET);
-			edges.add(edge);
-			rightPane.getChildren().add(edge);
+			isDrawingEdge = false;
 		} else {
 			//do nothing
 		}

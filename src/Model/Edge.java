@@ -29,7 +29,27 @@ public class Edge extends Line{
 		
 		
 	}
+	
+	public void setX1(double x1) {
+		this.x1 = x1;
+		super.setStartX(x1);
+	}
+	
+	public void setY1 (double y1) {
+		this.y1 = y1;
+		super.setStartY(y1);
+	}
 
+	public void setX2 (double x2) {
+		this.x2 = x2;
+		super.setEndX(x2);
+	}
+	
+	public void SetY2 (double y2) {
+		this.y2 = y2;
+		super.setEndY(y2);
+	}
+	
 	public double getX1() {
 		return x1;//line.getStartX();
 	}
