@@ -56,10 +56,14 @@ public class MainController extends AbstractController implements Initializable 
 	private Vertex currentVertex = null;
 	private Text currentLabel = null;
 	private Edge currentEdge = null;
+	private ArrowLine currentArrowLine = null;
 	private int indexVertex =-1;
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;//use to move the Vertex
 	private double firstX, firstY;//save the first position of the Vertex before moving the Vertex
+	private List<ArrowLine> arrows = new ArrayList<ArrowLine>();
+	private String currentType ="";
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -126,6 +130,12 @@ public class MainController extends AbstractController implements Initializable 
 				edge.setStrokeWidth(5);
 				edges.add(edge);
 				currentEdge = edge;
+				currentArrowLine = new ArrowLine();
+				currentArrowLine.setStartX(currentVertex.getX());
+				currentArrowLine.setStartY(currentVertex.getY());
+				
+				currentArrowLine.setEndX(event.getX());
+				currentArrowLine.setEndY(event.getY());
 				rightPane.getChildren().add(currentEdge);
 				isDrawingEdge = true;
 			} else {
@@ -178,12 +188,19 @@ public class MainController extends AbstractController implements Initializable 
 			currentLabel.setX(x);
 			currentLabel.setY(y);
 			//move the edges together with Vertex
-			movingTheLines(x,y);
+			if(currentType == "undirected") {
+				movingTheLines(x,y);
+			}else if(currentType == "directed") {
+				movingTheArrowLines(x, y);
+			}
+			
 			
 		}
 		if(isDrawingEdge) {
 			currentEdge.setX2(event.getX());
 			currentEdge.SetY2(event.getY());
+			currentArrowLine.setEndX(event.getX());
+			currentArrowLine.setEndY(event.getY());
 		}
 	}
 	
@@ -201,9 +218,31 @@ public class MainController extends AbstractController implements Initializable 
 				String weightEdge ="";
 				HashMap<String, Object> resultMap = showPopupEdge();
 				typeEdge = (String) resultMap.get("typeEdge");
-				weightEdge = (String) resultMap.get("typeEdge");
-				currentEdge.setX2(currentVertex.getX());
-				currentEdge.SetY2(currentVertex.getY());
+				weightEdge = (String) resultMap.get("weight");
+				Text textEdge = new Text();
+				textEdge.setX((currentEdge.getX1()+currentVertex.getX())/2);
+				textEdge.setY((currentEdge.getX2()+currentVertex.getY())/2+5);
+				textEdge.setText(weightEdge);
+				textEdge.setStyle("-fx-fill: red");
+				rightPane.getChildren().add(textEdge);
+				if(typeEdge.equalsIgnoreCase("directed")){
+					currentType = "directed";
+					//ArrowLine arrowLine = new ArrowLine();
+					//arrowLine.setStartX(currentEdge.getX1());
+					//arrowLine.setStartY(currentEdge.getY1());
+					
+					currentArrowLine.setEndX(currentVertex.getX());
+					currentArrowLine.setEndY(currentVertex.getY());
+					arrows.add(currentArrowLine);
+					rightPane.getChildren().add(currentArrowLine);
+					rightPane.getChildren().remove(currentEdge);
+				}else {
+					currentType = "undirected";
+					currentEdge.setX2(currentVertex.getX());
+					currentEdge.SetY2(currentVertex.getY());
+				}
+				
+				
 			}
 			isDrawingEdge = false;
 		} else {
@@ -222,6 +261,31 @@ public class MainController extends AbstractController implements Initializable 
 		firstX = newX;
 		firstY = newY;
 	}
+	
+	public void movingTheArrowLines(double newX, double newY) {// TODO
+		for (ArrowLine arrow : arrows) {
+			if (firstX == arrow.getStartX() && firstY == arrow.getEndX()) {
+				//arrow.setEdge(newX, newY, arrow.getEndX(), arrow.getEndY());
+				arrow.setStartX(newX);
+				arrow.setStartY(newY);
+				
+				arrow.setEndX(arrow.getEndX());
+				arrow.setEndY(arrow.getEndY());
+				
+			} else if (firstX == arrow.getEndX() && firstY == arrow.getEndY()) {
+				//edge.setEdge(edge.getX1(), edge.getY1(), newX, newY);
+				arrow.setStartX(arrow.getStartX());
+				arrow.setStartY(arrow.getEndX());
+				
+				arrow.setEndX(newX);
+				arrow.setEndY(newY);
+			}
+		}
+		firstX = newX;
+		firstY = newY;
+	}
+	
+	
 	
 	public void removeObject(double cX, double cY) {
 		ObservableList<Node> elementsOnPane = rightPane.getChildren();
