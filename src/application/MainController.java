@@ -1,7 +1,5 @@
 package application;
 
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,11 +18,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -56,20 +52,18 @@ public class MainController extends AbstractController implements Initializable 
 	private Vertex currentVertex = null;
 	private Text currentLabel = null;
 	private Edge currentEdge = null;
-	private ArrowLine currentArrowLine = null;
 	private int indexVertex =-1;
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;//use to move the Vertex
 	private double firstX, firstY;//save the first position of the Vertex before moving the Vertex
+	
 	private List<ArrowLine> arrows = new ArrayList<ArrowLine>();
 	private String currentType ="";
-	
+	private ArrowLine currentArrowLine = null;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rbVertex.setSelected(true);
-		
-
 	}
 
 	public void handleVertexPress() {
@@ -90,13 +84,11 @@ public class MainController extends AbstractController implements Initializable 
 	@FXML
 	public void clickMouse(MouseEvent event) {
 		
-		
 	}
 	
 	@FXML
 	public void pressMouse(MouseEvent event) {
 		if(eventOnLeftPane == StateOnLeftPane.VERTEX) {//draw vertice
-			//System.out.println("clicked");
 			if(isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else create a new vertice
 				isClickedInsideVertex = true;
 				deltaX = event.getX() - currentVertex.getX();
@@ -119,8 +111,6 @@ public class MainController extends AbstractController implements Initializable 
 				// Setting the stroke width of the circle
 				rightPane.getChildren().add(vertex);
 				rightPane.getChildren().add(label);
-				
-				
 			}
 			
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {//get starting point
@@ -145,12 +135,7 @@ public class MainController extends AbstractController implements Initializable 
 			System.out.println("Remove Object Start");
 			removeObject(event.getX(), event.getY());
 			System.out.println("Remove Object End");
-			
-			
-		}
-		
-		
-		else {
+		} else {
 			//do nothing
 		}
 	}
@@ -188,13 +173,13 @@ public class MainController extends AbstractController implements Initializable 
 			currentLabel.setX(x);
 			currentLabel.setY(y);
 			//move the edges together with Vertex
+			movingTheEdges(x,y);
+			/*
 			if(currentType == "undirected") {
-				movingTheLines(x,y);
+				movingTheEdges(x,y);
 			}else if(currentType == "directed") {
-				movingTheArrowLines(x, y);
-			}
-			
-			
+				//movingTheArrowLines(x, y);
+			}*/
 		}
 		if(isDrawingEdge) {
 			currentEdge.setX2(event.getX());
@@ -211,26 +196,15 @@ public class MainController extends AbstractController implements Initializable 
 		if(eventOnLeftPane == StateOnLeftPane.VERTEX) {
 			
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
-			if(!isOnAVertex(event.getX(),event.getY())) {
+			if(!isOnAVertex(event.getX(),event.getY())) {//mouse release not on a vertex -> remove current Edge
 				rightPane.getChildren().remove(currentEdge);
 			} else {//is on a vertex -> set the ending point of edge is the central of Vertex
-				String typeEdge = "";
-				String weightEdge ="";
 				HashMap<String, Object> resultMap = showPopupEdge();
-				typeEdge = (String) resultMap.get("typeEdge");
-				weightEdge = (String) resultMap.get("weight");
-				Text textEdge = new Text();
-				textEdge.setX((currentEdge.getX1()+currentVertex.getX())/2);
-				textEdge.setY((currentEdge.getX2()+currentVertex.getY())/2+5);
-				textEdge.setText(weightEdge);
-				textEdge.setStyle("-fx-fill: red");
-				rightPane.getChildren().add(textEdge);
+				String typeEdge = (String) resultMap.get("typeEdge");
+				String weightEdge = (String) resultMap.get("weight");
+				currentEdge.setTextWeight(weightEdge);//add weight to the edge
 				if(typeEdge.equalsIgnoreCase("directed")){
 					currentType = "directed";
-					//ArrowLine arrowLine = new ArrowLine();
-					//arrowLine.setStartX(currentEdge.getX1());
-					//arrowLine.setStartY(currentEdge.getY1());
-					
 					currentArrowLine.setEndX(currentVertex.getX());
 					currentArrowLine.setEndY(currentVertex.getY());
 					arrows.add(currentArrowLine);
@@ -238,11 +212,13 @@ public class MainController extends AbstractController implements Initializable 
 					rightPane.getChildren().remove(currentEdge);
 				}else {
 					currentType = "undirected";
-					currentEdge.setX2(currentVertex.getX());
-					currentEdge.SetY2(currentVertex.getY());
+					currentEdge.setPoint2(currentVertex.getX(), currentVertex.getY());
+					rightPane.getChildren().add(currentEdge.getTextWeight());
+					//test arrow
+					currentEdge.calculateArrow();//calculate arrow 1 and arrow 2.
+					rightPane.getChildren().add(currentEdge.getArrow1());
+					rightPane.getChildren().add(currentEdge.getArrow2());
 				}
-				
-				
 			}
 			isDrawingEdge = false;
 		} else {
@@ -250,18 +226,23 @@ public class MainController extends AbstractController implements Initializable 
 		}
 	}
 	
-	public void movingTheLines(double newX, double newY) {// TODO
+	public void movingTheEdges(double newX, double newY) {// TODO
 		for (Edge edge : edges) {
 			if (firstX == edge.getX1() && firstY == edge.getY1()) {
 				edge.setEdge(newX, newY, edge.getX2(), edge.getY2());
+				edge.updatePositionOfTextWeight();
+				edge.calculateArrow();
 			} else if (firstX == edge.getX2() && firstY == edge.getY2()) {
 				edge.setEdge(edge.getX1(), edge.getY1(), newX, newY);
+				edge.updatePositionOfTextWeight();
+				edge.calculateArrow();
 			}
 		}
 		firstX = newX;
 		firstY = newY;
 	}
 	
+	/*
 	public void movingTheArrowLines(double newX, double newY) {// TODO
 		for (ArrowLine arrow : arrows) {
 			if (firstX == arrow.getStartX() && firstY == arrow.getEndX()) {
@@ -283,9 +264,7 @@ public class MainController extends AbstractController implements Initializable 
 		}
 		firstX = newX;
 		firstY = newY;
-	}
-	
-	
+	}*/
 	
 	public void removeObject(double cX, double cY) {
 		ObservableList<Node> elementsOnPane = rightPane.getChildren();
@@ -295,12 +274,9 @@ public class MainController extends AbstractController implements Initializable 
 				return;
 			}
 		}
-		
-		
-		
 	}
 	
-	 private HashMap<String, Object> showPopupEdge() {
+	private HashMap<String, Object> showPopupEdge() {
          HashMap<String, Object> resultMap = new HashMap<String, Object>();
 
          FXMLLoader loader = new FXMLLoader();
