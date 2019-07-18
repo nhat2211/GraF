@@ -1,5 +1,7 @@
 package Model;
 
+import java.awt.geom.Point2D;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -13,11 +15,11 @@ public class Edge extends Line {
 	private Paint color;
 	private double weight;
 	Text textWeight = new Text();
-	// private int arrow = 0;//0 -> undirected, 1 -> directed at (x1,y1), 2 ->
-	// directed at (x2,y2)
 	private boolean directed = false;
 	Line arrow1 = new Line();
 	Line arrow2 = new Line();
+	Point2D point1 = new Point2D.Double();//point 1,2 is intersected by edge and vertex
+	Point2D point2 = new Point2D.Double();//
 
 	public Edge() {
 
@@ -37,6 +39,19 @@ public class Edge extends Line {
 		super.setStroke(color);
 	}
 
+	public void updateEdge() {
+		//intersected by edge and vertex
+		point1 = calculatePoint(x2,y2,x1,y1,20);
+		point2 = calculatePoint(x1,y1,x2,y2,20);
+		//update line
+		super.setStartX(point1.getX());
+		super.setStartY(point1.getY());
+		super.setEndX(point2.getX());
+		super.setEndY(point2.getY());
+		updatePositionOfTextWeight();
+		calculateArrow();
+	}
+	
 	public void setEdge(double x1, double y1, double x2, double y2) {
 		this.x1 = x1;
 		this.y1 = y1;
@@ -48,7 +63,7 @@ public class Edge extends Line {
 		super.setEndY(y2);
 	}
 
-	public void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
+	private void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
 		this.textWeight.setX((x1 + x2) / 2);
 		this.textWeight.setY((y1 + y2) / 2);
 	}
@@ -79,19 +94,13 @@ public class Edge extends Line {
 		return directed;
 	}
 
-	/*
-	 * public void setArrow (int arrow) { this.arrow = arrow; }
-	 * 
-	 * public int getArrow() { return arrow; }
-	 */
-
-	public void calculateArrow() {
+	private void calculateArrow() {
 		double arrowLength = 20;
 		double arrowWidth = 7;
-		double sx = x1;
-		double sy = y1;
-		double ex = x2;
-		double ey = y2;
+		double sx = point1.getX(); 	//x1
+		double sy = point1.getY(); 	//y1
+		double ex = point2.getX();	//x2
+		double ey = point2.getY();	//y2
 
 		arrow1.setEndX(ex);
 		arrow1.setEndY(ey);
@@ -153,6 +162,7 @@ public class Edge extends Line {
 		super.setStartY(y1);
 	}
 
+	
 	public void setX2(double x2) {
 		this.x2 = x2;
 		super.setEndX(x2);
@@ -179,6 +189,7 @@ public class Edge extends Line {
 		return y1;// line.getStartY();
 	}
 
+	
 	public double getX2() {
 		return x2;// line.getEndX();
 	}
@@ -187,12 +198,41 @@ public class Edge extends Line {
 		return y2;// line.getEndY();
 	}
 
+	
 	public Paint getColor() {
 		return color;
 	}
 
+	
 	public void setColor(Paint color) {
 		this.color = color;
 		super.setStroke(color);
+	}
+	
+	/*
+	 * There are two points: A(x1,y1) and B(x2,y2) with R is radius of B
+	 * Calculate thePoint is intersected by the line AB and circle of B
+	 */
+	public Point2D calculatePoint(double x1, double y1, double x2, double y2, int R) {
+		Point2D thePoint = new Point2D.Double();
+		double x3 = (x1 + x2) / 2;
+		double y3 = (y1 + y2) / 2;
+		double d = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
+		int times = 0;
+		while ((int) d > R) {
+			x1 = x3;
+			y1 = y3;
+			x3 = (x3 + x2)/2;
+			y3 = (y3 + y2)/2;
+			d = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
+			while((int) d < R && times < 10) {//set times to catch error here.
+				x3 = (x3 + x1)/2;
+				y3 = (y3 + y1)/2;
+				d = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
+				times++;
+			}
+		}
+		thePoint.setLocation(x3, y3);
+		return thePoint;
 	}
 }

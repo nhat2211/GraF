@@ -42,9 +42,6 @@ public class MainController extends AbstractController implements Initializable 
 	@FXML
 	private RadioButton rbEdge;
 	
-	
-	
-
 	private List<Vertex> vertices = new ArrayList<>();
 	private List<Edge> edges = new ArrayList<>();
 	private List<Text> labels = new ArrayList<Text>();
@@ -57,7 +54,6 @@ public class MainController extends AbstractController implements Initializable 
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;//use to move the Vertex
 	private double firstX, firstY;//save the first position of the Vertex before moving the Vertex
-	private String currentType ="";
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -115,7 +111,7 @@ public class MainController extends AbstractController implements Initializable 
 			if(isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else create a new vertice
 				Edge edge = new Edge(currentVertex.getX(), currentVertex.getY(), event.getX(),event.getY(),Color.BLUEVIOLET);
 				// set line height
-				edge.setStrokeWidth(5);
+				edge.setStrokeWidth(2);
 				edges.add(edge);
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
@@ -172,7 +168,6 @@ public class MainController extends AbstractController implements Initializable 
 			currentEdge.SetY2(event.getY());
 		}
 	}
-	
     
 	public void releaseMouse(MouseEvent event) {
 		isClickedInsideVertex = false;
@@ -188,17 +183,13 @@ public class MainController extends AbstractController implements Initializable 
 				String weightEdge = (String) resultMap.get("weight");
 				currentEdge.setTextWeight(weightEdge);//add weight to the edge
 				if(typeEdge.equalsIgnoreCase("directed")){
-					//currentType = "directed";
-					//do more code later
 					currentEdge.setDirection(true);
 				} else {
-					//currentType = "undirected";
 					currentEdge.setDirection(false);
 				}
 				currentEdge.setPoint2(currentVertex.getX(), currentVertex.getY());
 				rightPane.getChildren().add(currentEdge.getTextWeight());
-				//test arrow
-				currentEdge.calculateArrow();//calculate arrow 1 and arrow 2.
+				currentEdge.updateEdge();
 				rightPane.getChildren().add(currentEdge.getArrow1());
 				rightPane.getChildren().add(currentEdge.getArrow2());
 			}
@@ -212,12 +203,10 @@ public class MainController extends AbstractController implements Initializable 
 		for (Edge edge : edges) {
 			if (firstX == edge.getX1() && firstY == edge.getY1()) {
 				edge.setEdge(newX, newY, edge.getX2(), edge.getY2());
-				edge.updatePositionOfTextWeight();
-				edge.calculateArrow();
+				edge.updateEdge();
 			} else if (firstX == edge.getX2() && firstY == edge.getY2()) {
 				edge.setEdge(edge.getX1(), edge.getY1(), newX, newY);
-				edge.updatePositionOfTextWeight();
-				edge.calculateArrow();
+				edge.updateEdge();
 			}
 		}
 		firstX = newX;
