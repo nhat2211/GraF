@@ -1,10 +1,9 @@
-package application;
+package GeneralController;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import GeneralController.AbstractController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

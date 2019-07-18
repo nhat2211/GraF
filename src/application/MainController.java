@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import Enum.StateOnLeftPane;
 import GeneralController.AbstractController;
+import GeneralController.PopupEdgeController;
 import Model.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -56,10 +57,7 @@ public class MainController extends AbstractController implements Initializable 
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;//use to move the Vertex
 	private double firstX, firstY;//save the first position of the Vertex before moving the Vertex
-	
-	private List<ArrowLine> arrows = new ArrayList<ArrowLine>();
 	private String currentType ="";
-	private ArrowLine currentArrowLine = null;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -120,12 +118,6 @@ public class MainController extends AbstractController implements Initializable 
 				edge.setStrokeWidth(5);
 				edges.add(edge);
 				currentEdge = edge;
-				currentArrowLine = new ArrowLine();
-				currentArrowLine.setStartX(currentVertex.getX());
-				currentArrowLine.setStartY(currentVertex.getY());
-				
-				currentArrowLine.setEndX(event.getX());
-				currentArrowLine.setEndY(event.getY());
 				rightPane.getChildren().add(currentEdge);
 				isDrawingEdge = true;
 			} else {
@@ -174,18 +166,10 @@ public class MainController extends AbstractController implements Initializable 
 			currentLabel.setY(y);
 			//move the edges together with Vertex
 			movingTheEdges(x,y);
-			/*
-			if(currentType == "undirected") {
-				movingTheEdges(x,y);
-			}else if(currentType == "directed") {
-				//movingTheArrowLines(x, y);
-			}*/
 		}
 		if(isDrawingEdge) {
 			currentEdge.setX2(event.getX());
 			currentEdge.SetY2(event.getY());
-			currentArrowLine.setEndX(event.getX());
-			currentArrowLine.setEndY(event.getY());
 		}
 	}
 	
@@ -204,21 +188,19 @@ public class MainController extends AbstractController implements Initializable 
 				String weightEdge = (String) resultMap.get("weight");
 				currentEdge.setTextWeight(weightEdge);//add weight to the edge
 				if(typeEdge.equalsIgnoreCase("directed")){
-					currentType = "directed";
-					currentArrowLine.setEndX(currentVertex.getX());
-					currentArrowLine.setEndY(currentVertex.getY());
-					arrows.add(currentArrowLine);
-					rightPane.getChildren().add(currentArrowLine);
-					rightPane.getChildren().remove(currentEdge);
-				}else {
-					currentType = "undirected";
-					currentEdge.setPoint2(currentVertex.getX(), currentVertex.getY());
-					rightPane.getChildren().add(currentEdge.getTextWeight());
-					//test arrow
-					currentEdge.calculateArrow();//calculate arrow 1 and arrow 2.
-					rightPane.getChildren().add(currentEdge.getArrow1());
-					rightPane.getChildren().add(currentEdge.getArrow2());
+					//currentType = "directed";
+					//do more code later
+					currentEdge.setDirection(true);
+				} else {
+					//currentType = "undirected";
+					currentEdge.setDirection(false);
 				}
+				currentEdge.setPoint2(currentVertex.getX(), currentVertex.getY());
+				rightPane.getChildren().add(currentEdge.getTextWeight());
+				//test arrow
+				currentEdge.calculateArrow();//calculate arrow 1 and arrow 2.
+				rightPane.getChildren().add(currentEdge.getArrow1());
+				rightPane.getChildren().add(currentEdge.getArrow2());
 			}
 			isDrawingEdge = false;
 		} else {
@@ -241,30 +223,6 @@ public class MainController extends AbstractController implements Initializable 
 		firstX = newX;
 		firstY = newY;
 	}
-	
-	/*
-	public void movingTheArrowLines(double newX, double newY) {// TODO
-		for (ArrowLine arrow : arrows) {
-			if (firstX == arrow.getStartX() && firstY == arrow.getEndX()) {
-				//arrow.setEdge(newX, newY, arrow.getEndX(), arrow.getEndY());
-				arrow.setStartX(newX);
-				arrow.setStartY(newY);
-				
-				arrow.setEndX(arrow.getEndX());
-				arrow.setEndY(arrow.getEndY());
-				
-			} else if (firstX == arrow.getEndX() && firstY == arrow.getEndY()) {
-				//edge.setEdge(edge.getX1(), edge.getY1(), newX, newY);
-				arrow.setStartX(arrow.getStartX());
-				arrow.setStartY(arrow.getEndX());
-				
-				arrow.setEndX(newX);
-				arrow.setEndY(newY);
-			}
-		}
-		firstX = newX;
-		firstY = newY;
-	}*/
 	
 	public void removeObject(double cX, double cY) {
 		ObservableList<Node> elementsOnPane = rightPane.getChildren();
