@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -8,11 +9,11 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="609.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SplitPane fx:id="splitPane" dividerPositions="0.29797979797979796" layoutX="51.0" layoutY="67.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.29797979797979796" layoutY="30.0" prefHeight="579.0" prefWidth="997.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
         <items>
-          <AnchorPane fx:id="leftPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" style="-fx-background-color: #dff0d8;">
+          <AnchorPane fx:id="leftPane" minHeight="100.0" minWidth="0.0" prefHeight="577.0" prefWidth="100.0" style="-fx-background-color: #dff0d8;">
                <children>
                   <RadioButton fx:id="rbVertex" layoutX="47.0" layoutY="137.0" mnemonicParsing="false" onAction="#handleVertexPress" text="Add Vertex">
                      <toggleGroup>
@@ -20,10 +21,34 @@
                      </toggleGroup></RadioButton>
                   <RadioButton fx:id="rbEdge" layoutX="47.0" layoutY="207.0" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
                   <RadioButton fx:id="rbRemoveObj" layoutX="47.0" layoutY="272.0" mnemonicParsing="false" onAction="#handleRemoveObjPress" text="Remove Object" toggleGroup="$group1" />
+                  <Button fx:id="btnRemoveAll" layoutX="47.0" layoutY="334.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
+                  <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="39.0" layoutY="387.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
           <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveVertex" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" style="-fx-background-color: white;" />
         </items>
       </SplitPane>
+      <MenuBar fx:id="menuBar" layoutY="-2.0" prefHeight="32.0" prefWidth="997.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="New" />
+                  <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Algorithms">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Dijktra" />
+                  <MenuItem mnemonicParsing="false" text="Floyd-Warshall" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </AnchorPane>
