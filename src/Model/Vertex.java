@@ -5,6 +5,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class Vertex extends Circle{
+	private int index;
 	private double x;
 	private double y;
 	private double r;
@@ -25,6 +26,18 @@ public class Vertex extends Circle{
 		super.setCenterY(y);
 		super.setRadius(r);
 		super.setFill(color);
+	}
+	
+	
+
+	public Vertex(double x, double y, double r) {
+		super();
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		super.setCenterX(x);
+		super.setCenterY(y);
+		super.setRadius(r);
 	}
 
 	public double getX() {
@@ -73,5 +86,21 @@ public class Vertex extends Circle{
 		this.label.setText(Integer.toString(index));
 		this.label.setStyle(color);
 	}
+	
+	
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public void setLabel(Text label) {
+		this.label = label;
+	}
+	
+	
 	
 }

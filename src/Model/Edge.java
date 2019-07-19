@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import util.Calculate;
 
 public class Edge extends Line {
 	private double x1;
