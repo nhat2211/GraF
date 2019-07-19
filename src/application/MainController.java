@@ -60,6 +60,7 @@ public class MainController extends AbstractController implements Initializable 
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;// use to move the Vertex
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
+	private List<Integer> hasPoints = new ArrayList<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -133,9 +134,7 @@ public class MainController extends AbstractController implements Initializable 
 				System.out.println("You should click inside the Vertex for drawing the line");
 			}
 		} else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {
-			System.out.println("Remove Object Start");
 			removeObject(event.getX(), event.getY());
-			System.out.println("Remove Object End");
 		} else {
 			// do nothing
 		}
@@ -225,24 +224,35 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void removeObject(double cX, double cY) {
-
-		for (Edge edge : edges) {
-			if (edge.contains(cX, cX)) {
-				edges.remove(edge);//
-				break;
+		if(isOnAVertex(cX,cY)) {//delete Vertex
+			System.out.println("Delete Vertex!");
+			for (Vertex v : vertices) {
+				if (v.contains(cX, cY)) {
+					//delete Vertex on the list and rightPane
+					vertices.remove(v);//remove Vertex on the list (note: Vertex include label inside)
+					rightPane.getChildren().remove(v);//remove Vertex on the rightPane
+					rightPane.getChildren().remove(v.getLabel());//remove Label of Vertex on rightPane
+					break;
+				}
+			}
+		} else {//delete Edge
+			System.out.println("Deleting Edge!");
+			for (Edge edge : edges) {
+				if (edge.contains(cX, cX)) {
+					removeEdge(edge);
+					break;
+				}
 			}
 		}
-
-		for (Vertex v : vertices) {
-			if (v.contains(cX, cY)) {
-				//delete Vertex on the list and rightPane
-				vertices.remove(v);//remove Vertex on the list (note: Vertex include label inside)
-				rightPane.getChildren().remove(v);//remove Vertex on the rightPane
-				rightPane.getChildren().remove(v.getLabel());//remove Label of Vertex on rightPane
-				break;
-			}
-		}
-		
+	}
+	
+	private void removeEdge(Edge edge) {
+		System.out.println("Deleted the edge!");
+		edges.remove(edge);//
+		rightPane.getChildren().remove(edge.getTextWeight());
+		rightPane.getChildren().remove(edge.getArrow1());
+		rightPane.getChildren().remove(edge.getArrow2());
+		rightPane.getChildren().remove(edge);
 	}
 
 	private HashMap<String, Object> showPopupEdge() {

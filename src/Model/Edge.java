@@ -41,8 +41,8 @@ public class Edge extends Line {
 
 	public void updateEdge() {
 		//intersected by edge and vertex
-		point1 = calculatePoint(x2,y2,x1,y1,20);
-		point2 = calculatePoint(x1,y1,x2,y2,20);
+		point1 = Calculate.getPoint(x2,y2,x1,y1,20);
+		point2 = Calculate.getPoint(x1,y1,x2,y2,20);
 		//update line
 		super.setStartX(point1.getX());
 		super.setStartY(point1.getY());
@@ -209,30 +209,4 @@ public class Edge extends Line {
 		super.setStroke(color);
 	}
 	
-	/*
-	 * There are two points: A(x1,y1) and B(x2,y2) with R is radius of B
-	 * Calculate thePoint is intersected by the line AB and circle of B
-	 */
-	public Point2D calculatePoint(double x1, double y1, double x2, double y2, int R) {
-		Point2D thePoint = new Point2D.Double();
-		double x3 = (x1 + x2) / 2;
-		double y3 = (y1 + y2) / 2;
-		double d = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
-		int times = 0;
-		while ((int) d > R) {
-			x1 = x3;
-			y1 = y3;
-			x3 = (x3 + x2)/2;
-			y3 = (y3 + y2)/2;
-			d = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
-			while((int) d < R && times < 10) {//set times to catch error here.
-				x3 = (x3 + x1)/2;
-				y3 = (y3 + y1)/2;
-				d = Math.sqrt((x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2));
-				times++;
-			}
-		}
-		thePoint.setLocation(x3, y3);
-		return thePoint;
-	}
 }
