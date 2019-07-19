@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -228,10 +229,31 @@ public class MainController extends AbstractController implements Initializable 
 			System.out.println("Delete Vertex!");
 			for (Vertex v : vertices) {
 				if (v.contains(cX, cY)) {
+					//delete the edges related to this Vertex
+					Point2D point = new Point2D.Double(v.getCenterX(), v.getCenterY());
+					// Line2D deleteLine = new Line2D.Double();
+					for (Edge edge : edges) {
+						if (point.getX() == edge.getX1() && point.getY() == edge.getY1()) {
+							// convert the line that has started point to Point
+							edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
+							hasPoints.add(edges.indexOf(edge));
+						} else if (point.getX() == edge.getX2() && point.getY() == edge.getY2()) {
+							// convert the line that has ended point to Point
+							edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
+							hasPoints.add(edges.indexOf(edge));
+						}
+					}
+					// delete the points in the list of lines from highest index to lowest index
+					for (int i = hasPoints.size() - 1; i >= 0; i--) {
+						System.out.println("-> Delete edge at index: " + hasPoints.get(i));
+						removeEdge(edges.get(hasPoints.get(i)));
+					}
+					hasPoints.clear();// clear hasPoints (*_*)
+					
 					//delete Vertex on the list and rightPane
 					vertices.remove(v);//remove Vertex on the list (note: Vertex include label inside)
 					rightPane.getChildren().remove(v);//remove Vertex on the rightPane
-					rightPane.getChildren().remove(v.getLabel());//remove Label of Vertex on rightPane
+					rightPane.getChildren().remove(v.getLabel());//remove Label of Vertex on rightPane	
 					break;
 				}
 			}
