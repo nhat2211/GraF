@@ -9,7 +9,7 @@ public class Vertex extends Circle{
 	private double y;
 	private double r;
 	private Paint color;
-	private Text label;
+	private Text label = new Text();
 	
 	public Vertex() {
 		
@@ -67,7 +67,18 @@ public class Vertex extends Circle{
 		return label;
 	}
 
-	public void setLabel(Text label) {
-		this.label = label;
+	public void setLabel (double xText, double yText, Integer index, String color) {
+		//label.setX(event.getX() - 5);
+		//label.setY(event.getY() + 5);
+		//label.setText(Integer.toString(++indexVertex));
+		//label.setStyle("-fx-fill: yellow");
+		this.label.setX(xText);
+		this.label.setY(yText);
+		this.label.setText(Integer.toString(index));
+		this.label.setStyle(color);
 	}
+	
+	//public void setLabel(Text label) {
+	//	this.label = label;
+	//}
 }

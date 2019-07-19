@@ -1,7 +1,6 @@
 package application;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +11,9 @@ import Enum.StateOnLeftPane;
 import GeneralController.AbstractController;
 import GeneralController.PopupEdgeController;
 import Model.*;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -28,7 +25,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -56,11 +52,9 @@ public class MainController extends AbstractController implements Initializable 
 
 	private List<Vertex> vertices = new ArrayList<>();
 	private List<Edge> edges = new ArrayList<>();
-	private List<Text> labels = new ArrayList<Text>();
 	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
 	private Vertex currentVertex = null;
-	private Text currentLabel = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
 	private boolean isDrawingEdge = false;
@@ -69,7 +63,7 @@ public class MainController extends AbstractController implements Initializable 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		Class<?> clazz = this.getClass();
+		//Class<?> clazz = this.getClass();
 		 
        // InputStream input = clazz.getResourceAsStream("resources/images/death_head.png");
        // Image image = new Image(input);
@@ -77,10 +71,10 @@ public class MainController extends AbstractController implements Initializable 
 		rbVertex.setSelected(true);
 		// fix width left pane when resize window
 		menuBar.prefWidthProperty().bind(parentPane.widthProperty());
-		splitPane.setResizableWithParent(leftPane, Boolean.FALSE);
+		//splitPane.setResizableWithParent(leftPane, Boolean.FALSE);
 		//Image imageDead = new Image("/death_head.png");
 		Image imageCross = new Image("/iconEdge.png");
-		 imageView = new ImageView(imageCross);
+		imageView = new ImageView(imageCross);
 		leftPane.getChildren().add(imageView);
 		
 	}
@@ -118,19 +112,11 @@ public class MainController extends AbstractController implements Initializable 
 			} else {
 				Vertex vertex = new Vertex(event.getX(), event.getY(), 20, Color.CADETBLUE);
 				vertices.add(vertex);
-
-				Text label = new Text();
-				label.setX(event.getX() - 5);
-				label.setY(event.getY() + 5);
-
-				label.setText(Integer.toString(++indexVertex));
-				label.setStyle("-fx-fill: yellow");
-				labels.add(label);
-				vertex.setLabel(label);
-
+				vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
 				// Setting the stroke width of the circle
 				rightPane.getChildren().add(vertex);
-				rightPane.getChildren().add(label);
+				//rightPane.getChildren().add(label);
+				rightPane.getChildren().add(vertex.getLabel());
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
@@ -166,15 +152,6 @@ public class MainController extends AbstractController implements Initializable 
 					break;
 				}
 			}
-
-			for (int j = 0; j < labels.size(); j++) {
-				if (currentVertex != null) {
-					if (currentVertex.contains(labels.get(j).getX(), labels.get(j).getY())) {
-						currentLabel = labels.get(j);
-						break;
-					}
-				}
-			}
 		}
 		return flag;
 	}
@@ -186,8 +163,8 @@ public class MainController extends AbstractController implements Initializable 
 			double y = event.getY() - deltaY;
 			currentVertex.setX(x);
 			currentVertex.setY(y);
-			currentLabel.setX(x);
-			currentLabel.setY(y);
+			currentVertex.getLabel().setX(x);
+			currentVertex.getLabel().setY(y);
 			// move the edges together with Vertex
 			movingTheEdges(x, y);
 		}
@@ -248,13 +225,6 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void removeObject(double cX, double cY) {
-		ObservableList<Node> elementsOnPane = rightPane.getChildren();
-		for (Node n : elementsOnPane) {
-			if (n.contains(cX, cY)) {
-				elementsOnPane.remove(n);
-				break;
-			}
-		}
 
 		for (Edge edge : edges) {
 			if (edge.contains(cX, cX)) {
@@ -265,23 +235,18 @@ public class MainController extends AbstractController implements Initializable 
 
 		for (Vertex v : vertices) {
 			if (v.contains(cX, cY)) {
-				vertices.remove(v);
+				//delete Vertex on the list and rightPane
+				vertices.remove(v);//remove Vertex on the list (note: Vertex include label inside)
+				rightPane.getChildren().remove(v);//remove Vertex on the rightPane
+				rightPane.getChildren().remove(v.getLabel());//remove Label of Vertex on rightPane
 				break;
 			}
 		}
-
-		for (Text label : labels) {
-			if (label.contains(cX, cY)) {
-				labels.remove(label);
-				break;
-			}
-		}
-
+		
 	}
 
 	private HashMap<String, Object> showPopupEdge() {
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-
+		//HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/ui/Popup.fxml"));
 		// initializing the controller
@@ -314,7 +279,6 @@ public class MainController extends AbstractController implements Initializable 
 		rightPane.getChildren().clear();
 		edges.clear();
 		vertices.clear();
-		labels.clear();
 	}
-
+	
 }
