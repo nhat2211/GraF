@@ -55,9 +55,11 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Edge> edges = new ArrayList<>();
 	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
+	private Vertex firstVertex = null;
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
+	private int distanceToDeleteEdge = 5;//the limit of distance when click to delete the edge
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;// use to move the Vertex
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
@@ -131,10 +133,11 @@ public class MainController extends AbstractController implements Initializable 
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
 				isDrawingEdge = true;
+				firstVertex = currentVertex;//save the first Vertex for comparing later
 			} else {
 				System.out.println("You should click inside the Vertex for drawing the line");
 			}
-		} else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {
+		} else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {//remove all objects
 			removeObject(event.getX(), event.getY());
 		} else {
 			// do nothing
@@ -173,15 +176,25 @@ public class MainController extends AbstractController implements Initializable 
 		}
 	}
 
+	public Edge getExistEdge(Edge E) {
+		Edge edge = null;
+		for(Edge e : edges) {
+			if(e.getX1() == E.getX1() && e.getY1() == E.getY1() && e.getX2() == E.getX2() && e.getY2() == E.getY2()) {
+				edge = e;
+				break;
+			}
+		}
+		return edge;
+	}
+	
 	public void releaseMouse(MouseEvent event) {
 		isClickedInsideVertex = false;
 
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
-			if (!isOnAVertex(event.getX(), event.getY())) {// mouse release not on a vertex -> remove current Edge
-				rightPane.getChildren().remove(currentEdge);
-			} else {// is on a vertex -> set the ending point of edge is the central of Vertex
+			if (isOnAVertex(event.getX(), event.getY()) && currentVertex != firstVertex) {
+				// is on a vertex -> set the ending point of edge is the central of Vertex
 				HashMap<String, Object> resultMap = showPopupEdge();
 				String typeEdge = (String) resultMap.get("typeEdge");
 				String weightEdge = (String) resultMap.get("weight");
@@ -202,7 +215,15 @@ public class MainController extends AbstractController implements Initializable 
 				currentEdge.updateEdge();
 				rightPane.getChildren().add(currentEdge.getArrow1());
 				rightPane.getChildren().add(currentEdge.getArrow2());
+				Edge edge = getExistEdge(currentEdge);
+				if(edge != null) {
+					System.out.println("This edge is existed! Update the new edge!");
+					removeEdge(edge);
+				} 
 				edges.add(currentEdge);
+				
+			} else { // mouse release not on a vertex -> remove current Edge
+				rightPane.getChildren().remove(currentEdge);
 			}
 			isDrawingEdge = false;
 		} else {
@@ -260,10 +281,7 @@ public class MainController extends AbstractController implements Initializable 
 		} else {//delete Edge
 			for(Edge edge: edges) {	
 				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),edge.getY2());
-				System.out.println(
-						"The distance: " + distance + " < " + cX + " , " + cY + " >  ->   ( " + edge.getX1()
-								+ " , " + edge.getY1() + " ) & ( " + edge.getX2() + " , " + edge.getY2() + " ) ");
-				if (distance <= 5) {
+				if (distance <= distanceToDeleteEdge) {
 					System.out.println("You select the line with the distance to the edge is: " + distance);
 					hasPoints.add(edges.indexOf(edge));//save index of edge in edges
 				}
