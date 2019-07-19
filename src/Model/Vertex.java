@@ -68,17 +68,10 @@ public class Vertex extends Circle{
 	}
 
 	public void setLabel (double xText, double yText, Integer index, String color) {
-		//label.setX(event.getX() - 5);
-		//label.setY(event.getY() + 5);
-		//label.setText(Integer.toString(++indexVertex));
-		//label.setStyle("-fx-fill: yellow");
 		this.label.setX(xText);
 		this.label.setY(yText);
 		this.label.setText(Integer.toString(index));
 		this.label.setStyle(color);
 	}
 	
-	//public void setLabel(Text label) {
-	//	this.label = label;
-	//}
 }

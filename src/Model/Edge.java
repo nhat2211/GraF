@@ -14,12 +14,12 @@ public class Edge extends Line {
 	private double y2;
 	private Paint color;
 	private double weight;
-	Text textWeight = new Text();
+	private Text textWeight = new Text();
 	private boolean directed = false;
-	Line arrow1 = new Line();
-	Line arrow2 = new Line();
-	Point2D point1 = new Point2D.Double();//point 1,2 is intersected by edge and vertex
-	Point2D point2 = new Point2D.Double();//
+	private Line arrow1 = new Line();
+	private Line arrow2 = new Line();
+	private Point2D point1 = new Point2D.Double();//point 1,2 is intersected by edge and vertex
+	private Point2D point2 = new Point2D.Double();//
 
 	public Edge() {
 

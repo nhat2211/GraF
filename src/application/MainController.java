@@ -112,10 +112,10 @@ public class MainController extends AbstractController implements Initializable 
 			} else {
 				Vertex vertex = new Vertex(event.getX(), event.getY(), 20, Color.CADETBLUE);
 				vertices.add(vertex);
+				System.out.println("Size of vertices: " + vertices.size());
 				vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
 				// Setting the stroke width of the circle
 				rightPane.getChildren().add(vertex);
-				//rightPane.getChildren().add(label);
 				rightPane.getChildren().add(vertex.getLabel());
 			}
 
@@ -124,9 +124,8 @@ public class MainController extends AbstractController implements Initializable 
 															// create a new vertice
 				Edge edge = new Edge(currentVertex.getX(), currentVertex.getY(), event.getX(), event.getY(),
 						Color.BLUEVIOLET);
-				// set line height
 				edge.setStrokeWidth(2);
-				edges.add(edge);
+				System.out.println("Size of edges: " + edges.size());
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
 				isDrawingEdge = true;
@@ -197,12 +196,13 @@ public class MainController extends AbstractController implements Initializable 
 						currentEdge.setDirection(false);
 					}
 				}
-
+				//add the edge and its feature
 				currentEdge.setPoint2(currentVertex.getX(), currentVertex.getY());
 				rightPane.getChildren().add(currentEdge.getTextWeight());
 				currentEdge.updateEdge();
 				rightPane.getChildren().add(currentEdge.getArrow1());
 				rightPane.getChildren().add(currentEdge.getArrow2());
+				edges.add(currentEdge);
 			}
 			isDrawingEdge = false;
 		} else {
@@ -228,7 +228,7 @@ public class MainController extends AbstractController implements Initializable 
 
 		for (Edge edge : edges) {
 			if (edge.contains(cX, cX)) {
-				edges.remove(edge);
+				edges.remove(edge);//
 				break;
 			}
 		}
