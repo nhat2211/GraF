@@ -2,8 +2,6 @@ package Model;
 
 import java.awt.geom.Point2D;
 
-import javafx.scene.paint.Color;
-
 public class Calculate {
 	
 	/*

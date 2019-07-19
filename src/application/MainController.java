@@ -236,13 +236,22 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 		} else {//delete Edge
-			System.out.println("Deleting Edge!");
-			for (Edge edge : edges) {
-				if (edge.contains(cX, cX)) {
-					removeEdge(edge);
-					break;
+			for(Edge edge: edges) {	
+				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),edge.getY2());
+				System.out.println(
+						"The distance: " + distance + " < " + cX + " , " + cY + " >  ->   ( " + edge.getX1()
+								+ " , " + edge.getY1() + " ) & ( " + edge.getX2() + " , " + edge.getY2() + " ) ");
+				if (distance <= 5) {
+					System.out.println("You select the line with the distance to the edge is: " + distance);
+					hasPoints.add(edges.indexOf(edge));//save index of edge in edges
 				}
+			} // end while
+			// delete the points in the list of lines from highest index to lowest index
+			for (int i = hasPoints.size() - 1; i >= 0; i--) {//we have to delete from highest index to lowest index
+				System.out.println("-> Delete line at index: " + hasPoints.get(i));
+				removeEdge(edges.get(hasPoints.get(i)));
 			}
+			hasPoints.clear();// clear hasPoints (*_*)
 		}
 	}
 	
@@ -289,6 +298,7 @@ public class MainController extends AbstractController implements Initializable 
 		rightPane.getChildren().clear();
 		edges.clear();
 		vertices.clear();
+		indexVertex = -1;//reset index vertex
 	}
 	
 }
