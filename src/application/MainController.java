@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import Enum.StateOnLeftPane;
 import GeneralController.AbstractController;
+import GeneralController.ChangeLabelPopupController;
 import GeneralController.PopupEdgeController;
 import Model.*;
 import javafx.fxml.FXML;
@@ -47,6 +48,10 @@ public class MainController extends AbstractController implements Initializable 
 	private RadioButton rbVertex;
 	@FXML
 	private RadioButton rbEdge;
+	@FXML
+	private RadioButton rbChangeLbl;
+	@FXML
+	private RadioButton rbMoveLbl;
 	@FXML
 	private Button btnRemoveAll;
 	@FXML
@@ -105,6 +110,16 @@ public class MainController extends AbstractController implements Initializable 
 		System.out.println("Remove Object is pressed");
 		eventOnLeftPane = StateOnLeftPane.REMOVE;
 	}
+	
+	public void handleChangeLabelPress() {
+		System.out.println("Change Label is pressed");
+		eventOnLeftPane = StateOnLeftPane.CHANGE_LABEL;
+	}
+	
+	public void handleMoveLabelPress() {
+		System.out.println("Move Label is pressed");
+		eventOnLeftPane = StateOnLeftPane.MOVE_LABEL;
+	}
 
 	@FXML
 	public void clickMouse(MouseEvent event) {
@@ -145,9 +160,31 @@ public class MainController extends AbstractController implements Initializable 
 			} else {
 				System.out.println("You should click inside the Vertex for drawing the line");
 			}
-		} else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {// remove all objects
+		}
+
+		else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {// remove all objects
 			removeObject(event.getX(), event.getY());
-		} else {
+			
+		} else if(eventOnLeftPane == StateOnLeftPane.CHANGE_LABEL) {
+			for(Edge e:edges) {
+				
+				int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), e.getX1(), e.getY1(), e.getX2(),
+						e.getY2());
+				if (distance <= distanceToDeleteEdge) {
+					Edge edge = showChangeLabelPopupEdge(e);
+					//System.out.println("You select the line with the distance to the edge is: " + distance);
+					//hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+					
+				}
+			}
+			
+			
+			
+		} else if(eventOnLeftPane == StateOnLeftPane.MOVE_LABEL) {
+			
+		}
+		
+		else {
 			// do nothing
 		}
 	}
@@ -407,6 +444,34 @@ public class MainController extends AbstractController implements Initializable 
 		indexVertex = -1;// reset index vertex
 	}
 	
+	
+	private Edge showChangeLabelPopupEdge(Edge edge) {
+		// HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/ui/ChangeLabelPopup.fxml"));
+		// initializing the controller
+		ChangeLabelPopupController changeLabelController = new ChangeLabelPopupController(edge);
+		loader.setController(changeLabelController);
+		Parent layout;
+		try {
+			layout = loader.load();
+			Scene scene = new Scene(layout);
+			// this is the popup stage
+			Stage popupStage = new Stage();
+			// Giving the popup controller access to the popup stage (to allow the
+			// controller to close the stage)
+			changeLabelController.setStage(popupStage);
+			if (this.main != null) {
+				popupStage.initOwner(main.getPrimaryStage());
+			}
+			popupStage.initModality(Modality.WINDOW_MODAL);
+			popupStage.setScene(scene);
+			popupStage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return changeLabelController.getResult();
+	}
 	
 
 }

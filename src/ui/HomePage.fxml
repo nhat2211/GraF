@@ -15,14 +15,16 @@
         <items>
           <AnchorPane fx:id="leftPane" minHeight="100.0" minWidth="0.0" prefHeight="577.0" prefWidth="100.0" style="-fx-background-color: #dff0d8;">
                <children>
-                  <RadioButton fx:id="rbVertex" layoutX="47.0" layoutY="137.0" mnemonicParsing="false" onAction="#handleVertexPress" text="Add Vertex">
+                  <RadioButton fx:id="rbVertex" layoutX="53.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleVertexPress" text="Add Vertex">
                      <toggleGroup>
                         <ToggleGroup fx:id="group1" />
                      </toggleGroup></RadioButton>
-                  <RadioButton fx:id="rbEdge" layoutX="47.0" layoutY="207.0" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
-                  <RadioButton fx:id="rbRemoveObj" layoutX="47.0" layoutY="272.0" mnemonicParsing="false" onAction="#handleRemoveObjPress" text="Remove Object" toggleGroup="$group1" />
-                  <Button fx:id="btnRemoveAll" layoutX="47.0" layoutY="334.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
-                  <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="39.0" layoutY="387.0" pickOnBounds="true" preserveRatio="true" />
+                  <RadioButton fx:id="rbEdge" layoutX="53.0" layoutY="113.0" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
+                  <RadioButton fx:id="rbRemoveObj" layoutX="52.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleRemoveObjPress" text="Remove Object" toggleGroup="$group1" />
+                  <Button fx:id="btnRemoveAll" layoutX="51.0" layoutY="298.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
+                  <ImageView fx:id="imageView" fitHeight="81.0" fitWidth="117.0" layoutX="96.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true" />
+                  <RadioButton fx:id="rbChangeLbl" layoutX="53.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleChangeLabelPress" text="Change Label" toggleGroup="$group1" />
+                  <RadioButton fx:id="rbMoveLbl" layoutX="53.0" layoutY="233.0" mnemonicParsing="false" onAction="#handleMoveLabelPress" text="Move Label" toggleGroup="$group1" />
                </children>
             </AnchorPane>
           <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveVertex" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" style="-fx-background-color: white;" />
