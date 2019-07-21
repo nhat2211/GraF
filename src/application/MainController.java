@@ -66,7 +66,7 @@ public class MainController extends AbstractController implements Initializable 
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
-	private int distanceToDeleteEdge = 5;// the limit of distance when click to delete the edge
+	private int distanceToDeleteEdge = 15;// the limit of distance when click to delete the edge
 	private boolean isDrawingEdge = false;
 	private double deltaX, deltaY;// use to move the Vertex
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
@@ -168,14 +168,25 @@ public class MainController extends AbstractController implements Initializable 
 		} else if(eventOnLeftPane == StateOnLeftPane.CHANGE_LABEL) {
 			for(Edge e:edges) {
 				
-				int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), e.getX1(), e.getY1(), e.getX2(),
-						e.getY2());
-				if (distance <= distanceToDeleteEdge) {
-					Edge edge = showChangeLabelPopupEdge(e);
-					//System.out.println("You select the line with the distance to the edge is: " + distance);
-					//hasPoints.add(edges.indexOf(edge));// save index of edge in edges
-					
+				
+				if(e.getCircle() == null) {
+					int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), e.getX1(), e.getY1(), e.getX2(),
+							e.getY2());
+					if (distance !=0 && distance <= distanceToDeleteEdge) {
+						Edge edge = showChangeLabelPopupEdge(e);
+						break;
+						//System.out.println("You select the line with the distance to the edge is: " + distance);
+						//hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+						
+				
 				}
+				}else {
+					if(e.getTextWeight().contains(event.getX(), event.getY())){
+						Edge edge = showChangeLabelPopupEdge(e);
+						break;
+					}
+				}
+				
 			}
 			
 			
