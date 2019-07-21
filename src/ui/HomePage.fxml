@@ -21,10 +21,11 @@
                      </toggleGroup></RadioButton>
                   <RadioButton fx:id="rbEdge" layoutX="53.0" layoutY="113.0" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
                   <RadioButton fx:id="rbRemoveObj" layoutX="52.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleRemoveObjPress" text="Remove Object" toggleGroup="$group1" />
-                  <Button fx:id="btnRemoveAll" layoutX="51.0" layoutY="298.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
-                  <ImageView fx:id="imageView" fitHeight="81.0" fitWidth="117.0" layoutX="96.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="btnRemoveAll" layoutX="77.0" layoutY="370.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
                   <RadioButton fx:id="rbChangeLbl" layoutX="53.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleChangeLabelPress" text="Change Label" toggleGroup="$group1" />
                   <RadioButton fx:id="rbMoveLbl" layoutX="53.0" layoutY="233.0" mnemonicParsing="false" onAction="#handleMoveLabelPress" text="Move Label" toggleGroup="$group1" />
+                  <RadioButton fx:id="rbRemoveIcon" layoutX="14.0" layoutY="295.0" mnemonicParsing="false" onAction="#handleRemoveIconPress" text="Remove" toggleGroup="$group1" />
+                  <RadioButton fx:id="rbVertexIcon" layoutX="146.0" layoutY="295.0" mnemonicParsing="false" onAction="#handleVertexIconPress" text="Vertex" toggleGroup="$group1" />
                </children>
             </AnchorPane>
           <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveVertex" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" style="-fx-background-color: white;" />
@@ -32,11 +33,11 @@
       </SplitPane>
       <MenuBar fx:id="menuBar" layoutY="-2.0" prefHeight="32.0" prefWidth="997.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu fx:id="menu" mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" text="Exit" />
+              <MenuItem fx:id="itemNew" mnemonicParsing="false" onAction="#onNewPage" text="New" />
+                  <MenuItem fx:id="itemClose" mnemonicParsing="false" onAction="#onClosePage" text="Close" />
+                  <MenuItem fx:id="itemExit" mnemonicParsing="false" onAction="#onExit" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Algorithms">
