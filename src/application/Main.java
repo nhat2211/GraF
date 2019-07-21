@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 
 public class Main extends Application {
 	private Stage primaryStage;
@@ -23,6 +24,7 @@ public class Main extends Application {
 			scene.getStylesheets().add("/application/application.css");
 
 			primaryStage.setTitle("GraF");
+			primaryStage.getIcons().add(new Image("/graph.png"));
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
