@@ -63,7 +63,6 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Edge> edges = new ArrayList<>();
 	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
-	private Vertex firstVertex = null;
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
@@ -72,7 +71,8 @@ public class MainController extends AbstractController implements Initializable 
 	private double deltaX, deltaY;// use to move the Vertex
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
 	private List<Integer> hasPoints = new ArrayList<>();
-	HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every vertex has one piercings(also be a vertex for display)
+	private double radius = 20;//radius of Vertex
+	//HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every vertex has one piercings(also be a vertex for display)
 	String typeEdge ="";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -137,7 +137,7 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-				Vertex vertex = new Vertex(event.getX(), event.getY(), 20, Color.CADETBLUE);
+				Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
 				vertices.add(vertex);
 				System.out.println("Size of vertices: " + vertices.size());
 				vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
@@ -156,7 +156,7 @@ public class MainController extends AbstractController implements Initializable 
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
 				isDrawingEdge = true;
-				firstVertex = currentVertex;// save the first Vertex for comparing later
+				//firstVertex = currentVertex;// save the first Vertex for comparing later
 			} else {
 				System.out.println("You should click inside the Vertex for drawing the line");
 			}
@@ -212,19 +212,6 @@ public class MainController extends AbstractController implements Initializable 
 			currentVertex.setY(y);
 			currentVertex.getLabel().setX(x);
 			currentVertex.getLabel().setY(y);
-			// move the edges together with Vertex
-			if (mapVP.size() > 0) {
-				for (Map.Entry<Vertex, Vertex> m : mapVP.entrySet()) {
-					if (mapVP.containsKey(currentVertex)) {
-						mapVP.get(currentVertex).setX(currentVertex.getX() - 15);
-						mapVP.get(currentVertex).setY(currentVertex.getY() - 15);
-						mapVP.get(currentVertex).getLabel().setX(mapVP.get(currentVertex).getX());
-						mapVP.get(currentVertex).getLabel().setY(mapVP.get(currentVertex).getY()-40);
-					}
-				}
-
-			}
-			
 			movingTheEdges(x, y);
 		}
 		if (isDrawingEdge) {
@@ -250,7 +237,7 @@ public class MainController extends AbstractController implements Initializable 
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
-			if (isOnAVertex(event.getX(), event.getY()) && currentVertex != firstVertex) {
+			if (isOnAVertex(event.getX(), event.getY()) ) {//&& currentVertex != firstVertex ->cancel this
 				// is on a vertex -> set the ending point of edge is the central of Vertex
 			    resultMap = showPopupEdge();
 				 typeEdge = (String) resultMap.get("typeEdge");
@@ -270,50 +257,37 @@ public class MainController extends AbstractController implements Initializable 
 					// add the edge and its feature
 					currentEdge.setPoint2(currentVertex.getX(), currentVertex.getY());
 					rightPane.getChildren().add(currentEdge.getTextWeight());
-					currentEdge.updateEdge();
-					rightPane.getChildren().add(currentEdge.getArrow1());
-					rightPane.getChildren().add(currentEdge.getArrow2());
+					//draw a curve
+					if(currentEdge.getX1() == currentEdge.getX2() && currentEdge.getY1() == currentEdge.getY2()) {
+						System.out.println("This is a point, not an edge! Draw a curve");	
+						//if(currentEdge.getCircle() == null) {
+							currentEdge.setCircle(radius);
+							rightPane.getChildren().add(currentEdge.getCircle());
+							currentEdge.getCircle().toBack();
+							rightPane.getChildren().add(currentEdge.getArrow1());
+							rightPane.getChildren().add(currentEdge.getArrow2());
+							currentEdge.updateEdge();
+						//} 
+						
+					} else {//draw an edge
+						rightPane.getChildren().add(currentEdge.getArrow1());
+						rightPane.getChildren().add(currentEdge.getArrow2());
+						currentEdge.updateEdge();
+					}
+					//update the edge
 					Edge edge = getExistEdge(currentEdge);
 					if (edge != null) {
+						rightPane.getChildren().remove(edge.getCircle());//remove the last circle
 						System.out.println("This edge is existed! Update the new edge!");
 						removeEdge(edge);
 					}
 					edges.add(currentEdge);
+					currentEdge = null;//remove it after we don't use it anymore.
 					
 				}else {
 					rightPane.getChildren().remove(currentEdge);
 				}
-				
-
-			} else if (isOnAVertex(event.getX(), event.getY()) && currentVertex == firstVertex) { // add curve edge for
-				resultMap = showPopupEdge();
-				 typeEdge = (String) resultMap.get("typeEdge");
-				 weightEdge = (String) resultMap.get("weight");																				// itself one. ex: vertex: ex A->A
-				if(ValidateInput.userWantToCreate(typeEdge, weightEdge)) {
-					System.out.println("drawPercings");
-					
-
-					Vertex percings = new Vertex(currentVertex.getX() - 15, currentVertex.getY() - 15, 30);
-					percings.setStroke(Color.BLUEVIOLET);
-					percings.setFill(Color.TRANSPARENT);
-					percings.setStrokeWidth(2);
-					if (weightEdge != null && !weightEdge.contentEquals("")) {
-						percings.setLabel(percings.getX(), percings.getY() - 40, Integer.parseInt(weightEdge),
-								"-fx-fill: red");
-					}
-					rightPane.getChildren().remove(currentEdge);
-
-					rightPane.getChildren().add(percings);
-					rightPane.getChildren().add(percings.getLabel());
-					percings.toBack();
-					mapVP.put(currentVertex, percings);
-				}else {
-					rightPane.getChildren().remove(currentEdge);
-				}
-				
-			}
-
-			else { // mouse release not on a vertex -> remove current Edge
+			} else { // mouse release not on a vertex -> remove current Edge
 				rightPane.getChildren().remove(currentEdge);
 			}
 			isDrawingEdge = false;
@@ -342,19 +316,6 @@ public class MainController extends AbstractController implements Initializable 
 
 			for (Vertex v : vertices) {
 				if (v.contains(cX, cY)) {
-					// delete piersings
-					if (mapVP.size() > 0) {
-
-						if (mapVP.containsKey(v)) {
-							rightPane.getChildren().remove(mapVP.get(v));
-							rightPane.getChildren().remove(mapVP.get(v).getLabel());
-							mapVP.remove(v);
-							
-
-						}
-
-					}
-					// delete the edges related to this Vertex
 					Point2D point = new Point2D.Double(v.getCenterX(), v.getCenterY());
 					// Line2D deleteLine = new Line2D.Double();
 					for (Edge edge : edges) {
@@ -386,12 +347,16 @@ public class MainController extends AbstractController implements Initializable 
 			for (Edge edge : edges) {
 				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
 						edge.getY2());
-				if (distance <= distanceToDeleteEdge) {
+				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 					System.out.println("You select the line with the distance to the edge is: " + distance);
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 				}
-			} // end while
-				// delete the points in the list of lines from highest index to lowest index
+				if (edge.getCircle() != null && edge.getCircle().contains(cX, cY)) {
+					System.out.println("Delete the circle Edge!");
+					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+				}
+			} 
+			// delete the points in the list of lines from highest index to lowest index
 			for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest index
 				System.out.println("-> Delete line at index: " + hasPoints.get(i));
 				removeEdge(edges.get(hasPoints.get(i)));
@@ -402,6 +367,9 @@ public class MainController extends AbstractController implements Initializable 
 
 	private void removeEdge(Edge edge) {
 		System.out.println("Deleted the edge!");
+		if(edge.getCircle() != null) {
+			rightPane.getChildren().remove(edge.getCircle());
+		}
 		edges.remove(edge);//
 		rightPane.getChildren().remove(edge.getTextWeight());
 		rightPane.getChildren().remove(edge.getArrow1());

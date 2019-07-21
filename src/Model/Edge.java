@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import util.Calculate;
@@ -19,8 +20,11 @@ public class Edge extends Line {
 	private boolean directed = false;
 	private Line arrow1 = new Line();
 	private Line arrow2 = new Line();
-	private Point2D point1 = new Point2D.Double();//point 1,2 is intersected by edge and vertex
+	private Point2D point1 = new Point2D.Double();// point 1,2 is intersected by edge and vertex
 	private Point2D point2 = new Point2D.Double();//
+	// declare the edge by circle.
+	private Circle circle = null;
+	private double r = 20;// radius of the circle
 
 	public Edge() {
 
@@ -40,19 +44,49 @@ public class Edge extends Line {
 		super.setStroke(color);
 	}
 
-	public void updateEdge() {
-		//intersected by edge and vertex
-		point1 = Calculate.getPoint(x2,y2,x1,y1,20);
-		point2 = Calculate.getPoint(x1,y1,x2,y2,20);
-		//update line
-		super.setStartX(point1.getX());
-		super.setStartY(point1.getY());
-		super.setEndX(point2.getX());
-		super.setEndY(point2.getY());
-		updatePositionOfTextWeight();
-		calculateArrow();
+	public void setCircle(double r) {
+		this.circle = new Circle(x1 - r, y1 - r, r);
+		this.r = r;
+		this.circle.setStroke(Color.BLUEVIOLET);
+		this.circle.setFill(Color.TRANSPARENT);
+		this.circle.setStrokeWidth(2);
+		// super.setStroke(Color.TRANSPARENT);//set the color is invisible -> use it
+		// later
 	}
-	
+
+	public Circle getCircle() {
+		return circle;
+	}
+
+	public void updateEdge() {
+		if (circle == null) {// update the edge
+			// intersected by edge and vertex
+			point1 = Calculate.getPoint(x2, y2, x1, y1, 20);
+			point2 = Calculate.getPoint(x1, y1, x2, y2, 20);
+			// update line
+			super.setStartX(point1.getX());
+			super.setStartY(point1.getY());
+			super.setEndX(point2.getX());
+			super.setEndY(point2.getY());
+			updatePositionOfTextWeight();
+			calculateArrow();
+		} else { // System.out.println("Update the circle!");
+			if (circle.getCenterX() + r == x1 && circle.getCenterY() + r == y1) {// move circle follow to new position
+				x1 = x2;
+				y1 = y2;
+				circle.setCenterX(x2 - r);
+				circle.setCenterY(y2 - r);
+			} else if (circle.getCenterX() + r == x2 && circle.getCenterY() + r == y2) {
+				x2 = x1;
+				y2 = y1;
+				circle.setCenterX(x1 - r);
+				circle.setCenterY(y1 - r);
+			}
+			updatePositionOfTextWeight();
+			calculateArrow();
+		}
+	}
+
 	public void setEdge(double x1, double y1, double x2, double y2) {
 		this.x1 = x1;
 		this.y1 = y1;
@@ -65,8 +99,13 @@ public class Edge extends Line {
 	}
 
 	private void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
-		this.textWeight.setX((x1 + x2) / 2);
-		this.textWeight.setY((y1 + y2) / 2);
+		if (circle == null) {//update for line
+			this.textWeight.setX((x1 + x2) / 2);
+			this.textWeight.setY((y1 + y2) / 2);
+		} else {//update for circle
+			this.textWeight.setX(circle.getCenterX() - r);
+			this.textWeight.setY(circle.getCenterY() - r);
+		}
 	}
 
 	public void setTextWeight(String text) {
@@ -98,10 +137,20 @@ public class Edge extends Line {
 	private void calculateArrow() {
 		double arrowLength = 20;
 		double arrowWidth = 7;
-		double sx = point1.getX(); 	//x1
-		double sy = point1.getY(); 	//y1
-		double ex = point2.getX();	//x2
-		double ey = point2.getY();	//y2
+		double sx = point1.getX(); // x1
+		double sy = point1.getY(); // y1
+		double ex = point2.getX(); // x2
+		double ey = point2.getY(); // y2
+		if(circle != null) {
+			arrowLength = 10;
+			arrowWidth = 3;
+			double cx = circle.getCenterX();
+			double cy = circle.getCenterY();
+			sx = cx + r - 5;
+			sy = cy - r;
+			ex = cx + r;
+			ey = cy;
+		}
 
 		arrow1.setEndX(ex);
 		arrow1.setEndY(ey);
@@ -137,7 +186,7 @@ public class Edge extends Line {
 				arrow2.setStartX(ex + dx + oy);
 				arrow2.setStartY(ey + dy - ox);
 			}
-		} else { //undirected, we don't draw an arrow, just draw a point
+		} else { // undirected, we don't draw an arrow, just draw a point
 			arrow1.setStartX(ex);
 			arrow1.setStartY(ey);
 			arrow2.setStartX(ex);
@@ -163,7 +212,6 @@ public class Edge extends Line {
 		super.setStartY(y1);
 	}
 
-	
 	public void setX2(double x2) {
 		this.x2 = x2;
 		super.setEndX(x2);
@@ -190,7 +238,6 @@ public class Edge extends Line {
 		return y1;// line.getStartY();
 	}
 
-	
 	public double getX2() {
 		return x2;// line.getEndX();
 	}
@@ -199,15 +246,13 @@ public class Edge extends Line {
 		return y2;// line.getEndY();
 	}
 
-	
 	public Paint getColor() {
 		return color;
 	}
 
-	
 	public void setColor(Paint color) {
 		this.color = color;
 		super.setStroke(color);
 	}
-	
+
 }
