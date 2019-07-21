@@ -347,7 +347,9 @@ public class MainController extends AbstractController implements Initializable 
 
 						if (mapVP.containsKey(v)) {
 							rightPane.getChildren().remove(mapVP.get(v));
+							rightPane.getChildren().remove(mapVP.get(v).getLabel());
 							mapVP.remove(v);
+							
 
 						}
 
