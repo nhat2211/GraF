@@ -86,7 +86,6 @@ public class MainController extends AbstractController implements Initializable 
 	Image imageDead;
 	Image imageCross;
 	private List<Vertex> verticesRemove = new ArrayList<Vertex>();
-	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -100,7 +99,7 @@ public class MainController extends AbstractController implements Initializable 
 		// fix width left pane when resize window
 		menuBar.prefWidthProperty().bind(parentPane.widthProperty());
 		splitPane.setResizableWithParent(leftPane, Boolean.FALSE);
-		 imageDead = new Image("/death_head.png", 25, 25, false, false);
+		imageDead = new Image("/death_head.png", 25, 25, false, false);
 		imageCross = new Image("/cross.jpg", 25, 25, false, false);
 		rbRemoveIcon.setGraphic(new ImageView(imageDead));
 		rbVertexIcon.setGraphic(new ImageView(imageCross));
@@ -161,7 +160,7 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-				if(eventOnLeftPane == StateOnLeftPane.VERTEX) {
+				if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 					Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
 					vertices.add(vertex);
 					System.out.println("Size of vertices: " + vertices.size());
@@ -169,20 +168,20 @@ public class MainController extends AbstractController implements Initializable 
 					// Setting the stroke width of the circle
 					rightPane.getChildren().add(vertex);
 					rightPane.getChildren().add(vertex.getLabel());
-				}else if(eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
-					Vertex vertexIcon = new Vertex(event.getX(), event.getY(),radius);
-					//System.out.println("Size of vertices: " + vertices.size());
+				} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
+					Vertex vertexIcon = new Vertex(event.getX(), event.getY(), radius);
+					// System.out.println("Size of vertices: " + vertices.size());
 					vertexIcon.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
 					// Setting the stroke width of the circle
 					vertexIcon.setFill(new ImagePattern(imageCross));
 					vertices.add(vertexIcon);
 					rightPane.getChildren().add(vertexIcon);
 					rightPane.getChildren().add(vertexIcon.getLabel());
-					
-				}else {
-					//do nothing
+
+				} else {
+					// do nothing
 				}
-				
+
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
@@ -203,20 +202,18 @@ public class MainController extends AbstractController implements Initializable 
 
 		else if (eventOnLeftPane == StateOnLeftPane.REMOVE || eventOnLeftPane == StateOnLeftPane.REMOVE_ICON) {// remove
 																												// all
-			                                                                                                    // objects
-			if(eventOnLeftPane == StateOnLeftPane.REMOVE) {
+																												// objects
+			if (eventOnLeftPane == StateOnLeftPane.REMOVE) {
 				removeObject(event.getX(), event.getY());
-			}else if(eventOnLeftPane == StateOnLeftPane.REMOVE_ICON) {
+			} else if (eventOnLeftPane == StateOnLeftPane.REMOVE_ICON) {
 				removeObject(event.getX(), event.getY());
 				Vertex verDead = new Vertex(event.getX(), event.getY(), radius);
 				verDead.setFill(new ImagePattern(imageDead));
 				verticesRemove.add(verDead);
 				rightPane.getChildren().add(verDead);
-			}else {
-				//do nothing
+			} else {
+				// do nothing
 			}
-			
-			
 
 		} else if (eventOnLeftPane == StateOnLeftPane.CHANGE_LABEL) {
 			for (Edge e : edges) {
@@ -521,280 +518,5 @@ public class MainController extends AbstractController implements Initializable 
 		Platform.exit();
 		System.exit(0);
 	}
-
-	public AnchorPane getParentPane() {
-		return parentPane;
-	}
-
-	public void setParentPane(AnchorPane parentPane) {
-		this.parentPane = parentPane;
-	}
-
-	public SplitPane getSplitPane() {
-		return splitPane;
-	}
-
-	public void setSplitPane(SplitPane splitPane) {
-		this.splitPane = splitPane;
-	}
-
-	public AnchorPane getLeftPane() {
-		return leftPane;
-	}
-
-	public void setLeftPane(AnchorPane leftPane) {
-		this.leftPane = leftPane;
-	}
-
-	public AnchorPane getRightPane() {
-		return rightPane;
-	}
-
-	public void setRightPane(AnchorPane rightPane) {
-		this.rightPane = rightPane;
-	}
-
-	public RadioButton getRbVertex() {
-		return rbVertex;
-	}
-
-	public void setRbVertex(RadioButton rbVertex) {
-		this.rbVertex = rbVertex;
-	}
-
-	public RadioButton getRbEdge() {
-		return rbEdge;
-	}
-
-	public void setRbEdge(RadioButton rbEdge) {
-		this.rbEdge = rbEdge;
-	}
-
-	public RadioButton getRbChangeLbl() {
-		return rbChangeLbl;
-	}
-
-	public void setRbChangeLbl(RadioButton rbChangeLbl) {
-		this.rbChangeLbl = rbChangeLbl;
-	}
-
-	public RadioButton getRbMoveLbl() {
-		return rbMoveLbl;
-	}
-
-	public void setRbMoveLbl(RadioButton rbMoveLbl) {
-		this.rbMoveLbl = rbMoveLbl;
-	}
-
-	public RadioButton getRbRemoveIcon() {
-		return rbRemoveIcon;
-	}
-
-	public void setRbRemoveIcon(RadioButton rbRemoveIcon) {
-		this.rbRemoveIcon = rbRemoveIcon;
-	}
-
-	public RadioButton getRbVertexIcon() {
-		return rbVertexIcon;
-	}
-
-	public void setRbVertexIcon(RadioButton rbVertexIcon) {
-		this.rbVertexIcon = rbVertexIcon;
-	}
-
-	public Button getBtnRemoveAll() {
-		return btnRemoveAll;
-	}
-
-	public void setBtnRemoveAll(Button btnRemoveAll) {
-		this.btnRemoveAll = btnRemoveAll;
-	}
-
-	public MenuBar getMenuBar() {
-		return menuBar;
-	}
-
-	public void setMenuBar(MenuBar menuBar) {
-		this.menuBar = menuBar;
-	}
-
-	public ImageView getImageView() {
-		return imageView;
-	}
-
-	public void setImageView(ImageView imageView) {
-		this.imageView = imageView;
-	}
-
-	public List<Vertex> getVertices() {
-		return vertices;
-	}
-
-	public void setVertices(List<Vertex> vertices) {
-		this.vertices = vertices;
-	}
-
-	public List<Edge> getEdges() {
-		return edges;
-	}
-
-	public void setEdges(List<Edge> edges) {
-		this.edges = edges;
-	}
-
-	public StateOnLeftPane getEventOnLeftPane() {
-		return eventOnLeftPane;
-	}
-
-	public void setEventOnLeftPane(StateOnLeftPane eventOnLeftPane) {
-		this.eventOnLeftPane = eventOnLeftPane;
-	}
-
-	public boolean isClickedInsideVertex() {
-		return isClickedInsideVertex;
-	}
-
-	public void setClickedInsideVertex(boolean isClickedInsideVertex) {
-		this.isClickedInsideVertex = isClickedInsideVertex;
-	}
-
-	public Vertex getCurrentVertex() {
-		return currentVertex;
-	}
-
-	public void setCurrentVertex(Vertex currentVertex) {
-		this.currentVertex = currentVertex;
-	}
-
-	public Edge getCurrentEdge() {
-		return currentEdge;
-	}
-
-	public void setCurrentEdge(Edge currentEdge) {
-		this.currentEdge = currentEdge;
-	}
-
-	public int getIndexVertex() {
-		return indexVertex;
-	}
-
-	public void setIndexVertex(int indexVertex) {
-		this.indexVertex = indexVertex;
-	}
-
-	public int getDistanceToDeleteEdge() {
-		return distanceToDeleteEdge;
-	}
-
-	public void setDistanceToDeleteEdge(int distanceToDeleteEdge) {
-		this.distanceToDeleteEdge = distanceToDeleteEdge;
-	}
-
-	public boolean isDrawingEdge() {
-		return isDrawingEdge;
-	}
-
-	public void setDrawingEdge(boolean isDrawingEdge) {
-		this.isDrawingEdge = isDrawingEdge;
-	}
-
-	public double getDeltaX() {
-		return deltaX;
-	}
-
-	public void setDeltaX(double deltaX) {
-		this.deltaX = deltaX;
-	}
-
-	public double getDeltaY() {
-		return deltaY;
-	}
-
-	public void setDeltaY(double deltaY) {
-		this.deltaY = deltaY;
-	}
-
-	public double getFirstX() {
-		return firstX;
-	}
-
-	public void setFirstX(double firstX) {
-		this.firstX = firstX;
-	}
-
-	public double getFirstY() {
-		return firstY;
-	}
-
-	public void setFirstY(double firstY) {
-		this.firstY = firstY;
-	}
-
-	public List<Integer> getHasPoints() {
-		return hasPoints;
-	}
-
-	public void setHasPoints(List<Integer> hasPoints) {
-		this.hasPoints = hasPoints;
-	}
-
-	public double getRadius() {
-		return radius;
-	}
-
-	public void setRadius(double radius) {
-		this.radius = radius;
-	}
-
-	public String getTypeEdge() {
-		return typeEdge;
-	}
-
-	public void setTypeEdge(String typeEdge) {
-		this.typeEdge = typeEdge;
-	}
-
-	public String getWeightEdge() {
-		return weightEdge;
-	}
-
-	public void setWeightEdge(String weightEdge) {
-		this.weightEdge = weightEdge;
-	}
-
-	public HashMap<String, Object> getResultMap() {
-		return resultMap;
-	}
-
-	public void setResultMap(HashMap<String, Object> resultMap) {
-		this.resultMap = resultMap;
-	}
-
-	public Image getImageDead() {
-		return imageDead;
-	}
-
-	public void setImageDead(Image imageDead) {
-		this.imageDead = imageDead;
-	}
-
-	public Image getImageCross() {
-		return imageCross;
-	}
-
-	public void setImageCross(Image imageCross) {
-		this.imageCross = imageCross;
-	}
-
-	public List<Vertex> getVerticesRemove() {
-		return verticesRemove;
-	}
-
-	public void setVerticesRemove(List<Vertex> verticesRemove) {
-		this.verticesRemove = verticesRemove;
-	}
-	
-	
-	
 
 }
