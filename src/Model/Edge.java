@@ -17,6 +17,8 @@ public class Edge extends Line {
 	private Paint color;
 	private double weight;
 	private Text textWeight = new Text();
+	private Point2D deltaText = new Point2D.Double(0,0);
+	private Circle circleLabel = new Circle();//is the new position of the Label
 	private boolean directed = false;
 	private Line arrow1 = new Line();
 	private Line arrow2 = new Line();
@@ -98,14 +100,30 @@ public class Edge extends Line {
 		super.setEndY(y2);
 	}
 
+	public void setDeltaText(double x, double y) {
+		double xDeltaText = x - (x1 + x2)/2;
+		double yDeltaText = y - (y1 + y2)/2;
+		this.deltaText.setLocation(xDeltaText, yDeltaText);;
+	}
+	
 	private void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
+		double x, y;
 		if (circle == null) {//update for line
-			this.textWeight.setX((x1 + x2) / 2);
-			this.textWeight.setY((y1 + y2) / 2);
+			x = ((x1 + x2) / 2) + deltaText.getX();
+			y = ((y1 + y2) / 2) + deltaText.getY();
 		} else {//update for circle
-			this.textWeight.setX(circle.getCenterX() - r);
-			this.textWeight.setY(circle.getCenterY() - r);
+			x = circle.getCenterX() - r;
+			y = circle.getCenterY() - r;
 		}
+		this.textWeight.setX(x);
+		this.textWeight.setY(y);
+		this.circleLabel.setCenterX(x);
+		this.circleLabel.setCenterY(y);
+		this.circleLabel.setRadius(r);
+	}
+	
+	public Circle getCircleLable () {//get the position of the Label
+		return circleLabel;
 	}
 
 	public void setTextWeight(String text) {

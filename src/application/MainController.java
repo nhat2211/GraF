@@ -69,6 +69,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Edge> edges = new ArrayList<>();
 	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
+	private boolean isClickedInsideLabel = false;
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
@@ -239,7 +240,10 @@ public class MainController extends AbstractController implements Initializable 
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.MOVE_LABEL) {
-
+			if (isOnALabel(event.getX(), event.getY())) {
+				isClickedInsideLabel = true;
+				System.out.println("You just clicked inside the Label!");
+			}
 		}
 
 		else {
@@ -253,6 +257,20 @@ public class MainController extends AbstractController implements Initializable 
 			for (int i = 0; i < vertices.size(); i++) {
 				if (vertices.get(i).contains(xM, yM)) {
 					currentVertex = vertices.get(i);
+					flag = true;
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+
+	public boolean isOnALabel(double xL, double yL) {
+		boolean flag = false;
+		if (edges.size() > 0) {
+			for (int i = 0; i < edges.size(); i++) {
+				if (edges.get(i).getCircleLable().contains(xL, yL)) {
+					currentEdge = edges.get(i);
 					flag = true;
 					break;
 				}
@@ -349,6 +367,12 @@ public class MainController extends AbstractController implements Initializable 
 				rightPane.getChildren().remove(currentEdge);
 			}
 			isDrawingEdge = false;
+		} else if (eventOnLeftPane == StateOnLeftPane.MOVE_LABEL) {
+			System.out.println("You just released the Label!");
+			currentEdge.setDeltaText(event.getX(), event.getY());
+			currentEdge.updateEdge();
+			isClickedInsideLabel = false;
+			
 		} else {
 			// do nothing
 		}
