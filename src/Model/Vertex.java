@@ -1,5 +1,6 @@
 package Model;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -9,8 +10,10 @@ public class Vertex extends Circle{
 	private double x;
 	private double y;
 	private double r;
+	private double rPoint = 10;
 	private Paint color;
 	private Text label = new Text();
+	private boolean intermediatePoint = false;
 	
 	public Vertex() {
 		
@@ -40,6 +43,23 @@ public class Vertex extends Circle{
 		super.setRadius(r);
 	}
 
+	public Vertex(double x, double y) {//set Intermediate Point with x, y
+		super();
+		this.x = x;
+		this.y = y;
+		this.r = rPoint;
+		this.color = Color.DARKGOLDENROD;
+		super.setCenterX(x);
+		super.setCenterY(y);
+		super.setRadius(rPoint);
+		super.setFill(color);
+		this.intermediatePoint = true;
+	}
+	
+	public boolean isIntermediatePoint() {
+		return intermediatePoint;
+	}
+	
 	public double getX() {
 		return x;
 	}

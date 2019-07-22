@@ -224,6 +224,12 @@ public class MainController extends AbstractController implements Initializable 
 				isMovingLabel = true;
 				System.out.println("You just clicked inside the Label!");
 			} 
+		}else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
+			System.out.println("Create an intermediate point on the edge");
+			
+			//Mr Son will be coding this in 23/07/2019
+			
+			
 		}
 
 		else {
