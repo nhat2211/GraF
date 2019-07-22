@@ -4,10 +4,8 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import Enum.StateOnLeftPane;
@@ -69,7 +67,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Edge> edges = new ArrayList<>();
 	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
-	private boolean isClickedInsideLabel = false;
+	private boolean isMovingLabel = false;
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
@@ -217,33 +215,15 @@ public class MainController extends AbstractController implements Initializable 
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.CHANGE_LABEL) {
-			for (Edge e : edges) {
-
-				if (e.getCircle() == null) {
-					int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), e.getX1(), e.getY1(),
-							e.getX2(), e.getY2());
-					if (distance != 0 && distance <= distanceToDeleteEdge) {
-						Edge edge = showChangeLabelPopupEdge(e);
-						break;
-						// System.out.println("You select the line with the distance to the edge is: " +
-						// distance);
-						// hasPoints.add(edges.indexOf(edge));// save index of edge in edges
-
-					}
-				} else {
-					if (e.getTextWeight().contains(event.getX(), event.getY())) {
-						Edge edge = showChangeLabelPopupEdge(e);
-						break;
-					}
-				}
-
+			if (isOnALabel(event.getX(), event.getY())) {
+				showChangeLabelPopupEdge(currentEdge);
+				System.out.println("New value of label: " + currentEdge.getTextWeight().getText());
 			}
-
 		} else if (eventOnLeftPane == StateOnLeftPane.MOVE_LABEL) {
 			if (isOnALabel(event.getX(), event.getY())) {
-				isClickedInsideLabel = true;
+				isMovingLabel = true;
 				System.out.println("You just clicked inside the Label!");
-			}
+			} 
 		}
 
 		else {
@@ -294,6 +274,9 @@ public class MainController extends AbstractController implements Initializable 
 			currentEdge.setX2(event.getX());
 			currentEdge.SetY2(event.getY());
 		}
+		if (isMovingLabel) {
+			currentEdge.setDeltaText(event.getX(), event.getY());
+		}
 	}
 
 	public Edge getExistEdge(Edge E) {
@@ -302,7 +285,8 @@ public class MainController extends AbstractController implements Initializable 
 			if (e.getX1() == E.getX1() && e.getY1() == E.getY1() && e.getX2() == E.getX2() && e.getY2() == E.getY2()) {
 				edge = e;
 				break;
-			} else if (e.getX1() == E.getX2() && e.getY1() == E.getY2() && e.getX2() == E.getX1() && e.getY2() == E.getY1()){
+			} else if (e.getX1() == E.getX2() && e.getY1() == E.getY2() && e.getX2() == E.getX1()
+					&& e.getY2() == E.getY1()) {
 				edge = e;
 				break;
 			}
@@ -371,11 +355,13 @@ public class MainController extends AbstractController implements Initializable 
 			}
 			isDrawingEdge = false;
 		} else if (eventOnLeftPane == StateOnLeftPane.MOVE_LABEL) {
-			System.out.println("You just released the Label!");
-			currentEdge.setDeltaText(event.getX(), event.getY());
-			currentEdge.updateEdge();
-			isClickedInsideLabel = false;
-			
+			if (isMovingLabel) {
+				System.out.println("You just released the Label!");
+				currentEdge.setDeltaText(event.getX(), event.getY());
+				isMovingLabel = false;
+			}
+			currentEdge = null; // remove it after we don't use it anymore.
+
 		} else {
 			// do nothing
 		}

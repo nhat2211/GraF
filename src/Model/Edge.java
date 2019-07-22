@@ -103,7 +103,8 @@ public class Edge extends Line {
 	public void setDeltaText(double x, double y) {
 		double xDeltaText = x - (x1 + x2)/2;
 		double yDeltaText = y - (y1 + y2)/2;
-		this.deltaText.setLocation(xDeltaText, yDeltaText);;
+		this.deltaText.setLocation(xDeltaText, yDeltaText);
+		updatePositionOfTextWeight();
 	}
 	
 	private void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
