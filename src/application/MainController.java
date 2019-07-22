@@ -302,6 +302,9 @@ public class MainController extends AbstractController implements Initializable 
 			if (e.getX1() == E.getX1() && e.getY1() == E.getY1() && e.getX2() == E.getX2() && e.getY2() == E.getY2()) {
 				edge = e;
 				break;
+			} else if (e.getX1() == E.getX2() && e.getY1() == E.getY2() && e.getX2() == E.getX1() && e.getY2() == E.getY1()){
+				edge = e;
+				break;
 			}
 		}
 		return edge;
