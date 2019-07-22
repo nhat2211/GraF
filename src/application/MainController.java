@@ -49,11 +49,12 @@ public class MainController extends AbstractController implements Initializable 
 	@FXML
 	private RadioButton rbEdge;
 	@FXML
+	private RadioButton rbRemoveObj;
+	@FXML
 	private RadioButton rbChangeLbl;
 	@FXML
 	private RadioButton rbMoveLbl;
-	@FXML
-	private RadioButton rbRemoveIcon;
+
 	@FXML
 	private RadioButton rbVertexIcon;
 	@FXML
@@ -82,8 +83,12 @@ public class MainController extends AbstractController implements Initializable 
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
-	Image imageDead;
+	Image imageRemove;
 	Image imageCross;
+	Image imageVertex;
+	Image imageEdge;
+	Image imageLabel;
+
 	private List<Vertex> verticesRemove = new ArrayList<Vertex>();
 
 	@Override
@@ -98,9 +103,17 @@ public class MainController extends AbstractController implements Initializable 
 		// fix width left pane when resize window
 		menuBar.prefWidthProperty().bind(parentPane.widthProperty());
 		splitPane.setResizableWithParent(leftPane, Boolean.FALSE);
-		imageDead = new Image("/death_head.png", 25, 25, false, false);
+		imageRemove = new Image("/death_head.png", 25, 25, false, false);
 		imageCross = new Image("/cross.jpg", 25, 25, false, false);
-		rbRemoveIcon.setGraphic(new ImageView(imageDead));
+		imageVertex = new Image("/vertexIcon.jpg", 25, 25, false, false);
+		imageEdge = new Image("/edgeIcon.png", 25, 25, false, false);
+		imageLabel = new Image("/labelIcon.png", 25, 25, false, false);
+
+		rbVertex.setGraphic(new ImageView(imageVertex));
+		rbEdge.setGraphic(new ImageView(imageEdge));
+		rbRemoveObj.setGraphic(new ImageView(imageRemove));
+		rbChangeLbl.setGraphic(new ImageView(imageLabel));
+		rbMoveLbl.setGraphic(new ImageView(imageLabel));
 		rbVertexIcon.setGraphic(new ImageView(imageCross));
 		// imageView = new ImageView(imageCross);
 		// leftPane.getChildren().add(imageView);
@@ -159,7 +172,7 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-				if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
+				
 					Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
 					vertices.add(vertex);
 					System.out.println("Size of vertices: " + vertices.size());
@@ -167,19 +180,9 @@ public class MainController extends AbstractController implements Initializable 
 					// Setting the stroke width of the circle
 					rightPane.getChildren().add(vertex);
 					rightPane.getChildren().add(vertex.getLabel());
-				} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
-					Vertex vertexIcon = new Vertex(event.getX(), event.getY(), radius);
-					// System.out.println("Size of vertices: " + vertices.size());
-					vertexIcon.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
-					// Setting the stroke width of the circle
-					vertexIcon.setFill(new ImagePattern(imageCross));
-					vertices.add(vertexIcon);
-					rightPane.getChildren().add(vertexIcon);
-					rightPane.getChildren().add(vertexIcon.getLabel());
+				
 
-				} else {
-					// do nothing
-				}
+				
 
 			}
 
@@ -199,20 +202,9 @@ public class MainController extends AbstractController implements Initializable 
 			}
 		}
 
-		else if (eventOnLeftPane == StateOnLeftPane.REMOVE || eventOnLeftPane == StateOnLeftPane.REMOVE_ICON) {// remove
+		else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {// remove
 																												// all
-																												// objects
-			if (eventOnLeftPane == StateOnLeftPane.REMOVE) {
 				removeObject(event.getX(), event.getY());
-			} else if (eventOnLeftPane == StateOnLeftPane.REMOVE_ICON) {
-				removeObject(event.getX(), event.getY());
-				Vertex verDead = new Vertex(event.getX(), event.getY(), radius);
-				verDead.setFill(new ImagePattern(imageDead));
-				verticesRemove.add(verDead);
-				rightPane.getChildren().add(verDead);
-			} else {
-				// do nothing
-			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.CHANGE_LABEL) {
 			if (isOnALabel(event.getX(), event.getY())) {
@@ -223,13 +215,12 @@ public class MainController extends AbstractController implements Initializable 
 			if (isOnALabel(event.getX(), event.getY())) {
 				isMovingLabel = true;
 				System.out.println("You just clicked inside the Label!");
-			} 
-		}else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
+			}
+		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
 			System.out.println("Create an intermediate point on the edge");
-			
-			//Mr Son will be coding this in 23/07/2019
-			
-			
+
+			// Mr Son will be coding this in 23/07/2019
+
 		}
 
 		else {
