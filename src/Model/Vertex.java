@@ -120,7 +120,6 @@ public class Vertex extends Circle{
 	public void setLabel(Text label) {
 		this.label = label;
 	}
-	
-	
+
 	
 }

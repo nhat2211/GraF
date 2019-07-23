@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import Enum.StateOnLeftPane;
@@ -79,6 +80,7 @@ public class MainController extends AbstractController implements Initializable 
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
+	HashMap<Vertex,Edge> parentEdge = new HashMap<Vertex,Edge>();//save the parent edge of intermediate point.
 	// HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every
 	// vertex has one piercings(also be a vertex for display)
 	String typeEdge = "";
@@ -233,6 +235,7 @@ public class MainController extends AbstractController implements Initializable 
 					Vertex vertex = new Vertex(point.getX(), point.getY());
 					vertices.add(vertex);
 					rightPane.getChildren().add(vertex);
+					parentEdge.put(vertex, e);//save parent edge of vertex in hashmap
 					System.out.println("One more intermediate point \nSize of vertices: " + vertices.size());
 					
 					//add the first add to intermediate point
@@ -261,6 +264,10 @@ public class MainController extends AbstractController implements Initializable 
 					rightPane.getChildren().add(edge2.getArrow2());
 					edge2.updateEdge();
 					
+					//remove edge on the rightPane.
+					rightPane.getChildren().remove(e);
+					rightPane.getChildren().remove(e.getArrow1());
+					rightPane.getChildren().remove(e.getArrow2());
 				}
 			}
 
@@ -454,6 +461,26 @@ public class MainController extends AbstractController implements Initializable 
 					}
 					hasPoints.clear();// clear hasPoints (*_*)
 
+					//set visible for parent edge
+					boolean isIntermedatePoint = false;
+					for(Entry<Vertex, Edge> map : parentEdge.entrySet()){    
+					       //System.out.println(m.getKey()+" "+m.getValue());
+						if(map.getKey() == v) {
+							System.out.println("Set visible for parent edge!");
+							rightPane.getChildren().add(map.getValue());
+							rightPane.getChildren().add(map.getValue().getArrow1());
+							rightPane.getChildren().add(map.getValue().getArrow2());
+							map.getValue().updateEdge();
+							isIntermedatePoint = true;
+							//DO MORE CODE HERE TOMORROW ON 24-07-2019
+							
+							
+						}
+					}  
+					if(isIntermedatePoint) {
+						parentEdge.remove(v);
+					}
+					
 					// delete Vertex on the list and rightPane
 					vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
 					rightPane.getChildren().remove(v);// remove Vertex on the rightPane
