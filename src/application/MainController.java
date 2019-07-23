@@ -69,6 +69,7 @@ public class MainController extends AbstractController implements Initializable 
 	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
 	private boolean isClickedInsideVertex = false;
 	private boolean isMovingLabel = false;
+	private Vertex firstVertex = null;
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
 	private int indexVertex = -1;
@@ -163,7 +164,7 @@ public class MainController extends AbstractController implements Initializable 
 	@FXML
 	public void pressMouse(MouseEvent event) {
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {// draw
-																											// vertice
+														// vertice
 			if (isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else
 															// create a new vertice
 				isClickedInsideVertex = true;
@@ -172,13 +173,13 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-					Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
-					vertices.add(vertex);
-					System.out.println("Size of vertices: " + vertices.size());
-					vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
-					// Setting the stroke width of the circle
-					rightPane.getChildren().add(vertex);
-					rightPane.getChildren().add(vertex.getLabel());
+				Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
+				vertices.add(vertex);
+				System.out.println("Size of vertices: " + vertices.size());
+				vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
+				// Setting the stroke width of the circle
+				rightPane.getChildren().add(vertex);
+				rightPane.getChildren().add(vertex.getLabel());
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
@@ -190,7 +191,8 @@ public class MainController extends AbstractController implements Initializable 
 				System.out.println("Size of edges: " + edges.size());
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
-				isDrawingEdge = true;
+				isDrawingEdge = true;// this one,we have to put here in the end of this function because we want to
+										// save FirstVertex.
 				// firstVertex = currentVertex;// save the first Vertex for comparing later
 			} else {
 				System.out.println("You should click inside the Vertex for drawing the line");
@@ -198,8 +200,8 @@ public class MainController extends AbstractController implements Initializable 
 		}
 
 		else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {// remove
-																												// all
-				removeObject(event.getX(), event.getY());
+																// all
+			removeObject(event.getX(), event.getY());
 
 		} else if (eventOnLeftPane == StateOnLeftPane.CHANGE_LABEL) {
 			if (isOnALabel(event.getX(), event.getY())) {
@@ -214,25 +216,28 @@ public class MainController extends AbstractController implements Initializable 
 		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
 			Edge e = null;
 			for (Edge edge : edges) {
-				int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(), edge.getX2(),edge.getY2());
+				int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(),
+						edge.getX2(), edge.getY2());
 				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
-					System.out.println("You pressed the edge to make an intermediate point");
-					//hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+					System.out.println("You pressed on the edge");
+					// hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 					e = edge;
 					break;
 				}
 			}
 
-			if(e != null) {//find out the intermediate point
-				Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(), e.getX2(),e.getY2());
-				Vertex vertex = new Vertex(point.getX(), point.getY());
-				vertices.add(vertex);
-				System.out.println("more point - > Size of vertices: " + vertices.size());
+			if (e != null) {// find out the intermediate point
+				Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
+						e.getX2(), e.getY2());
+				if (!e.getV1().contains(point.getX(), point.getY())
+						&& !e.getV2().contains(point.getX(), point.getY())) {
+					Vertex vertex = new Vertex(point.getX(), point.getY());
+					vertices.add(vertex);
+					System.out.println("===> one more intermediate point - > Size of vertices: " + vertices.size());
 
-				rightPane.getChildren().add(vertex);
-
+					rightPane.getChildren().add(vertex);
+				}
 			}
-			
 
 		}
 
@@ -251,6 +256,9 @@ public class MainController extends AbstractController implements Initializable 
 					break;
 				}
 			}
+		}
+		if (!isDrawingEdge && flag) {// get the first vertex when we haven't drawn the edge
+			firstVertex = currentVertex;
 		}
 		return flag;
 	}
@@ -341,12 +349,16 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().add(currentEdge.getArrow2());
 						currentEdge.updateEdge();
 						// }
-
 					} else {// draw an edge
 						rightPane.getChildren().add(currentEdge.getArrow1());
 						rightPane.getChildren().add(currentEdge.getArrow2());
 						currentEdge.updateEdge();
 					}
+
+					// add vertex v1 and vertex v2 to the Edge
+					currentEdge.setV1(firstVertex);
+					currentEdge.setV2(currentVertex);
+
 					// update the edge
 					Edge edge = getExistEdge(currentEdge);
 					if (edge != null) {
