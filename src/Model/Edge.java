@@ -17,8 +17,8 @@ public class Edge extends Line {
 	private Paint color;
 	private double weight;
 	private Text textWeight = new Text();
-	private Point2D deltaText = new Point2D.Double(0,0);
-	private Circle circleLabel = new Circle();//is the new position of the Label
+	private Point2D deltaText = new Point2D.Double(0, 0);
+	private Circle circleLabel = new Circle();// is the new position of the Label
 	private boolean directed = false;
 	private Line arrow1 = new Line();
 	private Line arrow2 = new Line();
@@ -101,20 +101,26 @@ public class Edge extends Line {
 	}
 
 	public void setDeltaText(double x, double y) {
-		double xDeltaText = x - (x1 + x2)/2;
-		double yDeltaText = y - (y1 + y2)/2;
+		double xDeltaText = 0, yDeltaText = 0;
+		if (circle == null) {//update for line
+			xDeltaText = x - (x1 + x2) / 2;
+			yDeltaText = y - (y1 + y2) / 2;
+		} else {//update for curve edge
+			xDeltaText = x - circle.getCenterX() + r;
+			yDeltaText = y - circle.getCenterY() + r;
+		}
 		this.deltaText.setLocation(xDeltaText, yDeltaText);
 		updatePositionOfTextWeight();
 	}
-	
+
 	private void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
 		double x, y;
-		if (circle == null) {//update for line
+		if (circle == null) {// update for line
 			x = ((x1 + x2) / 2) + deltaText.getX();
 			y = ((y1 + y2) / 2) + deltaText.getY();
-		} else {//update for circle
-			x = circle.getCenterX() - r;
-			y = circle.getCenterY() - r;
+		} else {// update for curve edge
+			x = circle.getCenterX() - r + deltaText.getX();
+			y = circle.getCenterY() - r + deltaText.getY();
 		}
 		this.textWeight.setX(x);
 		this.textWeight.setY(y);
@@ -122,8 +128,8 @@ public class Edge extends Line {
 		this.circleLabel.setCenterY(y);
 		this.circleLabel.setRadius(r);
 	}
-	
-	public Circle getCircleLable () {//get the position of the Label
+
+	public Circle getCircleLable() {// get the position of the Label
 		return circleLabel;
 	}
 
@@ -160,7 +166,7 @@ public class Edge extends Line {
 		double sy = point1.getY(); // y1
 		double ex = point2.getX(); // x2
 		double ey = point2.getY(); // y2
-		if(circle != null) {
+		if (circle != null) {
 			arrowLength = 10;
 			arrowWidth = 3;
 			double cx = circle.getCenterX();
