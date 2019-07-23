@@ -162,7 +162,7 @@ public class MainController extends AbstractController implements Initializable 
 
 	@FXML
 	public void pressMouse(MouseEvent event) {
-		if (eventOnLeftPane == StateOnLeftPane.VERTEX || eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {// draw
+		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {// draw
 																											// vertice
 			if (isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else
 															// create a new vertice
@@ -172,7 +172,6 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-				
 					Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
 					vertices.add(vertex);
 					System.out.println("Size of vertices: " + vertices.size());
@@ -180,10 +179,6 @@ public class MainController extends AbstractController implements Initializable 
 					// Setting the stroke width of the circle
 					rightPane.getChildren().add(vertex);
 					rightPane.getChildren().add(vertex.getLabel());
-				
-
-				
-
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
@@ -217,9 +212,27 @@ public class MainController extends AbstractController implements Initializable 
 				System.out.println("You just clicked inside the Label!");
 			}
 		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
-			System.out.println("Create an intermediate point on the edge");
+			Edge e = null;
+			for (Edge edge : edges) {
+				int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(), edge.getX2(),edge.getY2());
+				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
+					System.out.println("You pressed the edge to make an intermediate point");
+					//hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+					e = edge;
+					break;
+				}
+			}
 
-			// Mr Son will be coding this in 23/07/2019
+			if(e != null) {//find out the intermediate point
+				Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(), e.getX2(),e.getY2());
+				Vertex vertex = new Vertex(point.getX(), point.getY());
+				vertices.add(vertex);
+				System.out.println("more point - > Size of vertices: " + vertices.size());
+
+				rightPane.getChildren().add(vertex);
+
+			}
+			
 
 		}
 

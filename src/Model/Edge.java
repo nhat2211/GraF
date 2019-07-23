@@ -10,6 +10,8 @@ import javafx.scene.text.Text;
 import util.Calculate;
 
 public class Edge extends Line {
+	private Vertex v1;
+	private Vertex v2;
 	private double x1;
 	private double y1;
 	private double x2;
@@ -278,6 +280,22 @@ public class Edge extends Line {
 	public void setColor(Paint color) {
 		this.color = color;
 		super.setStroke(color);
+	}
+
+	public Vertex getV1() {
+		return v1;
+	}
+
+	public void setV1(Vertex v1) {
+		this.v1 = v1;
+	}
+
+	public Vertex getV2() {
+		return v2;
+	}
+
+	public void setV2(Vertex v2) {
+		this.v2 = v2;
 	}
 
 }

@@ -28,7 +28,7 @@
                         <Pane prefHeight="200.0" prefWidth="200.0" />
                         <RadioButton fx:id="rbEdge" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
                         <Pane prefHeight="200.0" prefWidth="200.0" />
-                        <RadioButton fx:id="rbVertexIcon" mnemonicParsing="false" onAction="#handleVertexIconPress" text="Intermediate Vertex" toggleGroup="$group1" />
+                        <RadioButton fx:id="rbVertexIcon" mnemonicParsing="false" onAction="#handleVertexIconPress" text="Intermediate Point" toggleGroup="$group1" />
                         <Pane prefHeight="200.0" prefWidth="200.0" />
                         <RadioButton fx:id="rbRemoveObj" mnemonicParsing="false" onAction="#handleRemoveObjPress" text="Remove Object" toggleGroup="$group1" />
                         <Pane prefHeight="200.0" prefWidth="200.0" />
