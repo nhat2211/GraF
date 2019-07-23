@@ -20,7 +20,7 @@
                   <Button fx:id="btnRemoveAll" layoutX="78.0" layoutY="402.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
                   <VBox layoutX="75.0" layoutY="51.0" prefHeight="319.0" prefWidth="192.0">
                      <children>
-                        <RadioButton fx:id="rbVertex" mnemonicParsing="false" onAction="#handleVertexPress" text="Add Vertex">
+                        <RadioButton fx:id="rbVertex" mnemonicParsing="false" onAction="#handleVertexPress" text="Add / Move Vertex">
                            <toggleGroup>
                               <ToggleGroup fx:id="group1" />
                            </toggleGroup>

@@ -10,8 +10,8 @@ import javafx.scene.text.Text;
 import util.Calculate;
 
 public class Edge extends Line {
-	private Vertex v1;
-	private Vertex v2;
+	private Vertex v1 = new Vertex();
+	private Vertex v2 = new Vertex();
 	private double x1;
 	private double y1;
 	private double x2;
@@ -29,6 +29,7 @@ public class Edge extends Line {
 	// declare the edge by circle.
 	private Circle circle = null;
 	private double r = 20;// radius of the circle
+	private boolean isIntermediateEdge = false;
 
 	public Edge() {
 
@@ -64,9 +65,8 @@ public class Edge extends Line {
 
 	public void updateEdge() {
 		if (circle == null) {// update the edge
-			// intersected by edge and vertex
-			point1 = Calculate.getPoint(x2, y2, x1, y1, 20);
-			point2 = Calculate.getPoint(x1, y1, x2, y2, 20);
+			point1 = Calculate.getPoint(x2, y2, x1, y1, v1.getR());
+			point2 = Calculate.getPoint(x1, y1, x2, y2, v2.getR());
 			// update line
 			super.setStartX(point1.getX());
 			super.setStartY(point1.getY());
@@ -296,6 +296,14 @@ public class Edge extends Line {
 
 	public void setV2(Vertex v2) {
 		this.v2 = v2;
+	}
+
+	public boolean isIntermediateEdge() {
+		return isIntermediateEdge;
+	}
+
+	public void setIntermediateEdge(boolean isIntermediateEdge) {
+		this.isIntermediateEdge = isIntermediateEdge;
 	}
 
 }

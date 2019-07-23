@@ -9,8 +9,8 @@ public class Vertex extends Circle{
 	private int index;
 	private double x;
 	private double y;
-	private double r;
-	private double rPoint = 10;
+	private int r = 20;
+	private int rPoint = 10;
 	private Paint color;
 	private Text label = new Text();
 	private boolean intermediatePoint = false;
@@ -19,7 +19,7 @@ public class Vertex extends Circle{
 		
 	}
 
-	public Vertex(double x, double y, double r, Paint color) {
+	public Vertex(double x, double y, int r, Paint color) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -33,7 +33,7 @@ public class Vertex extends Circle{
 	
 	
 
-	public Vertex(double x, double y, double r) {
+	public Vertex(double x, double y, int r) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -47,7 +47,7 @@ public class Vertex extends Circle{
 		super();
 		this.x = x;
 		this.y = y;
-		this.r = rPoint;
+		this.r = 10;
 		this.color = Color.DARKGOLDENROD;
 		super.setCenterX(x);
 		super.setCenterY(y);
@@ -78,11 +78,11 @@ public class Vertex extends Circle{
 		super.setCenterY(y);
 	}
 
-	public double getR() {
+	public int getR() {
 		return r;
 	}
 
-	public void setR(double r) {
+	public void setR(int r) {
 		this.r = r;
 		super.setRadius(r);
 	}

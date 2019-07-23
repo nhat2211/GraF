@@ -78,7 +78,7 @@ public class MainController extends AbstractController implements Initializable 
 	private double deltaX, deltaY;// use to move the Vertex
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
 	private List<Integer> hasPoints = new ArrayList<>();
-	private double radius = 20;// radius of Vertex
+	private int radius = 20;// radius of Vertex
 	// HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every
 	// vertex has one piercings(also be a vertex for display)
 	String typeEdge = "";
@@ -220,7 +220,6 @@ public class MainController extends AbstractController implements Initializable 
 						edge.getX2(), edge.getY2());
 				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 					System.out.println("You pressed on the edge");
-					// hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 					e = edge;
 					break;
 				}
@@ -233,9 +232,35 @@ public class MainController extends AbstractController implements Initializable 
 						&& !e.getV2().contains(point.getX(), point.getY())) {
 					Vertex vertex = new Vertex(point.getX(), point.getY());
 					vertices.add(vertex);
-					System.out.println("===> one more intermediate point - > Size of vertices: " + vertices.size());
-
 					rightPane.getChildren().add(vertex);
+					System.out.println("One more intermediate point \nSize of vertices: " + vertices.size());
+					
+					//add the first add to intermediate point
+					Edge edge1 = new Edge(e.getX1(), e.getY1(), vertex.getX(), vertex.getY(),Color.BLUEVIOLET);
+					edge1.setDirection(false);//no direction for first edge
+					edge1.setIntermediateEdge(true);
+					edge1.setStrokeWidth(2);
+					edge1.setV1(e.getV1());
+					edge1.setV2(vertex);
+					edges.add(edge1);
+					rightPane.getChildren().add(edge1);
+					edge1.updateEdge();
+					
+					//add the first add to intermediate point
+					Edge edge2 = new Edge(vertex.getX(), vertex.getY(), e.getX2(), e.getY2(), Color.BLUEVIOLET);
+					if(e.getDirection()) {
+						edge2.setDirection(true);
+					}
+					edge2.setIntermediateEdge(true);
+					edge2.setStrokeWidth(2);
+					edge2.setV1(vertex);//set Vertex for starting point
+					edge2.setV2(e.getV2());//set Vertex for ending point
+					edges.add(edge2);
+					rightPane.getChildren().add(edge2);
+					rightPane.getChildren().add(edge2.getArrow1());
+					rightPane.getChildren().add(edge2.getArrow2());
+					edge2.updateEdge();
+					
 				}
 			}
 
