@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import util.ValidateInput;
 
 public class ChangeLabelPopupController extends AbstractController implements Initializable {
 	
@@ -39,6 +40,7 @@ public class ChangeLabelPopupController extends AbstractController implements In
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		ValidateInput.onlyUserInputNumerics(txtValueLabel);
 		
 		btnChangeLabel.setOnAction((event)->{
            // result.clear();

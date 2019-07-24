@@ -4,11 +4,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import util.ValidateInput;
 
 public class PopupEdgeController extends AbstractController implements Initializable {
 	@FXML
@@ -22,6 +25,7 @@ public class PopupEdgeController extends AbstractController implements Initializ
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		ValidateInput.onlyUserInputNumerics(txtEdgeWeight);
 		btnDirected.setOnAction((event)->{
             result.clear();
             result.put("typeEdge", "directed");
