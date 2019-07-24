@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import Enum.StateOnLeftPane;
 import GeneralController.AbstractController;
+import GeneralController.AddLabelToVertexPopupController;
 import GeneralController.ChangeLabelPopupController;
 import GeneralController.PopupEdgeController;
 import Model.*;
@@ -58,6 +59,8 @@ public class MainController extends AbstractController implements Initializable 
 	private AnchorPane rightPane;
 	@FXML
 	private RadioButton rbVertex;
+	@FXML
+	private RadioButton rbVertexCustomText;
 	@FXML
 	private RadioButton rbEdge;
 	@FXML
@@ -177,8 +180,8 @@ public class MainController extends AbstractController implements Initializable 
 
 	@FXML
 	public void pressMouse(MouseEvent event) {
-		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {// draw
-														// vertice
+		if (eventOnLeftPane == StateOnLeftPane.VERTEX || eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT  ) {// draw
+			Vertex vertex=null;											// vertice
 			if (isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else
 															// create a new vertice
 				isClickedInsideVertex = true;
@@ -187,10 +190,24 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-				Vertex vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
-				vertices.add(vertex);
-				System.out.println("Size of vertices: " + vertices.size());
-				vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
+				if(eventOnLeftPane == StateOnLeftPane.VERTEX) {
+					vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
+					vertices.add(vertex);
+					System.out.println("Size of vertices: " + vertices.size());
+					vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: red");
+					
+				}else if(eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT)  {
+					String valueText = showAddLabelPopupVertex();
+					vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
+					vertices.add(vertex);
+					indexVertex++;
+					System.out.println("Size of vertices: " + vertices.size());
+					vertex.setLabel(event.getX(), event.getY(), valueText, "-fx-fill: red");
+				}else  {
+					// do nothing
+				}
+			
+				
 				// Setting the stroke width of the circle
 				rightPane.getChildren().add(vertex);
 				rightPane.getChildren().add(vertex.getLabel());
@@ -490,7 +507,7 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 		} else {// delete Edge
-			//Edge deleteEdge = currentEdge;
+			// Edge deleteEdge = currentEdge;
 			for (Edge edge : edges) {
 				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
 						edge.getY2());
@@ -504,8 +521,8 @@ public class MainController extends AbstractController implements Initializable 
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 				}
 			}
-			
-			if(currentEdge.getV1().isIntermediatePoint()) {
+
+			if (currentEdge.getV1().isIntermediatePoint()) {
 				removeIntermediatePoint(currentEdge.getV1());
 				System.out.println("Delete intermediate point v1");
 				hasPoints.clear();
@@ -518,10 +535,10 @@ public class MainController extends AbstractController implements Initializable 
 				for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest index
 					System.out.println("-> Delete line at index: " + hasPoints.get(i));
 					removeEdge(edges.get(hasPoints.get(i)));
-					
+
 				}
 			}
-			
+
 			hasPoints.clear();// clear hasPoints (*_*)
 		}
 	}
@@ -530,15 +547,15 @@ public class MainController extends AbstractController implements Initializable 
 		List<Vertex> points = new ArrayList<>();
 		Edge fatherEdge = parentEdge.get(point);
 		for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
-			if(map.getValue() == fatherEdge) {
+			if (map.getValue() == fatherEdge) {
 				points.add(map.getKey());
 			}
 		}
 		System.out.println("=> Number of points in this edge: " + points.size());
-		for(Vertex v: points) {
+		for (Vertex v : points) {
 			removeVertex(v);
 		}
-		points.clear();//delete memory of the list of points
+		points.clear();// delete memory of the list of points
 		rightPane.getChildren().add(fatherEdge);
 		rightPane.getChildren().add(fatherEdge.getArrow1());
 		rightPane.getChildren().add(fatherEdge.getArrow2());
@@ -669,64 +686,98 @@ public class MainController extends AbstractController implements Initializable 
 		Platform.exit();
 		System.exit(0);
 	}
-	
+
 	public void onDirectorChooserImage() throws IOException {
 		System.out.println("Open Director Chooser Window Save Image.");
 		FileChooser fileChooser = new FileChooser();
-		 //Set extension filter
-	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
-	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("jpeg files (*.jpeg)", "*.jpeg"));
-	       configuringDirectoryChooser(fileChooser);
-	     //Show save file dialog
-           File file = fileChooser.showSaveDialog(main.getPrimaryStage());
-           String text ="";
+		// Set extension filter
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("jpeg files (*.jpeg)", "*.jpeg"));
+		configuringDirectoryChooser(fileChooser);
+		// Show save file dialog
+		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
+		String text = "";
 
-           if (file != null) {
-        	   System.out.println("Save Image Start");
-        	   saveImageToFile(file);
-        	  
-           }
-       }
-	
-	public void addImageToSnapshotArea(Node root,File file) {
+		if (file != null) {
+			System.out.println("Save Image Start");
+			saveImageToFile(file);
+
+		}
+	}
+
+	public void addImageToSnapshotArea(Node root, File file) {
 		SnapshotParameters params = new SnapshotParameters();
 		/*
 		 * params.setViewport( new Rectangle2D( rightPane.getScene().getX(),
 		 * rightPane.getScene().getY(), rightPane.getScene().getWidth(),
 		 * rightPane.getScene().getHeight()));
 		 */
-	       WritableImage image = rightPane.snapshot(params, null);
-	       try {
-	           ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-	       } catch (IOException ex) {
-	           ex.printStackTrace();
-	       }
+		WritableImage image = rightPane.snapshot(params, null);
+		try {
+			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
-	
-	public void saveImageToFile(File file) {
-		 //Pad the capture area
-       addImageToSnapshotArea(parentPane, file);
-		
-	}
-	     
-	
 
-	
-	 private void configuringDirectoryChooser(FileChooser fileChooser) {
-		 fileChooser.setTitle("Select Some Directories");
-		 fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-	   }
-	 public void onDirectorChooserTikZ() {
-		 System.out.println("Open Dialog File chooser Export TikiZ");
-		 FileChooser fileChooser = new FileChooser();
-		 //Set extension filter
-	   // fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
-	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tikz files (*.tikz)", "*.tikz"));
-	       configuringDirectoryChooser(fileChooser);
-	     //Show save file dialog
-           File file = fileChooser.showSaveDialog(main.getPrimaryStage());
-		 
-		 
-	 }
+	public void saveImageToFile(File file) {
+		// Pad the capture area
+		addImageToSnapshotArea(parentPane, file);
+
+	}
+
+	private void configuringDirectoryChooser(FileChooser fileChooser) {
+		fileChooser.setTitle("Select Some Directories");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+	}
+
+	public void onDirectorChooserTikZ() {
+		System.out.println("Open Dialog File chooser Export TikiZ");
+		FileChooser fileChooser = new FileChooser();
+		// Set extension filter
+		// fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png
+		// files (*.png)", "*.png"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tikz files (*.tikz)", "*.tikz"));
+		configuringDirectoryChooser(fileChooser);
+		// Show save file dialog
+		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
+
+	}
+
+	private String showAddLabelPopupVertex() {
+		// HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/ui/AddLabelToVertexPopup.fxml"));
+		// initializing the controller
+		AddLabelToVertexPopupController addLabelToVertexPopupController = new AddLabelToVertexPopupController();
+		loader.setController(addLabelToVertexPopupController);
+		Parent layout;
+		try {
+			layout = loader.load();
+			Scene scene = new Scene(layout);
+			// this is the popup stage
+			Stage popupStage = new Stage();
+			// Giving the popup controller access to the popup stage (to allow the
+			// controller to close the stage)
+			addLabelToVertexPopupController.setStage(popupStage);
+			if (this.main != null) {
+				popupStage.initOwner(main.getPrimaryStage());
+			}
+			popupStage.initModality(Modality.WINDOW_MODAL);
+			popupStage.setScene(scene);
+			popupStage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return addLabelToVertexPopupController.getResult();
+	}
+
+	public void handleVertexCustomTextPress() {
+		System.out.println("Create vertex custom text");
+		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
+		
+		
+
+	}
 
 }

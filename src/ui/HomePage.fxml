@@ -21,12 +21,15 @@
           <AnchorPane fx:id="leftPane" minHeight="100.0" minWidth="0.0" prefHeight="577.0" prefWidth="100.0" style="-fx-background-color: #dff0d8;">
                <children>
                   <Button fx:id="btnRemoveAll" layoutX="78.0" layoutY="402.0" mnemonicParsing="false" onAction="#removeAll" text="Remove All" />
-                  <VBox layoutX="75.0" layoutY="51.0" prefHeight="319.0" prefWidth="192.0">
+                  <VBox layoutX="9.0" layoutY="51.0" prefHeight="319.0" prefWidth="257.0">
                      <children>
                         <RadioButton fx:id="rbVertex" mnemonicParsing="false" onAction="#handleVertexPress" text="Add / Move Vertex">
                            <toggleGroup>
                               <ToggleGroup fx:id="group1" />
                            </toggleGroup>
+                        </RadioButton>
+                        <Pane prefHeight="200.0" prefWidth="200.0" />
+                        <RadioButton fx:id="rbVertexCustomText" mnemonicParsing="false" onAction="#handleVertexCustomTextPress" text="Add / Move Vertex Custom Text" toggleGroup="$group1">
                         </RadioButton>
                         <Pane prefHeight="200.0" prefWidth="200.0" />
                         <RadioButton fx:id="rbEdge" mnemonicParsing="false" onAction="#handleEdgePress" text="Add Edge" toggleGroup="$group1" />
@@ -55,12 +58,6 @@
                   <MenuItem fx:id="itemExit" mnemonicParsing="false" onAction="#onExit" text="Exit" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Settings">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Vertex" />
-                  <MenuItem mnemonicParsing="false" text="Edge" />
-              </items>
-            </Menu>
             <Menu mnemonicParsing="false" text="View">
               <items>
                 <MenuItem mnemonicParsing="false" text="100%" />
@@ -68,12 +65,6 @@
                   <MenuItem mnemonicParsing="false" text="25%" />
               </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="Algorithms">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Dijktra" />
-                  <MenuItem mnemonicParsing="false" text="Floyd-Warshall" />
-            </items>
-          </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />

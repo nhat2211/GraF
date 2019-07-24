@@ -135,8 +135,9 @@ public class Edge extends Line {
 	}
 
 	public void setTextWeight(String text) {
-		this.textWeight.setStyle("-fx-fill: red");
+		//this.textWeight.setStyle("-fx-fill: red");
 		this.textWeight.setText(text);
+		this.textWeight.setStyle("-fx-fill: red; -fx-font-weight: bold;");
 		setWeight(Integer.valueOf(text));
 	}
 

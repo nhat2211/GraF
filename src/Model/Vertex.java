@@ -104,7 +104,16 @@ public class Vertex extends Circle{
 		this.label.setX(xText);
 		this.label.setY(yText);
 		this.label.setText(Integer.toString(index));
-		this.label.setStyle(color);
+		//this.label.setStyle(color);
+		this.label.setStyle(color+ ";"+" -fx-font-weight: bold;");
+	}
+	
+	public void setLabel (double xText, double yText, String value, String color) {
+		this.label.setX(xText);
+		this.label.setY(yText);
+		this.label.setText(value);
+		//this.label.setStyle(color);
+		this.label.setStyle(color+ ";"+" -fx-font-weight: bold;");
 	}
 	
 	
