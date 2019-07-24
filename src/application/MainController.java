@@ -185,7 +185,7 @@ public class MainController extends AbstractController implements Initializable 
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
-			if (isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else
+			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// if mouse click inside the vertice then move when drag else
 															// create a new vertice
 				Edge edge = new Edge(currentVertex.getX(), currentVertex.getY(), event.getX(), event.getY(),
 						Color.BLUEVIOLET);
@@ -265,9 +265,9 @@ public class MainController extends AbstractController implements Initializable 
 					edge2.updateEdge();
 					
 					//remove edge on the rightPane.
-					rightPane.getChildren().remove(e);
-					rightPane.getChildren().remove(e.getArrow1());
-					rightPane.getChildren().remove(e.getArrow2());
+					//rightPane.getChildren().remove(e);
+					//rightPane.getChildren().remove(e.getArrow1());
+					//rightPane.getChildren().remove(e.getArrow2());
 				}
 			}
 
@@ -350,7 +350,7 @@ public class MainController extends AbstractController implements Initializable 
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
-			if (isOnAVertex(event.getX(), event.getY())) {// && currentVertex != firstVertex ->cancel this
+			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// && currentVertex != firstVertex ->cancel this
 				// is on a vertex -> set the ending point of edge is the central of Vertex
 				resultMap = showPopupEdge();
 				typeEdge = (String) resultMap.get("typeEdge");
