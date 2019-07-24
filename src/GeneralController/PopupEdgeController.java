@@ -26,42 +26,43 @@ public class PopupEdgeController extends AbstractController implements Initializ
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ValidateInput.onlyUserInputNumerics(txtEdgeWeight);
-		btnDirected.setOnAction((event)->{
-            result.clear();
-            result.put("typeEdge", "directed");
-            result.put("weight", txtEdgeWeight.getText());
-            
-            closeStage();
-        });
-		
-		btnUndirected.setOnAction((event)->{
-            result.clear();
-            result.put("typeEdge", "undirected");
-            result.put("weight", txtEdgeWeight.getText());
-            closeStage();
-        });
+		btnDirected.setOnAction((event) -> {
+			result.clear();
+			result.put("typeEdge", "directed");
+			result.put("weight", txtEdgeWeight.getText());
+
+			closeStage();
+		});
+
+		btnUndirected.setOnAction((event) -> {
+			result.clear();
+			result.put("typeEdge", "undirected");
+			result.put("weight", txtEdgeWeight.getText());
+			closeStage();
+		});
 
 	}
-	
-	/**
-     * setting the stage of this view
-     * @param stage
-     */
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
-    /**
-     * Closes the stage of this view
-     */
-    private void closeStage() {
-        if(stage!=null) {
-            stage.close();
-        }
-    }
-    
-    public HashMap<String, Object> getResult() {
-        return this.result;
-    }
+	/**
+	 * setting the stage of this view
+	 * 
+	 * @param stage
+	 */
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
+
+	/**
+	 * Closes the stage of this view
+	 */
+	private void closeStage() {
+		if (stage != null) {
+			stage.close();
+		}
+	}
+
+	public HashMap<String, Object> getResult() {
+		return this.result;
+	}
 
 }
