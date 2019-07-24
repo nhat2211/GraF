@@ -291,9 +291,9 @@ public class MainController extends AbstractController implements Initializable 
 						edge2.updateEdge();
 
 						// remove edge on the rightPane.
-						// rightPane.getChildren().remove(e);
-						// rightPane.getChildren().remove(e.getArrow1());
-						// rightPane.getChildren().remove(e.getArrow2());
+						rightPane.getChildren().remove(e);
+						rightPane.getChildren().remove(e.getArrow1());
+						rightPane.getChildren().remove(e.getArrow2());
 					}
 				}
 
@@ -479,14 +479,14 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 		} else {// delete Edge
-			Edge deleteEdge = currentEdge;
+			//Edge deleteEdge = currentEdge;
 			for (Edge edge : edges) {
 				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
 						edge.getY2());
 				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 					System.out.println("You select the line with the distance to the edge is: " + distance);
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
-					deleteEdge = edge;
+					currentEdge = edge;
 				}
 				if (edge.getCircle() != null && edge.getCircle().contains(cX, cY)) {
 					System.out.println("Delete the circle Edge!");
@@ -494,10 +494,14 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 			
-			if(deleteEdge.getV1().isIntermediatePoint()) {
-				removeIntermediatePoint(deleteEdge.getV1());
-			} else if (deleteEdge.getV2().isIntermediatePoint()) {
-				removeIntermediatePoint(deleteEdge.getV2());
+			if(currentEdge.getV1().isIntermediatePoint()) {
+				removeIntermediatePoint(currentEdge.getV1());
+				System.out.println("Delete intermediate point v1");
+				hasPoints.clear();
+			} else if (currentEdge.getV2().isIntermediatePoint()) {
+				removeIntermediatePoint(currentEdge.getV2());
+				System.out.println("Delete intermediate point v2");
+				hasPoints.clear();
 			} else {
 				// delete the points in the list of lines from highest index to lowest index
 				for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest index
@@ -523,28 +527,32 @@ public class MainController extends AbstractController implements Initializable 
 		for(Vertex v: points) {
 			removeVertex(v);
 		}
-		
-		
 		points.clear();//delete memory of the list of points
+		rightPane.getChildren().add(fatherEdge);
+		rightPane.getChildren().add(fatherEdge.getArrow1());
+		rightPane.getChildren().add(fatherEdge.getArrow2());
 	}
 
 	private void removeVertex(Vertex v) {
 		Point2D point = new Point2D.Double(v.getCenterX(), v.getCenterY());
 		// Line2D deleteLine = new Line2D.Double();
+		hasPoints.clear();
 		for (Edge edge : edges) {
 			if (point.getX() == edge.getX1() && point.getY() == edge.getY1()) {
 				// convert the line that has started point to Point
 				edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
 				hasPoints.add(edges.indexOf(edge));
+				System.out.println("add to hasPoints at index: " + edges.indexOf(edge));
 			} else if (point.getX() == edge.getX2() && point.getY() == edge.getY2()) {
 				// convert the line that has ended point to Point
 				edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
 				hasPoints.add(edges.indexOf(edge));
+				System.out.println("add to hasPoints at index: " + edges.indexOf(edge));
 			}
 		}
 		// delete the points in the list of lines from highest index to lowest index
 		for (int i = hasPoints.size() - 1; i >= 0; i--) {
-			System.out.println("-> Delete edge at index: " + hasPoints.get(i));
+			System.out.println("-> Delete edge at index: " + hasPoints.get(i) + " of size: " + hasPoints.size());
 			removeEdge(edges.get(hasPoints.get(i)));
 		}
 		hasPoints.clear();// clear hasPoints (*_*)

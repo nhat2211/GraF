@@ -55,8 +55,7 @@ public class Edge extends Line {
 		this.circle.setStroke(Color.BLUEVIOLET);
 		this.circle.setFill(Color.TRANSPARENT);
 		this.circle.setStrokeWidth(2);
-		// super.setStroke(Color.TRANSPARENT);//set the color is invisible -> use it
-		// later
+		super.setStroke(Color.TRANSPARENT);//set the color is invisible -> use it later
 	}
 
 	public Circle getCircle() {
