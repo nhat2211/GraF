@@ -1,6 +1,8 @@
 package application;
 
 import java.awt.geom.Point2D;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,27 +11,36 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
+
 import Enum.StateOnLeftPane;
 import GeneralController.AbstractController;
 import GeneralController.ChangeLabelPopupController;
 import GeneralController.PopupEdgeController;
 import Model.*;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import util.Calculate;
@@ -658,5 +669,64 @@ public class MainController extends AbstractController implements Initializable 
 		Platform.exit();
 		System.exit(0);
 	}
+	
+	public void onDirectorChooserImage() throws IOException {
+		System.out.println("Open Director Chooser Window Save Image.");
+		FileChooser fileChooser = new FileChooser();
+		 //Set extension filter
+	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("jpeg files (*.jpeg)", "*.jpeg"));
+	       configuringDirectoryChooser(fileChooser);
+	     //Show save file dialog
+           File file = fileChooser.showSaveDialog(main.getPrimaryStage());
+           String text ="";
+
+           if (file != null) {
+        	   System.out.println("Save Image Start");
+        	   saveImageToFile(file);
+        	  
+           }
+       }
+	
+	public void addImageToSnapshotArea(Node root,File file) {
+		SnapshotParameters params = new SnapshotParameters();
+		/*
+		 * params.setViewport( new Rectangle2D( rightPane.getScene().getX(),
+		 * rightPane.getScene().getY(), rightPane.getScene().getWidth(),
+		 * rightPane.getScene().getHeight()));
+		 */
+	       WritableImage image = rightPane.snapshot(params, null);
+	       try {
+	           ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+	       } catch (IOException ex) {
+	           ex.printStackTrace();
+	       }
+	}
+	
+	public void saveImageToFile(File file) {
+		 //Pad the capture area
+       addImageToSnapshotArea(parentPane, file);
+		
+	}
+	     
+	
+
+	
+	 private void configuringDirectoryChooser(FileChooser fileChooser) {
+		 fileChooser.setTitle("Select Some Directories");
+		 fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+	   }
+	 public void onDirectorChooserTikZ() {
+		 System.out.println("Open Dialog File chooser Export TikiZ");
+		 FileChooser fileChooser = new FileChooser();
+		 //Set extension filter
+	   // fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tikz files (*.tikz)", "*.tikz"));
+	       configuringDirectoryChooser(fileChooser);
+	     //Show save file dialog
+           File file = fileChooser.showSaveDialog(main.getPrimaryStage());
+		 
+		 
+	 }
 
 }
