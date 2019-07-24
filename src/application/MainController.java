@@ -95,8 +95,6 @@ public class MainController extends AbstractController implements Initializable 
 	Image imageEdge;
 	Image imageLabel;
 
-	private List<Vertex> verticesRemove = new ArrayList<Vertex>();
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Class<?> clazz = this.getClass();
@@ -474,40 +472,60 @@ public class MainController extends AbstractController implements Initializable 
 				if (v.contains(cX, cY)) {
 					if (v.isIntermediatePoint()) {
 						removeIntermediatePoint(v);
-						System.out.println("==> Remove intermediate point");
 					} else {
 						removeVertex(v);
-						System.out.println("==> Remove vertex");
 					}
 					break;
 				}
 			}
 		} else {// delete Edge
+			Edge deleteEdge = currentEdge;
 			for (Edge edge : edges) {
 				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
 						edge.getY2());
 				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 					System.out.println("You select the line with the distance to the edge is: " + distance);
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+					deleteEdge = edge;
 				}
 				if (edge.getCircle() != null && edge.getCircle().contains(cX, cY)) {
 					System.out.println("Delete the circle Edge!");
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 				}
 			}
-			// delete the points in the list of lines from highest index to lowest index
-			for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest index
-				System.out.println("-> Delete line at index: " + hasPoints.get(i));
-				removeEdge(edges.get(hasPoints.get(i)));
+			
+			if(deleteEdge.getV1().isIntermediatePoint()) {
+				removeIntermediatePoint(deleteEdge.getV1());
+			} else if (deleteEdge.getV2().isIntermediatePoint()) {
+				removeIntermediatePoint(deleteEdge.getV2());
+			} else {
+				// delete the points in the list of lines from highest index to lowest index
+				for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest index
+					System.out.println("-> Delete line at index: " + hasPoints.get(i));
+					removeEdge(edges.get(hasPoints.get(i)));
+					
+				}
 			}
+			
 			hasPoints.clear();// clear hasPoints (*_*)
 		}
 	}
 
-//for (Entry<Vertex, Edge> map : parentEdge.entrySet())
 	private void removeIntermediatePoint(Vertex point) {// return the father edge.
-
-		System.out.println("===> Number of points in this edge: " + parentEdge.size());
+		List<Vertex> points = new ArrayList<>();
+		Edge fatherEdge = parentEdge.get(point);
+		for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
+			if(map.getValue() == fatherEdge) {
+				points.add(map.getKey());
+			}
+		}
+		System.out.println("=> Number of points in this edge: " + points.size());
+		for(Vertex v: points) {
+			removeVertex(v);
+		}
+		
+		
+		points.clear();//delete memory of the list of points
 	}
 
 	private void removeVertex(Vertex v) {
