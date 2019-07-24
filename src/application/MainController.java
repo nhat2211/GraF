@@ -80,7 +80,7 @@ public class MainController extends AbstractController implements Initializable 
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
-	HashMap<Vertex,Edge> parentEdge = new HashMap<Vertex,Edge>();//save the parent edge of intermediate point.
+	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent edge of intermediate point.
 	// HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every
 	// vertex has one piercings(also be a vertex for display)
 	String typeEdge = "";
@@ -185,8 +185,11 @@ public class MainController extends AbstractController implements Initializable 
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
-			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// if mouse click inside the vertice then move when drag else
-															// create a new vertice
+			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// if mouse click
+																									// inside the
+																									// vertice then move
+																									// when drag else
+				// create a new vertice
 				Edge edge = new Edge(currentVertex.getX(), currentVertex.getY(), event.getX(), event.getY(),
 						Color.BLUEVIOLET);
 				edge.setStrokeWidth(2);
@@ -216,61 +219,69 @@ public class MainController extends AbstractController implements Initializable 
 				System.out.println("You just clicked inside the Label!");
 			}
 		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
-			Edge e = null;
-			for (Edge edge : edges) {
-				int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(),
-						edge.getX2(), edge.getY2());
-				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
-					System.out.println("You pressed on the edge");
-					e = edge;
-					break;
-				}
-			}
-
-			if (e != null) {// find out the intermediate point
-				Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
-						e.getX2(), e.getY2());
-				if (!e.getV1().contains(point.getX(), point.getY())
-						&& !e.getV2().contains(point.getX(), point.getY())) {
-					Vertex vertex = new Vertex(point.getX(), point.getY());
-					vertices.add(vertex);
-					rightPane.getChildren().add(vertex);
-					parentEdge.put(vertex, e);//save parent edge of vertex in hashmap
-					System.out.println("One more intermediate point \nSize of vertices: " + vertices.size());
-					
-					//add the first add to intermediate point
-					Edge edge1 = new Edge(e.getX1(), e.getY1(), vertex.getX(), vertex.getY(),Color.BLUEVIOLET);
-					edge1.setDirection(false);//no direction for first edge
-					edge1.setIntermediateEdge(true);
-					edge1.setStrokeWidth(2);
-					edge1.setV1(e.getV1());
-					edge1.setV2(vertex);
-					edges.add(edge1);
-					rightPane.getChildren().add(edge1);
-					edge1.updateEdge();
-					
-					//add the first add to intermediate point
-					Edge edge2 = new Edge(vertex.getX(), vertex.getY(), e.getX2(), e.getY2(), Color.BLUEVIOLET);
-					if(e.getDirection()) {
-						edge2.setDirection(true);
+			if (isOnAVertex(event.getX(), event.getY())) {// move vertices (include intermediate point)
+				isClickedInsideVertex = true;
+				deltaX = event.getX() - currentVertex.getX();
+				deltaY = event.getY() - currentVertex.getY();
+				firstX = currentVertex.getX();// save the first position of Vertex before moving
+				firstY = currentVertex.getY();
+			} else { //create the intermediate point.
+				Edge e = null;
+				for (Edge edge : edges) {
+					int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(),
+							edge.getX2(), edge.getY2());
+					if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
+						System.out.println("You pressed on the edge");
+						e = edge;
+						break;
 					}
-					edge2.setIntermediateEdge(true);
-					edge2.setStrokeWidth(2);
-					edge2.setV1(vertex);//set Vertex for starting point
-					edge2.setV2(e.getV2());//set Vertex for ending point
-					edges.add(edge2);
-					rightPane.getChildren().add(edge2);
-					rightPane.getChildren().add(edge2.getArrow1());
-					rightPane.getChildren().add(edge2.getArrow2());
-					edge2.updateEdge();
-					
-					//remove edge on the rightPane.
-					//rightPane.getChildren().remove(e);
-					//rightPane.getChildren().remove(e.getArrow1());
-					//rightPane.getChildren().remove(e.getArrow2());
 				}
-			}
 
+				if (e != null) {// find out the intermediate point
+					Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
+							e.getX2(), e.getY2());
+					if (!e.getV1().contains(point.getX(), point.getY())
+							&& !e.getV2().contains(point.getX(), point.getY())) {
+						Vertex vertex = new Vertex(point.getX(), point.getY());
+						vertices.add(vertex);
+						rightPane.getChildren().add(vertex);
+						parentEdge.put(vertex, e);// save parent edge of vertex in hashmap
+						System.out.println("One more intermediate point \nSize of vertices: " + vertices.size());
+
+						// add the first add to intermediate point
+						Edge edge1 = new Edge(e.getX1(), e.getY1(), vertex.getX(), vertex.getY(), Color.BLUEVIOLET);
+						edge1.setDirection(false);// no direction for first edge
+						edge1.setIntermediateEdge(true);
+						edge1.setStrokeWidth(2);
+						edge1.setV1(e.getV1());
+						edge1.setV2(vertex);
+						edges.add(edge1);
+						rightPane.getChildren().add(edge1);
+						edge1.updateEdge();
+
+						// add the first add to intermediate point
+						Edge edge2 = new Edge(vertex.getX(), vertex.getY(), e.getX2(), e.getY2(), Color.BLUEVIOLET);
+						if (e.getDirection()) {
+							edge2.setDirection(true);
+						}
+						edge2.setIntermediateEdge(true);
+						edge2.setStrokeWidth(2);
+						edge2.setV1(vertex);// set Vertex for starting point
+						edge2.setV2(e.getV2());// set Vertex for ending point
+						edges.add(edge2);
+						rightPane.getChildren().add(edge2);
+						rightPane.getChildren().add(edge2.getArrow1());
+						rightPane.getChildren().add(edge2.getArrow2());
+						edge2.updateEdge();
+
+						// remove edge on the rightPane.
+						// rightPane.getChildren().remove(e);
+						// rightPane.getChildren().remove(e.getArrow1());
+						// rightPane.getChildren().remove(e.getArrow2());
+					}
+				}
+
+			}////end creating the intermediate point.
 		}
 
 		else {
@@ -350,7 +361,9 @@ public class MainController extends AbstractController implements Initializable 
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
-			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// && currentVertex != firstVertex ->cancel this
+			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// && currentVertex !=
+																									// firstVertex
+																									// ->cancel this
 				// is on a vertex -> set the ending point of edge is the central of Vertex
 				resultMap = showPopupEdge();
 				typeEdge = (String) resultMap.get("typeEdge");
@@ -461,26 +474,26 @@ public class MainController extends AbstractController implements Initializable 
 					}
 					hasPoints.clear();// clear hasPoints (*_*)
 
-					//set visible for parent edge
+					/*
+					// set visible for parent edge
 					boolean isIntermedatePoint = false;
-					for(Entry<Vertex, Edge> map : parentEdge.entrySet()){    
-					       //System.out.println(m.getKey()+" "+m.getValue());
-						if(map.getKey() == v) {
+					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
+						// System.out.println(m.getKey()+" "+m.getValue());
+						if (map.getKey() == v) {
 							System.out.println("Set visible for parent edge!");
 							rightPane.getChildren().add(map.getValue());
 							rightPane.getChildren().add(map.getValue().getArrow1());
 							rightPane.getChildren().add(map.getValue().getArrow2());
 							map.getValue().updateEdge();
 							isIntermedatePoint = true;
-							//DO MORE CODE HERE TOMORROW ON 24-07-2019
-							
-							
+							// DO MORE CODE HERE TOMORROW ON 24-07-2019
+
 						}
-					}  
-					if(isIntermedatePoint) {
-						parentEdge.remove(v);
 					}
-					
+					if (isIntermedatePoint) {
+						parentEdge.remove(v);
+					}*/
+
 					// delete Vertex on the list and rightPane
 					vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
 					rightPane.getChildren().remove(v);// remove Vertex on the rightPane
