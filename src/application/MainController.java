@@ -80,7 +80,10 @@ public class MainController extends AbstractController implements Initializable 
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
-	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent edge of intermediate point.
+	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
+	// parent edge of intermediate point.
+	// HashMap<Edge, Vertex> mapPoints = new HashMap<Edge, Vertex>();// list of
+	// intermediate points of the edge
 	// HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every
 	// vertex has one piercings(also be a vertex for display)
 	String typeEdge = "";
@@ -225,7 +228,7 @@ public class MainController extends AbstractController implements Initializable 
 				deltaY = event.getY() - currentVertex.getY();
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
-			} else { //create the intermediate point.
+			} else { // create the intermediate point.
 				Edge e = null;
 				for (Edge edge : edges) {
 					int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(),
@@ -245,10 +248,25 @@ public class MainController extends AbstractController implements Initializable 
 						Vertex vertex = new Vertex(point.getX(), point.getY());
 						vertices.add(vertex);
 						rightPane.getChildren().add(vertex);
-						parentEdge.put(vertex, e);// save parent edge of vertex in hashmap
+						// map points: list intermediate points of the edge
+						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
+							parentEdge.put(vertex, e);
+						} else {
+							Edge fatherEdge = new Edge();
+							for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
+								if (e.getV1().isIntermediatePoint() && map.getKey() == e.getV1()) {
+									fatherEdge = map.getValue();
+									break;
+								} else if (e.getV2().isIntermediatePoint() && map.getKey() == e.getV2()) {
+									fatherEdge = map.getValue();
+									break;
+								}
+							}
+							parentEdge.put(vertex, fatherEdge);
+						}
 						System.out.println("One more intermediate point \nSize of vertices: " + vertices.size());
 
-						// add the first add to intermediate point
+						// add the first edge to intermediate point
 						Edge edge1 = new Edge(e.getX1(), e.getY1(), vertex.getX(), vertex.getY(), Color.BLUEVIOLET);
 						edge1.setDirection(false);// no direction for first edge
 						edge1.setIntermediateEdge(true);
@@ -259,7 +277,7 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().add(edge1);
 						edge1.updateEdge();
 
-						// add the first add to intermediate point
+						// add the first edge to intermediate point
 						Edge edge2 = new Edge(vertex.getX(), vertex.getY(), e.getX2(), e.getY2(), Color.BLUEVIOLET);
 						if (e.getDirection()) {
 							edge2.setDirection(true);
@@ -281,7 +299,7 @@ public class MainController extends AbstractController implements Initializable 
 					}
 				}
 
-			}////end creating the intermediate point.
+			} //// end creating the intermediate point.
 		}
 
 		else {
@@ -454,50 +472,13 @@ public class MainController extends AbstractController implements Initializable 
 
 			for (Vertex v : vertices) {
 				if (v.contains(cX, cY)) {
-					Point2D point = new Point2D.Double(v.getCenterX(), v.getCenterY());
-					// Line2D deleteLine = new Line2D.Double();
-					for (Edge edge : edges) {
-						if (point.getX() == edge.getX1() && point.getY() == edge.getY1()) {
-							// convert the line that has started point to Point
-							edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
-							hasPoints.add(edges.indexOf(edge));
-						} else if (point.getX() == edge.getX2() && point.getY() == edge.getY2()) {
-							// convert the line that has ended point to Point
-							edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
-							hasPoints.add(edges.indexOf(edge));
-						}
+					if (v.isIntermediatePoint()) {
+						removeIntermediatePoint(v);
+						System.out.println("==> Remove intermediate point");
+					} else {
+						removeVertex(v);
+						System.out.println("==> Remove vertex");
 					}
-					// delete the points in the list of lines from highest index to lowest index
-					for (int i = hasPoints.size() - 1; i >= 0; i--) {
-						System.out.println("-> Delete edge at index: " + hasPoints.get(i));
-						removeEdge(edges.get(hasPoints.get(i)));
-					}
-					hasPoints.clear();// clear hasPoints (*_*)
-
-					/*
-					// set visible for parent edge
-					boolean isIntermedatePoint = false;
-					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
-						// System.out.println(m.getKey()+" "+m.getValue());
-						if (map.getKey() == v) {
-							System.out.println("Set visible for parent edge!");
-							rightPane.getChildren().add(map.getValue());
-							rightPane.getChildren().add(map.getValue().getArrow1());
-							rightPane.getChildren().add(map.getValue().getArrow2());
-							map.getValue().updateEdge();
-							isIntermedatePoint = true;
-							// DO MORE CODE HERE TOMORROW ON 24-07-2019
-
-						}
-					}
-					if (isIntermedatePoint) {
-						parentEdge.remove(v);
-					}*/
-
-					// delete Vertex on the list and rightPane
-					vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
-					rightPane.getChildren().remove(v);// remove Vertex on the rightPane
-					rightPane.getChildren().remove(v.getLabel());// remove Label of Vertex on rightPane
 					break;
 				}
 			}
@@ -521,6 +502,39 @@ public class MainController extends AbstractController implements Initializable 
 			}
 			hasPoints.clear();// clear hasPoints (*_*)
 		}
+	}
+
+//for (Entry<Vertex, Edge> map : parentEdge.entrySet())
+	private void removeIntermediatePoint(Vertex point) {// return the father edge.
+
+		System.out.println("===> Number of points in this edge: " + parentEdge.size());
+	}
+
+	private void removeVertex(Vertex v) {
+		Point2D point = new Point2D.Double(v.getCenterX(), v.getCenterY());
+		// Line2D deleteLine = new Line2D.Double();
+		for (Edge edge : edges) {
+			if (point.getX() == edge.getX1() && point.getY() == edge.getY1()) {
+				// convert the line that has started point to Point
+				edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
+				hasPoints.add(edges.indexOf(edge));
+			} else if (point.getX() == edge.getX2() && point.getY() == edge.getY2()) {
+				// convert the line that has ended point to Point
+				edge.setEdge(point.getX(), point.getY(), point.getX(), point.getY());
+				hasPoints.add(edges.indexOf(edge));
+			}
+		}
+		// delete the points in the list of lines from highest index to lowest index
+		for (int i = hasPoints.size() - 1; i >= 0; i--) {
+			System.out.println("-> Delete edge at index: " + hasPoints.get(i));
+			removeEdge(edges.get(hasPoints.get(i)));
+		}
+		hasPoints.clear();// clear hasPoints (*_*)
+
+		// delete Vertex on the list and rightPane
+		vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
+		rightPane.getChildren().remove(v);// remove Vertex on the rightPane
+		rightPane.getChildren().remove(v.getLabel());// remove Label of Vertex on rightPane
 	}
 
 	private void removeEdge(Edge edge) {
