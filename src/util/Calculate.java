@@ -2,6 +2,10 @@ package util;
 
 import java.awt.geom.Point2D;
 
+import com.sun.javafx.geom.Line2D;
+
+import javafx.scene.paint.Color;
+
 public class Calculate {
 
 	/*
@@ -78,4 +82,44 @@ public class Calculate {
 		return thePoint;
 	}
 
+	public static Line2D getNewArc(double x1, double y1, double x2, double y2, double length) {
+		Line2D newArc = new Line2D();
+		Point2D p1 = getNewPoint(x1, y1, x2, y2, true, length);
+		Point2D p2 = getNewPoint(x2, y2, x1, y1, false, length);
+		newArc.setLine((float)p2.getX(), (float)p2.getY(), (float)p1.getX(), (float)p1.getY());
+		return newArc;
+	}
+	
+	private static Point2D getNewPoint(double x1, double y1, double x2, double y2, boolean whichPoint, double length) {
+		Point2D newPoint1 = new Point2D.Double();
+		Point2D newPoint2 = new Point2D.Double();
+		double arrowLength = length;
+		double arrowWidth = length/3;
+		double sx = x1; // x1
+		double sy = y1; // y1
+		double ex = x2; // x2
+		double ey = y2; // y2
+
+
+			if (ex == sx && ey == sy) {// arrow parts of length 0
+				newPoint1.setLocation(ex, ey);
+				newPoint2.setLocation(ex, ey);
+			} else {
+				double factor = arrowLength / Math.hypot(sx - ex, sy - ey);
+				double factorO = arrowWidth / Math.hypot(sx - ex, sy - ey);
+
+				// part in direction of main line
+				double dx = (sx - ex) * factor;
+				double dy = (sy - ey) * factor;
+
+				// part ortogonal to main line
+				double ox = (sx - ex) * factorO;
+				double oy = (sy - ey) * factorO;
+
+				newPoint1.setLocation(ex + dx - oy, ey + dy + ox);
+				newPoint2.setLocation(ex + dx + oy, ey + dy - ox);
+			}
+
+		return whichPoint ? newPoint1 : newPoint2;
+	}
 }

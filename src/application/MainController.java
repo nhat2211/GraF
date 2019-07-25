@@ -1,7 +1,6 @@
 package application;
 
 import java.awt.geom.Point2D;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
+
+import com.sun.javafx.geom.Line2D;
 
 import Enum.StateOnLeftPane;
 import GeneralController.AbstractController;
@@ -40,6 +41,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.CubicCurve;
+import javafx.scene.shape.QuadCurve;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -96,11 +101,6 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
-	// parent edge of intermediate point.
-	// HashMap<Edge, Vertex> mapPoints = new HashMap<Edge, Vertex>();// list of
-	// intermediate points of the edge
-	// HashMap<Vertex, Vertex> mapVP = new HashMap<Vertex, Vertex>(); // save every
-	// vertex has one piercings(also be a vertex for display)
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -460,6 +460,25 @@ public class MainController extends AbstractController implements Initializable 
 					if (edge == null && existEdge != null) {
 						if (existEdge.getDirection() && currentEdge.getDirection()) {
 							System.out.println("=> two edges between two vertices");
+							
+							//do more code here,test the code here
+							double x1 = existEdge.getX1();
+							double y1 = existEdge.getY1();
+							double x2 = existEdge.getX2();
+							double y2 = existEdge.getY2();
+							Line2D arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
+							Line2D arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 30);
+							System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
+							System.out.println(arc1.x1 + " " + arc1.y1 + " " + arc1.x2 + " " + arc1.y2);
+							System.out.println(arc2.x1 + " " + arc2.y1 + " " + arc2.x2 + " " + arc2.y2);
+							CubicCurve curve1 = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
+					        curve1.setStroke(Color.BLACK);
+					        curve1.setStrokeWidth(2);
+					        curve1.setFill( null);
+					        rightPane.getChildren().add(curve1);
+					        curve1.setStroke(Color.BLUE);
+					        ///CONTINUE TO CODE HERE TOMORROW
+
 
 						} else {
 							System.out.println("Can't exist directed edge and undirected edge between two edges!\n Update the new edge!");
