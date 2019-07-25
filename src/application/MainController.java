@@ -180,8 +180,8 @@ public class MainController extends AbstractController implements Initializable 
 
 	@FXML
 	public void pressMouse(MouseEvent event) {
-		if (eventOnLeftPane == StateOnLeftPane.VERTEX || eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT  ) {// draw
-			Vertex vertex=null;											// vertice
+		if (eventOnLeftPane == StateOnLeftPane.VERTEX || eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT) {// draw
+			Vertex vertex = null; // vertice
 			if (isOnAVertex(event.getX(), event.getY())) {// if mouse click inside the vertice then move when drag else
 															// create a new vertice
 				isClickedInsideVertex = true;
@@ -190,24 +190,23 @@ public class MainController extends AbstractController implements Initializable 
 				firstX = currentVertex.getX();// save the first position of Vertex before moving
 				firstY = currentVertex.getY();
 			} else {
-				if(eventOnLeftPane == StateOnLeftPane.VERTEX) {
+				if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 					vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
 					vertices.add(vertex);
 					System.out.println("Size of vertices: " + vertices.size());
-					vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: red");
-					
-				}else if(eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT)  {
+					vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
+
+				} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT) {
 					String valueText = showAddLabelPopupVertex();
 					vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
 					vertices.add(vertex);
 					indexVertex++;
 					System.out.println("Size of vertices: " + vertices.size());
-					vertex.setLabel(event.getX(), event.getY(), valueText, "-fx-fill: red");
-				}else  {
+					vertex.setLabel(event.getX(), event.getY(), valueText, "-fx-fill: yellow");
+				} else {
 					// do nothing
 				}
-			
-				
+
 				// Setting the stroke width of the circle
 				rightPane.getChildren().add(vertex);
 				rightPane.getChildren().add(vertex.getLabel());
@@ -392,7 +391,12 @@ public class MainController extends AbstractController implements Initializable 
 				break;
 			} else if (e.getX1() == E.getX2() && e.getY1() == E.getY2() && e.getX2() == E.getX1()
 					&& e.getY2() == E.getY1()) {
-				edge = e;
+				if (!e.getDirection()) {
+					edge = e;
+				} else {
+					// do more later
+
+				}
 				break;
 			}
 		}
@@ -775,8 +779,6 @@ public class MainController extends AbstractController implements Initializable 
 	public void handleVertexCustomTextPress() {
 		System.out.println("Create vertex custom text");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
-		
-		
 
 	}
 
