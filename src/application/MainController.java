@@ -87,6 +87,7 @@ public class MainController extends AbstractController implements Initializable 
 	private Vertex firstVertex = null;
 	private Vertex currentVertex = null;
 	private Edge currentEdge = null;
+	private Edge existEdge = null;
 	private int indexVertex = -1;
 	private int distanceToDeleteEdge = 15;// the limit of distance when click to delete the edge
 	private boolean isDrawingEdge = false;
@@ -385,18 +386,14 @@ public class MainController extends AbstractController implements Initializable 
 
 	public Edge getExistEdge(Edge E) {
 		Edge edge = null;
+		existEdge = null;// we use this one to save opposite edge.
 		for (Edge e : edges) {
 			if (e.getX1() == E.getX1() && e.getY1() == E.getY1() && e.getX2() == E.getX2() && e.getY2() == E.getY2()) {
 				edge = e;
 				break;
 			} else if (e.getX1() == E.getX2() && e.getY1() == E.getY2() && e.getX2() == E.getX1()
 					&& e.getY2() == E.getY1()) {
-				if (!e.getDirection()) {
-					edge = e;
-				} else {
-					// do more later
-
-				}
+				existEdge = e;// save opposite edge
 				break;
 			}
 		}
@@ -458,6 +455,16 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().remove(edge.getCircle());// remove the last circle
 						System.out.println("This edge is existed! Update the new edge!");
 						removeEdge(edge);
+					}
+
+					if (edge == null && existEdge != null) {
+						if (existEdge.getDirection() && currentEdge.getDirection()) {
+							System.out.println("=> two edges between two vertices");
+
+						} else {
+							System.out.println("Can't exist directed edge and undirected edge between two edges!\n Update the new edge!");
+							removeEdge(existEdge);
+						}
 					}
 					edges.add(currentEdge);
 					currentEdge = null;// remove it after we don't use it anymore.
