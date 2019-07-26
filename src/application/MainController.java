@@ -101,6 +101,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
+	HashMap<Edge, Edge> fatherCurveEdge = new HashMap<Edge, Edge>();// save the
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -214,10 +215,8 @@ public class MainController extends AbstractController implements Initializable 
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
-			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// if mouse click
-																									// inside the
-																									// vertice then move
-																									// when drag else
+			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {
+				// if mouse click inside the vertice then move when drag else
 				// create a new vertice
 				Edge edge = new Edge(currentVertex.getX(), currentVertex.getY(), event.getX(), event.getY(),
 						Color.BLUEVIOLET);
@@ -468,11 +467,17 @@ public class MainController extends AbstractController implements Initializable 
 					if (edge == null && existEdge != null) {
 						if (existEdge.getDirection() && currentEdge.getDirection()) {
 							System.out.println("=> two edges between two vertices");
+							System.out.println("=> Change the form of edges to curve edges!");
+							//Change the form of exist edge
 							existEdge.setCurve();
 							rightPane.getChildren().add(existEdge.getCurve());
-							// rightPane.getChildren().remove(existEdge.)
 							existEdge.updateEdge();
-
+							existEdge.setVisibleMainEdge(false);//set invisible
+							//Change the form of current edge
+							currentEdge.setCurve();
+							rightPane.getChildren().add(currentEdge.getCurve());
+							currentEdge.updateEdge();
+							currentEdge.setVisibleMainEdge(false);//set invisible
 						} else {
 							System.out.println(
 									"Can't exist directed edge and undirected edge between two edges!\n Update the new edge!");
@@ -532,8 +537,13 @@ public class MainController extends AbstractController implements Initializable 
 			}
 		} else {// delete Edge
 			for (Edge edge : edges) {
-				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
-						edge.getY2());
+				int distance;
+				if(edge.getCurve() == null) {//Calculate distance of Main Edge
+					distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(), edge.getY2());
+				} else {//Calculate distance of curve edge
+					distance = Calculate.heightOfTriangle(cX, cY, edge.getCurve().getControlX1(), edge.getCurve().getControlY1(), edge.getCurve().getControlX2(), edge.getCurve().getControlY2());
+				}
+				
 				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 					System.out.println("You select the line with the distance to the edge is: " + distance);
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
@@ -621,6 +631,9 @@ public class MainController extends AbstractController implements Initializable 
 		System.out.println("Deleted the edge!");
 		if (edge.getCircle() != null) {
 			rightPane.getChildren().remove(edge.getCircle());
+		}
+		if(edge.getCurve() != null) {
+			rightPane.getChildren().remove(edge.getCurve());
 		}
 		edges.remove(edge);//
 		rightPane.getChildren().remove(edge.getTextWeight());

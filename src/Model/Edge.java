@@ -95,7 +95,7 @@ public class Edge extends Line {
 			}
 			updatePositionOfTextWeight();
 			calculateArrow();
-		} else {
+		} else {//update the curve edge
 			arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
 			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 60);
 			//this.curve = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
@@ -350,6 +350,11 @@ public class Edge extends Line {
 	public CubicCurve getCurve() {
 		return curve;
 	}
+	
+	public void setNullCurveEdge() {//we use it for change the form of the edge, use later
+		this.isCurveEdge = false;
+		this.curve = null;
+	}
 
 	public void setCurve() {
 		arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
@@ -359,7 +364,14 @@ public class Edge extends Line {
         this.curve.setStrokeWidth(2);
         this.curve.setFill( null);
         setCurveEdge(true);
-        //super.setStroke(Color.TRANSPARENT);//set the color is invisible -> use it later
+        
 	}
 
+	public void setVisibleMainEdge (boolean visible) {
+		if(visible) {
+			super.setStroke(Color.BLUEVIOLET);
+		}else {//invisible
+			super.setStroke(Color.TRANSPARENT);//set the color is invisible
+		}
+	}
 }
