@@ -3,6 +3,7 @@ package GeneralController;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
-	//HashMap<Edge, Edge> fatherCurveEdge = new HashMap<Edge, Edge>();// save the
+	// HashMap<Edge, Edge> fatherCurveEdge = new HashMap<Edge, Edge>();// save the
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -261,13 +262,14 @@ public class MainController extends AbstractController implements Initializable 
 						break;
 					}
 				}
-				
-				for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //sure only one intermediate point on father edge
-					if (map.getValue() == e) {//this is father edge
+
+				for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { // sure only one intermediate point on father
+																		// edge
+					if (map.getValue() == e) {// this is father edge
 						System.out.println("You should move current intermediate point and then can make a new one!");
 						e = null;
 						break;
-					} 
+					}
 				}
 
 				if (e != null) {// find out the intermediate point
@@ -459,33 +461,31 @@ public class MainController extends AbstractController implements Initializable 
 					if (edge != null) {
 						rightPane.getChildren().remove(edge.getCircle());// remove the last circle
 						System.out.println("This edge is existed! Update the new edge!");
-						//set the form of currentEdge similar to existEdge
-						if(edge.isCurveEdge()) {
+						// set the form of currentEdge similar to existEdge
+						if (edge.isCurveEdge()) {
 							System.out.println("Set this edge is curve edge");
 							currentEdge.setCurve();
 							rightPane.getChildren().add(currentEdge.getCurve());
 							currentEdge.updateEdge();
-							currentEdge.setVisibleMainEdge(false);//set invisible
+							currentEdge.setVisibleMainEdge(false);// set invisible
 						}
 						removeEdge(edge);
 					}
 
-					
-					
 					if (edge == null && existEdge != null) {
 						if (existEdge.getDirection() && currentEdge.getDirection()) {
 							System.out.println("=> two edges between two vertices");
 							System.out.println("=> Change the form of edges to curve edges!");
-							//Change the form of exist edge
+							// Change the form of exist edge
 							existEdge.setCurve();
 							rightPane.getChildren().add(existEdge.getCurve());
 							existEdge.updateEdge();
-							existEdge.setVisibleMainEdge(false);//set invisible
-							//Change the form of current edge
+							existEdge.setVisibleMainEdge(false);// set invisible
+							// Change the form of current edge
 							currentEdge.setCurve();
 							rightPane.getChildren().add(currentEdge.getCurve());
 							currentEdge.updateEdge();
-							currentEdge.setVisibleMainEdge(false);//set invisible
+							currentEdge.setVisibleMainEdge(false);// set invisible
 						} else {
 							System.out.println(
 									"Can't exist directed edge and undirected edge between two edges!\n Update the new edge!");
@@ -546,12 +546,15 @@ public class MainController extends AbstractController implements Initializable 
 		} else {// delete Edge
 			for (Edge edge : edges) {
 				int distance;
-				if(edge.getCurve() == null) {//Calculate distance of Main Edge
-					distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(), edge.getY2());
-				} else {//Calculate distance of curve edge
-					distance = Calculate.heightOfTriangle(cX, cY, edge.getCurve().getControlX1(), edge.getCurve().getControlY1(), edge.getCurve().getControlX2(), edge.getCurve().getControlY2());
+				if (edge.getCurve() == null) {// Calculate distance of Main Edge
+					distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
+							edge.getY2());
+				} else {// Calculate distance of curve edge
+					distance = Calculate.heightOfTriangle(cX, cY, edge.getCurve().getControlX1(),
+							edge.getCurve().getControlY1(), edge.getCurve().getControlX2(),
+							edge.getCurve().getControlY2());
 				}
-				
+
 				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 					System.out.println("You select the line with the distance to the edge is: " + distance);
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
@@ -562,7 +565,7 @@ public class MainController extends AbstractController implements Initializable 
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 				}
 			}
-			
+
 			if (currentEdge != null) {
 				if (currentEdge.getV1().isIntermediatePoint()) {
 					removeIntermediatePoint(currentEdge.getV1());
@@ -640,7 +643,7 @@ public class MainController extends AbstractController implements Initializable 
 		if (edge.getCircle() != null) {
 			rightPane.getChildren().remove(edge.getCircle());
 		}
-		if(edge.getCurve() != null) {
+		if (edge.getCurve() != null) {
 			rightPane.getChildren().remove(edge.getCurve());
 		}
 		edges.remove(edge);//
@@ -778,6 +781,8 @@ public class MainController extends AbstractController implements Initializable 
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 	}
 
+	String inputTestTikZ = "tikiZ command line";
+
 	public void onDirectorChooserTikZ() {
 		System.out.println("Open Dialog File chooser Export TikiZ");
 		FileChooser fileChooser = new FileChooser();
@@ -788,6 +793,11 @@ public class MainController extends AbstractController implements Initializable 
 		configuringDirectoryChooser(fileChooser);
 		// Show save file dialog
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
+		if(file != null) {
+			System.out.println("Start Save text to file tiKZ");
+			this.saveTextToFile(inputTestTikZ, file);
+			System.out.println("End Save text to file tiKZ");
+		}
 
 	}
 
@@ -823,6 +833,18 @@ public class MainController extends AbstractController implements Initializable 
 		System.out.println("Create vertex custom text");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
 
+	}
+
+	private void saveTextToFile(String content, File file) {
+		try {
+			PrintWriter writer;
+			writer = new PrintWriter(file);
+			writer.println(content);
+			writer.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+
+		}
 	}
 
 }
