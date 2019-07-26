@@ -265,6 +265,14 @@ public class MainController extends AbstractController implements Initializable 
 						break;
 					}
 				}
+				
+				for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //sure only one intermediate point on father edge
+					if (map.getValue() == e) {//this is father edge
+						System.out.println("You should move current intermediate point and then can make a new one!");
+						e = null;
+						break;
+					} 
+				}
 
 				if (e != null) {// find out the intermediate point
 					Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
