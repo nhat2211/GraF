@@ -460,28 +460,14 @@ public class MainController extends AbstractController implements Initializable 
 					if (edge == null && existEdge != null) {
 						if (existEdge.getDirection() && currentEdge.getDirection()) {
 							System.out.println("=> two edges between two vertices");
-							
-							//do more code here,test the code here
-							double x1 = existEdge.getX1();
-							double y1 = existEdge.getY1();
-							double x2 = existEdge.getX2();
-							double y2 = existEdge.getY2();
-							Line2D arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
-							Line2D arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 30);
-							System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
-							System.out.println(arc1.x1 + " " + arc1.y1 + " " + arc1.x2 + " " + arc1.y2);
-							System.out.println(arc2.x1 + " " + arc2.y1 + " " + arc2.x2 + " " + arc2.y2);
-							CubicCurve curve1 = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
-					        curve1.setStroke(Color.BLACK);
-					        curve1.setStrokeWidth(2);
-					        curve1.setFill( null);
-					        rightPane.getChildren().add(curve1);
-					        curve1.setStroke(Color.BLUE);
-					        ///CONTINUE TO CODE HERE TOMORROW
-
+							existEdge.setCurve();
+							rightPane.getChildren().add(existEdge.getCurve());
+							// rightPane.getChildren().remove(existEdge.)
+							existEdge.updateEdge();
 
 						} else {
-							System.out.println("Can't exist directed edge and undirected edge between two edges!\n Update the new edge!");
+							System.out.println(
+									"Can't exist directed edge and undirected edge between two edges!\n Update the new edge!");
 							removeEdge(existEdge);
 						}
 					}
@@ -537,7 +523,6 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 		} else {// delete Edge
-			// Edge deleteEdge = currentEdge;
 			for (Edge edge : edges) {
 				int distance = Calculate.heightOfTriangle(cX, cY, edge.getX1(), edge.getY1(), edge.getX2(),
 						edge.getY2());
@@ -551,21 +536,24 @@ public class MainController extends AbstractController implements Initializable 
 					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
 				}
 			}
+			
+			if (currentEdge != null) {
+				if (currentEdge.getV1().isIntermediatePoint()) {
+					removeIntermediatePoint(currentEdge.getV1());
+					System.out.println("Delete intermediate point v1");
+					hasPoints.clear();
+				} else if (currentEdge.getV2().isIntermediatePoint()) {
+					removeIntermediatePoint(currentEdge.getV2());
+					System.out.println("Delete intermediate point v2");
+					hasPoints.clear();
+				} else {
+					// delete the points in the list of lines from highest index to lowest index
+					for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest
+																		// index
+						System.out.println("-> Delete line at index: " + hasPoints.get(i));
+						removeEdge(edges.get(hasPoints.get(i)));
 
-			if (currentEdge.getV1().isIntermediatePoint()) {
-				removeIntermediatePoint(currentEdge.getV1());
-				System.out.println("Delete intermediate point v1");
-				hasPoints.clear();
-			} else if (currentEdge.getV2().isIntermediatePoint()) {
-				removeIntermediatePoint(currentEdge.getV2());
-				System.out.println("Delete intermediate point v2");
-				hasPoints.clear();
-			} else {
-				// delete the points in the list of lines from highest index to lowest index
-				for (int i = hasPoints.size() - 1; i >= 0; i--) {// we have to delete from highest index to lowest index
-					System.out.println("-> Delete line at index: " + hasPoints.get(i));
-					removeEdge(edges.get(hasPoints.get(i)));
-
+					}
 				}
 			}
 

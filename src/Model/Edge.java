@@ -2,9 +2,12 @@ package Model;
 
 import java.awt.geom.Point2D;
 
+import com.sun.javafx.geom.Line2D;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import util.Calculate;
@@ -30,6 +33,11 @@ public class Edge extends Line {
 	private Circle circle = null;
 	private double r = 20;// radius of the circle
 	private boolean isIntermediateEdge = false;
+	// declare the edge by Arc (we will use CubicCurve)
+	private CubicCurve curve = null;
+	private boolean isCurveEdge = false;
+	private Line2D arc1 = new Line2D();
+	private Line2D arc2 = new Line2D();
 
 	public Edge() {
 
@@ -63,7 +71,7 @@ public class Edge extends Line {
 	}
 
 	public void updateEdge() {
-		if (circle == null) {// update the edge
+		if (circle == null && curve == null) {// update the edge
 			point1 = Calculate.getPoint(x2, y2, x1, y1, v1.getR());
 			point2 = Calculate.getPoint(x1, y1, x2, y2, v2.getR());
 			// update line
@@ -73,7 +81,7 @@ public class Edge extends Line {
 			super.setEndY(point2.getY());
 			updatePositionOfTextWeight();
 			calculateArrow();
-		} else { // System.out.println("Update the circle!");
+		} else if (curve == null) { // System.out.println("Update the circle!");
 			if (circle.getCenterX() + r == x1 && circle.getCenterY() + r == y1) {// move circle follow to new position
 				x1 = x2;
 				y1 = y2;
@@ -86,6 +94,28 @@ public class Edge extends Line {
 				circle.setCenterY(y1 - r);
 			}
 			updatePositionOfTextWeight();
+			calculateArrow();
+		} else {
+			arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
+			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 60);
+			//this.curve = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
+			curve.setStartX(arc1.x1);
+			curve.setStartY(arc1.y1);
+			curve.setControlX1(arc2.x1);
+			curve.setControlY1(arc2.y1);
+			curve.setControlX2(arc2.x2);
+			curve.setControlY2(arc2.y2);
+			curve.setEndX(arc1.x2);
+			curve.setEndY(arc1.y2);
+			//set new line for the super of curve
+			super.setStartX(arc2.x1);
+			super.setStartY(arc2.y1);
+			super.setEndX(arc2.x2);
+			super.setEndY(arc2.y2);
+			updatePositionOfTextWeight();
+			//update point1 and point2 for calculating the arrow
+			point1.setLocation(arc2.x2, arc2.y2);
+			point2.setLocation(arc1.x2, arc1.y2);
 			calculateArrow();
 		}
 	}
@@ -116,12 +146,15 @@ public class Edge extends Line {
 
 	private void updatePositionOfTextWeight() {// update position of Text Weight when edge moving
 		double x, y;
-		if (circle == null) {// update for line
+		if (circle == null && curve == null) {// update for line
 			x = ((x1 + x2) / 2) + deltaText.getX();
 			y = ((y1 + y2) / 2) + deltaText.getY();
-		} else {// update for curve edge
+		} else if(curve == null) {// update for curve edge
 			x = circle.getCenterX() - r + deltaText.getX();
 			y = circle.getCenterY() - r + deltaText.getY();
+		} else {
+			x = ((arc2.x1 + arc2.x2) / 2) + deltaText.getX();
+			y = ((arc2.y1 + arc2.y2) / 2) + deltaText.getY();
 		}
 		this.textWeight.setX(x);
 		this.textWeight.setY(y);
@@ -304,6 +337,29 @@ public class Edge extends Line {
 
 	public void setIntermediateEdge(boolean isIntermediateEdge) {
 		this.isIntermediateEdge = isIntermediateEdge;
+	}
+
+	public boolean isCurveEdge() {
+		return isCurveEdge;
+	}
+
+	public void setCurveEdge(boolean isCurveEdge) {
+		this.isCurveEdge = isCurveEdge;
+	}
+
+	public CubicCurve getCurve() {
+		return curve;
+	}
+
+	public void setCurve() {
+		arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
+		arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 60);
+		this.curve = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
+		this.curve.setStroke(Color.BLUEVIOLET);
+        this.curve.setStrokeWidth(2);
+        this.curve.setFill( null);
+        setCurveEdge(true);
+        //super.setStroke(Color.TRANSPARENT);//set the color is invisible -> use it later
 	}
 
 }

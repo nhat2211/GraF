@@ -12,8 +12,12 @@ public class Calculate {
 	 * Calculate the height of the Triangle when we know 3 vertices of the triangle
 	 * A(x1, y1); B(x2, y2); C(x3, y3) -> Calculate the height from Vertice A to the
 	 * edge BC
-	 * 
-	 * A * /|\ a(AB)/ | \ b(AC) / | \ B /___|___\ C H c(BC) h(AH)
+	 * 		A
+	 *a(AB)/|\ 
+	 *    / | \ b(AC)
+	 *   /  |  \  
+	 * B/___|___\ C 
+	 * 		H c(BC) => h(AH)
 	 */
 	public static int heightOfTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
 		double a = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
