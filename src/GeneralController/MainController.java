@@ -48,6 +48,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import util.Calculate;
+import util.TikZData;
 import util.ValidateInput;
 
 public class MainController extends AbstractController implements Initializable {
@@ -795,7 +796,7 @@ public class MainController extends AbstractController implements Initializable 
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
 		if(file != null) {
 			System.out.println("Start Save text to file tiKZ");
-			this.saveTextToFile(inputTestTikZ, file);
+			this.saveTextToFile(TikZData.handlerData(vertices, edges), file);
 			System.out.println("End Save text to file tiKZ");
 		}
 
@@ -835,7 +836,7 @@ public class MainController extends AbstractController implements Initializable 
 
 	}
 
-	private void saveTextToFile(String content, File file) {
+	private void saveTextToFile(StringBuilder content, File file) {
 		try {
 			PrintWriter writer;
 			writer = new PrintWriter(file);
@@ -846,5 +847,7 @@ public class MainController extends AbstractController implements Initializable 
 
 		}
 	}
+	
+	
 
 }
