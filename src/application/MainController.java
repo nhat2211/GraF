@@ -101,7 +101,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
-	HashMap<Edge, Edge> fatherCurveEdge = new HashMap<Edge, Edge>();// save the
+	//HashMap<Edge, Edge> fatherCurveEdge = new HashMap<Edge, Edge>();// save the
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -458,12 +458,23 @@ public class MainController extends AbstractController implements Initializable 
 
 					// update the edge
 					Edge edge = getExistEdge(currentEdge);
+					System.out.println("existEdge" + existEdge);
 					if (edge != null) {
 						rightPane.getChildren().remove(edge.getCircle());// remove the last circle
 						System.out.println("This edge is existed! Update the new edge!");
+						//set the form of currentEdge similar to existEdge
+						if(edge.isCurveEdge()) {
+							System.out.println("Set this edge is curve edge");
+							currentEdge.setCurve();
+							rightPane.getChildren().add(currentEdge.getCurve());
+							currentEdge.updateEdge();
+							currentEdge.setVisibleMainEdge(false);//set invisible
+						}
 						removeEdge(edge);
 					}
 
+					
+					
 					if (edge == null && existEdge != null) {
 						if (existEdge.getDirection() && currentEdge.getDirection()) {
 							System.out.println("=> two edges between two vertices");
