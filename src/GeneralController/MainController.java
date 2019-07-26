@@ -1,4 +1,4 @@
-package application;
+package GeneralController;
 
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -15,11 +15,8 @@ import javax.imageio.ImageIO;
 import com.sun.javafx.geom.Line2D;
 
 import Enum.StateOnLeftPane;
-import GeneralController.AbstractController;
-import GeneralController.AddLabelToVertexPopupController;
-import GeneralController.ChangeLabelPopupController;
-import GeneralController.PopupEdgeController;
 import Model.*;
+import application.Main;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
