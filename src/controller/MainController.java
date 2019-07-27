@@ -1,4 +1,4 @@
-package GeneralController;
+package controller;
 
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -15,9 +15,8 @@ import javax.imageio.ImageIO;
 
 import com.sun.javafx.geom.Line2D;
 
-import Enum.StateOnLeftPane;
-import Model.*;
 import application.Main;
+import enums.StateOnLeftPane;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -47,6 +46,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.*;
 import util.Calculate;
 import util.TikZData;
 import util.ValidateInput;

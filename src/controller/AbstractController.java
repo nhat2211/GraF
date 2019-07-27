@@ -1,4 +1,4 @@
-package GeneralController;
+package controller;
 
 import application.Main;
 

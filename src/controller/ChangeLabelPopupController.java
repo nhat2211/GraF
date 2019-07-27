@@ -1,16 +1,16 @@
-package GeneralController;
+package controller;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import Model.Edge;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Edge;
 import util.ValidateInput;
 
 public class ChangeLabelPopupController extends AbstractController implements Initializable {

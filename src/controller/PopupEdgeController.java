@@ -1,4 +1,4 @@
-package GeneralController;
+package controller;
 
 import java.net.URL;
 import java.util.HashMap;

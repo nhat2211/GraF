@@ -2,8 +2,8 @@ package util;
 
 import java.util.List;
 
-import Model.Edge;
-import Model.Vertex;
+import model.Edge;
+import model.Vertex;
 
 public class TikZData {
 
