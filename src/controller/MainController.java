@@ -837,6 +837,22 @@ public class MainController extends AbstractController implements Initializable 
 
 		}
 	}
+
+	public Vertex getCurrentVertex() {
+		return currentVertex;
+	}
+
+	public void setCurrentVertex(Vertex currentVertex) {
+		this.currentVertex = currentVertex;
+	}
+
+	public Edge getCurrentEdge() {
+		return currentEdge;
+	}
+
+	public void setCurrentEdge(Edge currentEdge) {
+		this.currentEdge = currentEdge;
+	}
 	
 	
 
