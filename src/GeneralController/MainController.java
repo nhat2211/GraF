@@ -100,7 +100,6 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
-	// HashMap<Edge, Edge> fatherCurveEdge = new HashMap<Edge, Edge>();// save the
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -112,12 +111,6 @@ public class MainController extends AbstractController implements Initializable 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// Class<?> clazz = this.getClass();
-
-		// InputStream input =
-		// clazz.getResourceAsStream("resources/images/death_head.png");
-		// Image image = new Image(input);
-		// ImageView imageView = new ImageView(image);
 		rbVertex.setSelected(true);
 		// fix width left pane when resize window
 		menuBar.prefWidthProperty().bind(parentPane.widthProperty());
@@ -134,9 +127,6 @@ public class MainController extends AbstractController implements Initializable 
 		rbChangeLbl.setGraphic(new ImageView(imageLabel));
 		rbMoveLbl.setGraphic(new ImageView(imageLabel));
 		rbVertexIcon.setGraphic(new ImageView(imageCross));
-		// imageView = new ImageView(imageCross);
-		// leftPane.getChildren().add(imageView);
-
 	}
 
 	public void handleVertexPress() {
@@ -790,7 +780,7 @@ public class MainController extends AbstractController implements Initializable 
 		// Set extension filter
 		// fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png
 		// files (*.png)", "*.png"));
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tikz files (*.tikz)", "*.tikz"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tikz files (*.tex)", "*.tex"));
 		configuringDirectoryChooser(fileChooser);
 		// Show save file dialog
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
