@@ -99,7 +99,7 @@ public class MainController extends AbstractController implements Initializable 
 	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
-	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
+	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent Edge
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -790,7 +790,7 @@ public class MainController extends AbstractController implements Initializable 
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
 		if(file != null) {
 			System.out.println("Start Save text to file tiKZ");
-			this.saveTextToFile(TikZData.handlerData(vertices, edges), file);
+			this.saveTextToFile(TikZData.handlerData(vertices, edges, parentEdge), file);
 			System.out.println("End Save text to file tiKZ");
 		}
 

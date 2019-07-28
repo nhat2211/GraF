@@ -1,6 +1,8 @@
 package util;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javafx.scene.text.Text;
 import model.Edge;
@@ -9,7 +11,7 @@ import model.Vertex;
 public class TikZData {
 	private static StringBuilder sb = new StringBuilder();
 
-	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges) {
+	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges, HashMap<Vertex, Edge> parentEdge) {
 
 		sb.append("\\documentclass{article} \n");
 		sb.append("\\usepackage[utf8]{inputenc} \n");
@@ -18,63 +20,100 @@ public class TikZData {
 		sb.append("\\begin{document} \n");
 		sb.append("\\begin{figure} \n");
 		sb.append("\\begin{tikzpicture} \n");
-		//START THE CODE FOR EXPORT GRAPH
-		sb.append("[bigNode/.style={circle, draw=green!60, fill=green!5, thick, minimum size=7mm}, smallNode/.style={circle, draw=blue!60, fill=blue!20, thick, minimum size=3mm},] \n");
-		
+		// START THE CODE FOR EXPORT GRAPH
+		sb.append(
+				"[bigNode/.style={circle, draw=green!60, fill=green!5, thick, minimum size=7mm}, smallNode/.style={circle, draw=blue!60, fill=blue!20, thick, minimum size=3mm},] \n");
+
 		System.out.println("Size of vertices: " + vertices.size());
 		for (Vertex v : vertices) {
-			if(v.isIntermediatePoint()) {
-				smallNode(v.getIndex(),v.getX(),v.getY());
+			if (v.isIntermediatePoint()) {
+				smallNode(v.getIndex(), v.getX(), v.getY());
 			} else {
-				bigNode(v.getIndex(), v.getX() , v.getY());
+				bigNode(v.getIndex(), v.getX(), v.getY());
 			}
 		}
-		
+
 		System.out.println("Size of edges: " + edges.size());
 		for (Edge e : edges) {
-			if(e.getCircle() == null && e.getCurve() == null) {//draw the normal edge
-				drawNormalEdge(true, e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
-			} else if (e.getCurve() == null) {//draw the circle (loop edge)
-				
-			} else { //draw the curve edge
-				
+			if (e.getCircle() == null && e.getCurve() == null) {// draw the normal edge & segment edge
+				if (e.getV2().isIntermediatePoint()) {//draw the segment edge
+					drawSegmentEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
+				} else if (e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
+					Edge fatherEdge = new Edge();
+					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
+						if (map.getKey() == e.getV1()) {
+							fatherEdge = map.getValue();
+							break;
+						}
+					}
+					drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(),
+							fatherEdge.getTextWeight());
+				} else {//draw Normal Edge
+					boolean isExistFatherEdge = false;
+					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
+						if (map.getValue() == e) {
+							isExistFatherEdge = true;
+							break;
+						}
+					}
+					if (!isExistFatherEdge) {
+						drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
+					}
+				}
+			} else if (e.getCurve() == null) {// draw the circle (loop edge)
+
+			} else { // draw the curve edge
+
 			}
 		}
-		
-		//END THE CODE
+
+		// END THE CODE
 		sb.append("\\end{tikzpicture} \n");
 		sb.append("\\end{figure} \n");
 		sb.append("\\end{document} \n");
 		return sb;
 
 	}
-	
-	// \node[bigNode] (e) at ( 1, 2) {e};
+
 	private static void bigNode(int index, double x, double y) {
-		x = x/100;
-		y = 10 - y/100;
+		x = x / 100;
+		y = 10 - y / 100;
 		sb.append("		\\node[bigNode] (" + index + ") at ( " + x + ", " + y + ")" + " {" + index + "}; \n");
 	}
-	
-	// \node[smallNode] (f) at (-1, 2) {};
+
 	private static void smallNode(int index, double x, double y) {
-		x = x/100;
-		y = 10 - y/100;
+		x = x / 100;
+		y = 10 - y / 100;
 		sb.append("		\\node[smallNode] (" + index + ") at ( " + x + ", " + y + ")" + " {}; \n");
 	}
-	
-	//  \draw[->] (e) to [loop above] node [midway,fill=red!20] {5} (e);
-	private static void drawLoopEdge(boolean directed, Text textWeight, double x, double y) {
+
+	// \draw[->] (e) to [loop above] node [midway,fill=red!20] {5} (e);
+	private static void drawLoopEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
 		
 	}
-	
-	//   \draw[->] (g) to [bend left] node [midway,fill=red!20] {8} (h);
+
+	// \draw[->] (g) to [bend left] node [midway,fill=red!20] {8} (h);
 	private static void drawCurveEdge(boolean directed, Text textWeight, double x1, double y1, double x2, double y2) {
-		
+
 	}
-	
-	// \draw [->] (c) -- (d) node[midway,fill=green!20] {9};
+
 	private static void drawNormalEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
-		sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=green!20] {" + textWeight.getText() + "}; \n");
+		if (directed) {
+			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=green!20] {"
+					+ textWeight.getText() + "}; \n");
+		} else {
+			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=green!20] {"
+					+ textWeight.getText() + "}; \n");
+		}
+	}
+
+	private static void drawSegmentEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
+		if (directed) {
+			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=green!20] {"
+					+ textWeight.getText() + "}; \n");
+		} else {
+			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=green!20] {"
+					+ textWeight.getText() + "}; \n");
+		}
 	}
 }
