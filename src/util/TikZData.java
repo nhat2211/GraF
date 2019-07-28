@@ -61,9 +61,9 @@ public class TikZData {
 					}
 				}
 			} else if (e.getCurve() == null) {// draw the circle (loop edge)
-
+				drawLoopEdge(e.getDirection(), e.getV1().getIndex(), e.getTextWeight());
 			} else { // draw the curve edge
-
+				drawCurveEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
 			}
 		}
 
@@ -76,43 +76,55 @@ public class TikZData {
 	}
 
 	private static void bigNode(int index, double x, double y) {
-		x = x / 100;
-		y = 10 - y / 100;
+		x = x/80;
+		y = 10 - y/80;
 		sb.append("		\\node[bigNode] (" + index + ") at ( " + x + ", " + y + ")" + " {" + index + "}; \n");
 	}
 
 	private static void smallNode(int index, double x, double y) {
-		x = x / 100;
-		y = 10 - y / 100;
+		x = x/80;
+		y = 10 - y/80;
 		sb.append("		\\node[smallNode] (" + index + ") at ( " + x + ", " + y + ")" + " {}; \n");
 	}
 
 	// \draw[->] (e) to [loop above] node [midway,fill=red!20] {5} (e);
-	private static void drawLoopEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
-		
+	private static void drawLoopEdge(boolean directed, int indexV1, Text textWeight) {
+		if (directed) {
+			sb.append("		\\draw [->] (" + indexV1 + ") to [loop above] node[midway,fill=red!20] {"
+					+ textWeight.getText() + "} (" + indexV1 + "); \n");
+		} else {
+			sb.append("		\\draw [-] (" + indexV1 + ") to [loop above] node[midway,fill=red!20] {"
+					+ textWeight.getText() + "} (" + indexV1 + "); \n");	
+		}
 	}
 
 	// \draw[->] (g) to [bend left] node [midway,fill=red!20] {8} (h);
-	private static void drawCurveEdge(boolean directed, Text textWeight, double x1, double y1, double x2, double y2) {
-
+	private static void drawCurveEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
+		if (directed) {
+			sb.append("		\\draw [->] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
+					+ textWeight.getText() + "} (" + indexV2 + "); \n");
+		} else {
+			sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
+					+ textWeight.getText() + "} (" + indexV2 + "); \n");	
+		}
 	}
 
 	private static void drawNormalEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
 		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=green!20] {"
+			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=red!20] {"
 					+ textWeight.getText() + "}; \n");
 		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=green!20] {"
+			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=red!20] {"
 					+ textWeight.getText() + "}; \n");
 		}
 	}
 
 	private static void drawSegmentEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
 		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=green!20] {"
+			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {"
 					+ textWeight.getText() + "}; \n");
 		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=green!20] {"
+			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {"
 					+ textWeight.getText() + "}; \n");
 		}
 	}
