@@ -22,7 +22,6 @@ public class TikZData {
 		sb.append("[bigNode/.style={circle, draw=green!60, fill=green!5, thick, minimum size=7mm}, smallNode/.style={circle, draw=blue!60, fill=blue!20, thick, minimum size=3mm},] \n");
 		
 		System.out.println("Size of vertices: " + vertices.size());
-		System.out.println("Size of edges: " + edges.size());
 		for (Vertex v : vertices) {
 			if(v.isIntermediatePoint()) {
 				smallNode(v.getIndex(),v.getX(),v.getY());
@@ -31,8 +30,15 @@ public class TikZData {
 			}
 		}
 		
+		System.out.println("Size of edges: " + edges.size());
 		for (Edge e : edges) {
-			
+			if(e.getCircle() == null && e.getCurve() == null) {//draw the normal edge
+				drawNormalEdge(true, e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
+			} else if (e.getCurve() == null) {//draw the circle (loop edge)
+				
+			} else { //draw the curve edge
+				
+			}
 		}
 		
 		//END THE CODE
@@ -68,7 +74,7 @@ public class TikZData {
 	}
 	
 	// \draw [->] (c) -- (d) node[midway,fill=green!20] {9};
-	private static void drawNormalEdge(boolean directed, Text textWeight, double x1, double y1, double x2, double y2) {
-		
+	private static void drawNormalEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
+		sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=green!20] {" + textWeight.getText() + "}; \n");
 	}
 }
