@@ -20,7 +20,6 @@ public class TikZData {
 		sb.append("\\begin{tikzpicture} \n");
 		//START THE CODE FOR EXPORT GRAPH
 		sb.append("[bigNode/.style={circle, draw=green!60, fill=green!5, thick, minimum size=7mm}, smallNode/.style={circle, draw=blue!60, fill=blue!20, thick, minimum size=3mm},] \n");
-		sb.append("\\draw (0,0) -- (4,0) -- (4,4) -- (0,4) -- (0,0); \n");//test graph
 		
 		System.out.println("Size of vertices: " + vertices.size());
 		System.out.println("Size of edges: " + edges.size());
@@ -30,6 +29,10 @@ public class TikZData {
 			} else {
 				bigNode(v.getIndex(), v.getX() , v.getY());
 			}
+		}
+		
+		for (Edge e : edges) {
+			
 		}
 		
 		//END THE CODE
@@ -51,7 +54,7 @@ public class TikZData {
 	private static void smallNode(int index, double x, double y) {
 		x = x/100;
 		y = 10 - y/100;
-		sb.append("		\\node[smallNode] (" + index + ") at ( " + x + ", " + y + ")" + " {" + index + "}; \n");
+		sb.append("		\\node[smallNode] (" + index + ") at ( " + x + ", " + y + ")" + " {}; \n");
 	}
 	
 	//  \draw[->] (e) to [loop above] node [midway,fill=red!20] {5} (e);

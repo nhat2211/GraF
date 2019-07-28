@@ -186,6 +186,7 @@ public class MainController extends AbstractController implements Initializable 
 					vertices.add(vertex);
 					System.out.println("Size of vertices: " + vertices.size());
 					vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
+					vertex.setIndex(indexVertex);
 
 				} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT) {
 					String valueText = showAddLabelPopupVertex();
@@ -194,6 +195,7 @@ public class MainController extends AbstractController implements Initializable 
 					indexVertex++;
 					System.out.println("Size of vertices: " + vertices.size());
 					vertex.setLabel(event.getX(), event.getY(), valueText, "-fx-fill: yellow");
+					vertex.setIndex(indexVertex);
 				} else {
 					// do nothing
 				}
@@ -270,6 +272,8 @@ public class MainController extends AbstractController implements Initializable 
 							&& !e.getV2().contains(point.getX(), point.getY())) {
 						Vertex vertex = new Vertex(point.getX(), point.getY());
 						vertices.add(vertex);
+						indexVertex++;
+						vertex.setIndex(indexVertex);
 						rightPane.getChildren().add(vertex);
 						// map points: list intermediate points of the edge
 						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
