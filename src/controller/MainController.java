@@ -100,6 +100,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent Edge
+	HashMap<Edge, Vertex> invisibleEdges = new HashMap<Edge, Vertex>();// invisible edges
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -275,6 +276,8 @@ public class MainController extends AbstractController implements Initializable 
 						indexVertex++;
 						vertex.setIndex(indexVertex);
 						rightPane.getChildren().add(vertex);
+						invisibleEdges.put(e, vertex);
+						
 						// map points: list intermediate points of the edge
 						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
 							parentEdge.put(vertex, e);
@@ -313,6 +316,7 @@ public class MainController extends AbstractController implements Initializable 
 						edge2.setStrokeWidth(2);
 						edge2.setV1(vertex);// set Vertex for starting point
 						edge2.setV2(e.getV2());// set Vertex for ending point
+						edge2.setTextWeight(parentEdge.get(edge2.getV1()).getTextWeight().getText());
 						edges.add(edge2);
 						rightPane.getChildren().add(edge2);
 						rightPane.getChildren().add(edge2.getArrow1());
@@ -631,6 +635,21 @@ public class MainController extends AbstractController implements Initializable 
 		vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
 		rightPane.getChildren().remove(v);// remove Vertex on the rightPane
 		rightPane.getChildren().remove(v.getLabel());// remove Label of Vertex on rightPane
+		
+		//remove vertex in the HashMap of invisibleEdge
+		boolean isExistVertex = false;
+		for (Entry<Edge, Vertex> map : invisibleEdges.entrySet()) { //
+			if (map.getValue() == v) {
+				isExistVertex = true;
+				currentEdge = map.getKey();
+				break;
+			}
+		}
+		if (isExistVertex) {
+			boolean status = invisibleEdges.remove(currentEdge,v);
+			System.out.println("Status of removing in invisibleEdges: " + status);
+			System.out.println("Current size of invisibleEdges: " + invisibleEdges.size());
+		}
 	}
 
 	private void removeEdge(Edge edge) {
@@ -790,7 +809,7 @@ public class MainController extends AbstractController implements Initializable 
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
 		if(file != null) {
 			System.out.println("Start Save text to file tiKZ");
-			this.saveTextToFile(TikZData.handlerData(vertices, edges, parentEdge), file);
+			this.saveTextToFile(TikZData.handlerData(vertices, edges, invisibleEdges), file);
 			System.out.println("End Save text to file tiKZ");
 		}
 

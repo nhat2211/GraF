@@ -2,8 +2,6 @@ package util;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-
 import javafx.scene.text.Text;
 import model.Edge;
 import model.Vertex;
@@ -11,7 +9,7 @@ import model.Vertex;
 public class TikZData {
 	private static StringBuilder sb = new StringBuilder();
 
-	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges, HashMap<Vertex, Edge> parentEdge) {
+	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges, HashMap<Edge, Vertex> invisibleEdges) {
 
 		sb.append("\\documentclass{article} \n");
 		sb.append("\\usepackage[utf8]{inputenc} \n");
@@ -36,27 +34,16 @@ public class TikZData {
 		System.out.println("Size of edges: " + edges.size());
 		for (Edge e : edges) {
 			if (e.getCircle() == null && e.getCurve() == null) {// draw the normal edge & segment edge
-				if (e.getV2().isIntermediatePoint()) {//draw the segment edge
-					drawSegmentEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
-				} else if (e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
-					Edge fatherEdge = new Edge();
-					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
-						if (map.getKey() == e.getV1()) {
-							fatherEdge = map.getValue();
-							break;
+				if (e.getV2().isIntermediatePoint() || e.getV2().isIntermediatePoint()) {//draw the segment edge
+					if(invisibleEdges.get(e) == null) {
+						if(!e.getV2().isIntermediatePoint()) {
+							drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
+						} else {
+							drawSegmentEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
 						}
 					}
-					drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(),
-							fatherEdge.getTextWeight());
-				} else {//draw Normal Edge
-					boolean isExistFatherEdge = false;
-					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
-						if (map.getValue() == e) {
-							isExistFatherEdge = true;
-							break;
-						}
-					}
-					if (!isExistFatherEdge) {
+				} else {// draw normal edge and only invisible father edge that have intermediate points
+					if(invisibleEdges.get(e) == null) {
 						drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
 					}
 				}
@@ -121,11 +108,9 @@ public class TikZData {
 
 	private static void drawSegmentEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
 		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {"
-					+ textWeight.getText() + "}; \n");
+			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {}; \n");
 		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {"
-					+ textWeight.getText() + "}; \n");
+			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {}; \n");
 		}
 	}
 }
