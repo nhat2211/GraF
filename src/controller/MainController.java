@@ -248,23 +248,24 @@ public class MainController extends AbstractController implements Initializable 
 			} else { // create the intermediate point.
 				Edge e = null;
 				for (Edge edge : edges) {
-					int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(),
-							edge.getX2(), edge.getY2());
-					if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
-						System.out.println("You pressed on the edge");
-						e = edge;
-						break;
+					if (invisibleEdges.get(edge) == null) {
+						int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(),
+								edge.getY1(), edge.getX2(), edge.getY2());
+						if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
+							System.out.println("You pressed on the edge");
+							e = edge;
+							break;
+						}
 					}
 				}
 
-				for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { // sure only one intermediate point on father
-																		// edge
-					if (map.getValue() == e) {// this is father edge
-						System.out.println("You should move current intermediate point and then can make a new one!");
-						e = null;
-						break;
-					}
-				}
+				/*
+				 * for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { // sure only one
+				 * intermediate point on father // edge if (map.getValue() == e) {// this is
+				 * father edge System.out.
+				 * println("You should move current intermediate point and then can make a new one!"
+				 * ); e = null; break; } }
+				 */
 
 				if (e != null) {// find out the intermediate point
 					Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
@@ -277,7 +278,7 @@ public class MainController extends AbstractController implements Initializable 
 						vertex.setIndex(indexVertex);
 						rightPane.getChildren().add(vertex);
 						invisibleEdges.put(e, vertex);
-						
+
 						// map points: list intermediate points of the edge
 						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
 							parentEdge.put(vertex, e);
@@ -635,8 +636,8 @@ public class MainController extends AbstractController implements Initializable 
 		vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
 		rightPane.getChildren().remove(v);// remove Vertex on the rightPane
 		rightPane.getChildren().remove(v.getLabel());// remove Label of Vertex on rightPane
-		
-		//remove vertex in the HashMap of invisibleEdge
+
+		// remove vertex in the HashMap of invisibleEdge
 		boolean isExistVertex = false;
 		for (Entry<Edge, Vertex> map : invisibleEdges.entrySet()) { //
 			if (map.getValue() == v) {
@@ -646,7 +647,7 @@ public class MainController extends AbstractController implements Initializable 
 			}
 		}
 		if (isExistVertex) {
-			boolean status = invisibleEdges.remove(currentEdge,v);
+			boolean status = invisibleEdges.remove(currentEdge, v);
 			System.out.println("Status of removing in invisibleEdges: " + status);
 			System.out.println("Current size of invisibleEdges: " + invisibleEdges.size());
 		}
@@ -807,7 +808,7 @@ public class MainController extends AbstractController implements Initializable 
 		configuringDirectoryChooser(fileChooser);
 		// Show save file dialog
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
-		if(file != null) {
+		if (file != null) {
 			System.out.println("Start Save text to file tiKZ");
 			this.saveTextToFile(TikZData.handlerData(vertices, edges, invisibleEdges), file);
 			System.out.println("End Save text to file tiKZ");
@@ -876,7 +877,5 @@ public class MainController extends AbstractController implements Initializable 
 	public void setCurrentEdge(Edge currentEdge) {
 		this.currentEdge = currentEdge;
 	}
-	
-	
 
 }
