@@ -557,6 +557,21 @@ We use Model-View-Controller in the application development.
 
 \subsection{Framework} 
 Why choose JavaFX for Developing Application?:
+
+Our experience proves that implementing an employee desktop front end with native technology is a valid approach and that JavaFX is a good fit.
+\begin{itemize}
+	\item JavaFX is available on the leading desktop operating systems (Windows, Linux, and . Mac OS X).
+	\item Although it has gone through some painful changes, its evolution proves its       vendor's level of commitment.
+	\item As the successor to Swing, it is being used by an increasing number of Java developers. Regardless of its future, it will benefit from a strong developer community.
+	\item Compared to Swing, it provides a clear and clean architecture and features many enhancements: styling, event management, transitions, scene graph—to name a few.
+	\item It provides the possibility of developing up-to-date user interfaces with animations, multitouch, and the like.
+	\item It is based on a clear and clean language: Java.
+	\item It provides all the professional Java tooling required to debug, analyze, profile, and log a client application.
+	\item It enables a simple app-like installation on the client side, without any prerequisites.
+	\item In short, we believe that JavaFX is the only native UI environment that provides all these features today.
+\end{itemize}
+
+Source: https://www.oracle.com/technetwork/articles/java/casa-1919152.html
 \paragraph{}
 
 
@@ -576,10 +591,212 @@ Why choose JavaFX for Developing Application?:
 \paragraph{}
 
 \subsection{IDE} 
-\subsection{Unit Test} 
-\subsection{Functions} 
 
+Eclipse
+
+\subsection{Unit Test} 
+\begin{enumerate}
+	\item One
+	\item Two
+	\item Three
+\end{enumerate}
+Junit 4
+\subsection{Functions} 
+\subsubsection{Draw vertex}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Draw Vertices \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Application is running. \\
+\hline
+Flow of Events: & 1. User choose vertex option on left pane. \\
+
+
+& 2. System remember the type which user chose.  \\
+& 3. User press mouse left button on panel.  \\
+& 4. System will draw a vertice on the panel by a circle.  \\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+	\paragraph{}
+	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{drawVertex.png}
+		\caption[Optional caption]{Draw vertex}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\subsubsection{Draw vertex custom text}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Draw vertex custom text \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Application is running. \\
+\hline
+Flow of Events: & 1. User choose vertex custom text option on left pane. \\
+
+
+& 2. System remember the type which user chose.  \\
+& 3. User press mouse left button on panel.  \\
+& 4. The popup add vertex be showed  \\
+& 5. User type text in textbox  \\
+& 6. User click add button  \\
+& 7. System draw a vertex with label be text which user input   \\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+	\paragraph{}
+	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{drawVertexWithText.png}
+		\caption[Optional caption]{Draw vertex with text}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{drawVertexWithText2.png}
+		\caption[Optional caption]{Draw vertex with text}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
 %
+
+\subsubsection{Move vertex}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Move Vertex \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one vertex for moving. \\
+\hline
+Flow of Events: & 1. User choose move vertex option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press and hold mouse left button on vertex.  \\
+& 4. User hold press the left mouse on the vertex and move the mouse for moving vertex.  \\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+	\paragraph{}
+	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{drawVertex.png}
+		\caption[Optional caption]{Move vertex}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+
+\subsubsection{Draw edge}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Draw edge \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing two at least two vertex on right pane. \\
+\hline
+Flow of Events: & 1. User choose add edge option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press and hold left mouse on the first vertex.  \\
+& 4. User hold press left mouse and move cursor to inside the second vertex.  \\
+& 5. User release mouse.  \\
+& 6. The popup Add edge be showed.  \\
+& 7. User input the weight of edge.  \\
+& 8. User click Directed button or Undirected button for create edge   \\
+& 9. System draw a edge.   \\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+	\paragraph{}
+	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{addEdge1.png}
+		\caption[Optional caption]{Add edge}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{addEdge2.png}
+		\caption[Optional caption]{Add edge}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+
+\subsubsection{Intermediate Point}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Intermediate Point \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one edge on right pane. \\
+\hline
+Flow of Events: & 1. User choose Intermediate Point option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press left mouse on a edge  \\
+& 4. System draw a Intermediate Point on this edge  \\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+	\paragraph{}
+	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{IntermediatePoint.png}
+		\caption[Optional caption]{Intermediate Point}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+
+\subsubsection{Remove Object}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Remove Object \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose Remove Object option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press left mouse on a object  \\
+& 4. System remove object  \\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+	\paragraph{}
+
 \newpage
 \addcontentsline{toc}{section}{\numberline{}References}
 \printbibliography
