@@ -73,7 +73,8 @@ public class MainController extends AbstractController implements Initializable 
 	private RadioButton rbChangeLbl;
 	@FXML
 	private RadioButton rbMoveLbl;
-
+	@FXML
+	private RadioButton formEdge;
 	@FXML
 	private RadioButton rbVertexIcon;
 	@FXML
@@ -130,6 +131,11 @@ public class MainController extends AbstractController implements Initializable 
 		rbVertexIcon.setGraphic(new ImageView(imageCross));
 	}
 
+	public void handleFormEdgePress() {
+		System.out.println("Form of Edge is pressed");
+		eventOnLeftPane = StateOnLeftPane.FORM_EDGE;
+	}
+	
 	public void handleVertexPress() {
 		System.out.println("Vertex is pressed");
 		eventOnLeftPane = StateOnLeftPane.VERTEX;
@@ -249,7 +255,7 @@ public class MainController extends AbstractController implements Initializable 
 				Edge e = null;
 				int smallestDistance = 1000;
 				for (Edge edge : edges) {
-					if (invisibleEdges.get(edge) == null) {
+					if (invisibleEdges.get(edge) == null && !edge.isCurveEdge()) {
 						int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(),
 								edge.getY1(), edge.getX2(), edge.getY2());
 						if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
@@ -266,7 +272,6 @@ public class MainController extends AbstractController implements Initializable 
 				if (e != null) {// find out the intermediate point				
 					Point2D point = Calculate.getPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
 							e.getX2(), e.getY2());
-					System.out.println("==>> point : " + point);
 					if (!e.getV1().contains(point.getX(), point.getY())
 							&& !e.getV2().contains(point.getX(), point.getY())) {
 						Vertex vertex = new Vertex(point.getX(), point.getY());
@@ -329,6 +334,42 @@ public class MainController extends AbstractController implements Initializable 
 				}
 
 			} //// end creating the intermediate point.
+		} else if (eventOnLeftPane == StateOnLeftPane.FORM_EDGE) {
+			System.out.println("We will change the form of edge here!");
+			Edge e = null;
+			int smallestDistance = 1000;
+			for (Edge edge : edges) {
+				if (invisibleEdges.get(edge) == null) {
+					int distance;
+					if (edge.getCurve() == null) {// Calculate distance of Main Edge
+						distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(), edge.getX2(),
+								edge.getY2());
+					} else {// Calculate distance of curve edge
+						distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getCurve().getControlX1(),
+								edge.getCurve().getControlY1(), edge.getCurve().getControlX2(),
+								edge.getCurve().getControlY2());
+					}
+					if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
+						if(distance < smallestDistance) {
+							e = edge;
+							smallestDistance = distance;
+							System.out.println("Smallest distance: " + distance);
+						}
+					}
+				}
+			}
+			if (e != null) {
+				if(e.isCurveEdge()) {
+					rightPane.getChildren().remove(e.getCurve());
+					e.setVisibleMainEdge(true);
+					e.setNullCurveEdge();
+				} else {
+					e.setCurve();
+					rightPane.getChildren().add(e.getCurve());
+					e.setVisibleMainEdge(false);
+				}
+				e.updateEdge();
+			}
 		}
 
 		else {

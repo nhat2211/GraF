@@ -26,12 +26,9 @@ public class Calculate {
 		double S = (a + b + c) / 2;
 		double Area = Math.sqrt(S * (S - a) * (S - b) * (S - c));
 		double h = 2 * Area / c;
-		//calculate the corner of B 
+		//calculate the corner of B and C
 		double B = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2))/(2*a*c);
-		System.out.println(" B: " + B);
-		//calculate the corner of B
 		double C = (Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2))/(2*b*c);
-		System.out.println(" C: " + C);
 		if (B < 0 || C < 0) { //the coner of B or C > 90 degree, we don't get this distance
 			h = 100;
 		}
