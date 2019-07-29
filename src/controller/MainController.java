@@ -247,29 +247,26 @@ public class MainController extends AbstractController implements Initializable 
 				firstY = currentVertex.getY();
 			} else { // create the intermediate point.
 				Edge e = null;
+				int smallestDistance = 1000;
 				for (Edge edge : edges) {
 					if (invisibleEdges.get(edge) == null) {
 						int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(),
 								edge.getY1(), edge.getX2(), edge.getY2());
 						if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
-							System.out.println("You pressed on the edge");
-							e = edge;
-							break;
+							if(distance < smallestDistance) {
+								e = edge;
+								smallestDistance = distance;
+								System.out.println("Smallest distance: " + distance);
+							}
+							//break;
 						}
 					}
 				}
 
-				/*
-				 * for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { // sure only one
-				 * intermediate point on father // edge if (map.getValue() == e) {// this is
-				 * father edge System.out.
-				 * println("You should move current intermediate point and then can make a new one!"
-				 * ); e = null; break; } }
-				 */
-
-				if (e != null) {// find out the intermediate point
-					Point2D point = Calculate.getTheNearestPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
+				if (e != null) {// find out the intermediate point				
+					Point2D point = Calculate.getPointOnEdge(event.getX(), event.getY(), e.getX1(), e.getY1(),
 							e.getX2(), e.getY2());
+					System.out.println("==>> point : " + point);
 					if (!e.getV1().contains(point.getX(), point.getY())
 							&& !e.getV2().contains(point.getX(), point.getY())) {
 						Vertex vertex = new Vertex(point.getX(), point.getY());

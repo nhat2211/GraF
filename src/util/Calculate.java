@@ -7,7 +7,6 @@ import com.sun.javafx.geom.Line2D;
 import javafx.scene.paint.Color;
 
 public class Calculate {
-
 	/*
 	 * Calculate the height of the Triangle when we know 3 vertices of the triangle
 	 * A(x1, y1); B(x2, y2); C(x3, y3) -> Calculate the height from Vertice A to the
@@ -27,35 +26,27 @@ public class Calculate {
 		double S = (a + b + c) / 2;
 		double Area = Math.sqrt(S * (S - a) * (S - b) * (S - c));
 		double h = 2 * Area / c;
+		//calculate the corner of B 
+		double B = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2))/(2*a*c);
+		System.out.println(" B: " + B);
+		//calculate the corner of B
+		double C = (Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2))/(2*b*c);
+		System.out.println(" C: " + C);
+		if (B < 0 || C < 0) { //the coner of B or C > 90 degree, we don't get this distance
+			h = 100;
+		}
 		return (int) h;
 	}
-
-	public static Point2D getTheNearestPointOnEdge(double x1, double y1, double x2, double y2, double x3, double y3) {
+	
+	public static Point2D getPointOnEdge (double x1, double y1, double x2, double y2, double x3, double y3) {
 		Point2D point = new Point2D.Double();
-		double x = 0, y = 0, h = 0, times = 0;
-		double height = heightOfTriangle(x1, y1, x2, y2, x3, y3);
-		if (height == 0) {
-			 x = x1;
-			 y = y1;
+		double a = Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+		double b = Math.sqrt((x1 - x3)*(x1 - x3) + (y1 - y3)*(y1 - y3));
+		if (a == 0 && b == 0) {
+			point.setLocation(x1, y1);
 		} else {
-			while ((h != height) && (times < 10)) {
-				double a = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-				double b = Math.sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));
-				x = (x2 + x3) / 2;
-				y = (y2 + y3) / 2;
-				if (a > b) {
-					x2 = x;
-					y2 = y;
-				} else if (a < b) {
-					x3 = x;
-					y3 = y;
-				} else {// a = b
-					break;
-				}
-				times++;
-			}
+			point.setLocation((b*x2 + a*x3)/(a + b), (b*y2 + a*y3)/(a + b));
 		}
-		point.setLocation(x, y);
 		return point;
 	}
 
