@@ -10,7 +10,7 @@ public class TikZData {
 	private static StringBuilder sb = new StringBuilder();
 
 	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges, HashMap<Edge, Vertex> invisibleEdges) {
-
+		sb.delete(0, sb.length());
 		sb.append("\\documentclass{article} \n");
 		sb.append("\\usepackage[utf8]{inputenc} \n");
 		sb.append("\\usepackage{tikz} \n");
@@ -90,9 +90,8 @@ public class TikZData {
 		if (directed) {
 			sb.append("		\\draw [->] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
 					+ textWeight.getText() + "} (" + indexV2 + "); \n");
-		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
-					+ textWeight.getText() + "} (" + indexV2 + "); \n");	
+		} else {	
+			sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] (" + indexV2 + "); \n");
 		}
 	}
 
