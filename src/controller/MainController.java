@@ -13,8 +13,6 @@ import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
-import com.sun.javafx.geom.Line2D;
-
 import application.Main;
 import enums.StateOnLeftPane;
 import javafx.application.Platform;
@@ -22,7 +20,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,12 +34,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.CubicCurve;
-import javafx.scene.shape.QuadCurve;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -116,7 +107,7 @@ public class MainController extends AbstractController implements Initializable 
 		rbVertex.setSelected(true);
 		// fix width left pane when resize window
 		menuBar.prefWidthProperty().bind(parentPane.widthProperty());
-		splitPane.setResizableWithParent(leftPane, Boolean.FALSE);
+		SplitPane.setResizableWithParent(leftPane, Boolean.FALSE);
 		imageRemove = new Image("/death_head.png", 25, 25, false, false);
 		imageCross = new Image("/cross.jpg", 25, 25, false, false);
 		imageVertex = new Image("/vertexIcon.jpg", 25, 25, false, false);
@@ -461,6 +452,10 @@ public class MainController extends AbstractController implements Initializable 
 					if (weightEdge != null && !weightEdge.contentEquals("")) {
 						currentEdge.setTextWeight(weightEdge);// add weight to the edge
 					}
+					
+					if (weightEdge.contentEquals("")) {
+						currentEdge.setTextWeight("0");
+					}
 
 					if (typeEdge != null) {
 						if (typeEdge.equalsIgnoreCase("directed")) {
@@ -799,8 +794,6 @@ public class MainController extends AbstractController implements Initializable 
 		configuringDirectoryChooser(fileChooser);
 		// Show save file dialog
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
-		String text = "";
-
 		if (file != null) {
 			System.out.println("Save Image Start");
 			saveImageToFile(file);
