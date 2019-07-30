@@ -96,9 +96,17 @@ public class Edge extends Line {
 			updatePositionOfTextWeight();
 			calculateArrow();
 		} else {//update the curve edge
-			arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
-			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 60);
-			//this.curve = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
+			double length1 = 20;
+			if(v2.isIntermediatePoint()) {
+				length1 = length1/2;
+			}
+			double length2 = 20;
+			if(v1.isIntermediatePoint()) {
+				length2 = length2/2;
+			}
+			double length = Math.max(length1, length2)*3;
+			arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2);
+			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length);
 			curve.setStartX(arc1.x1);
 			curve.setStartY(arc1.y1);
 			curve.setControlX1(arc2.x1);
@@ -168,7 +176,6 @@ public class Edge extends Line {
 	}
 
 	public void setTextWeight(String text) {
-		//this.textWeight.setStyle("-fx-fill: red");
 		this.textWeight.setText(text);
 		this.textWeight.setStyle("-fx-fill: red; -fx-font-weight: bold;");
 		setWeight(Integer.valueOf(text));
@@ -357,8 +364,17 @@ public class Edge extends Line {
 	}
 
 	public void setCurve() {
-		arc1 = Calculate.getNewArc(x1, y1, x2, y2, 20);
-		arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, 60);
+		double length1 = 20;
+		if(v2.isIntermediatePoint()) {
+			length1 = length1/2;
+		}
+		double length2 = 20;
+		if(v1.isIntermediatePoint()) {
+			length2 = length2/2;
+		}
+		double length = Math.max(length1, length2)*3;
+		arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2);
+		arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length);
 		this.curve = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
 		this.curve.setStroke(Color.BLUEVIOLET);
         this.curve.setStrokeWidth(2);

@@ -74,10 +74,10 @@ public class Calculate {
 		return thePoint;
 	}
 
-	public static Line2D getNewArc(double x1, double y1, double x2, double y2, double length) {
+	public static Line2D getNewArc(double x1, double y1, double x2, double y2, double length1, double length2) {
 		Line2D newArc = new Line2D();
-		Point2D p1 = getNewPoint(x1, y1, x2, y2, true, length);
-		Point2D p2 = getNewPoint(x2, y2, x1, y1, false, length);
+		Point2D p1 = getNewPoint(x1, y1, x2, y2, true, length1);
+		Point2D p2 = getNewPoint(x2, y2, x1, y1, false, length2);
 		newArc.setLine((float)p2.getX(), (float)p2.getY(), (float)p1.getX(), (float)p1.getY());
 		return newArc;
 	}
