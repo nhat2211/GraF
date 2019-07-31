@@ -4,8 +4,6 @@ import java.awt.geom.Point2D;
 
 import com.sun.javafx.geom.Line2D;
 
-import javafx.scene.paint.Color;
-
 public class Calculate {
 	/*
 	 * Calculate the height of the Triangle when we know 3 vertices of the triangle
