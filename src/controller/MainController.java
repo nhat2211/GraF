@@ -513,7 +513,14 @@ public class MainController extends AbstractController implements Initializable 
 							currentEdge.updateEdge();
 							currentEdge.setVisibleMainEdge(false);// set invisible
 						}
-						removeEdge(edge);
+						if(parentEdge.containsValue(edge) ) {
+							System.out.println("Update the text weight for intermediate edge");
+							edge.setTextWeight(currentEdge.getTextWeight().getText());
+							edge.updateEdge();
+							removeEdge(currentEdge);
+						} else {
+							removeEdge(edge);
+						}
 					}
 
 					if (edge == null && existEdge != null) {
