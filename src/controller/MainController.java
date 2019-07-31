@@ -185,22 +185,29 @@ public class MainController extends AbstractController implements Initializable 
 					System.out.println("Size of vertices: " + vertices.size());
 					vertex.setLabel(event.getX(), event.getY(), ++indexVertex, "-fx-fill: yellow");
 					vertex.setIndex(indexVertex);
+					// Setting the stroke width of the circle
+					rightPane.getChildren().add(vertex);
+					rightPane.getChildren().add(vertex.getLabel());
 
 				} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT) {
 					String valueText = showAddLabelPopupVertex();
-					vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
-					vertices.add(vertex);
-					indexVertex++;
-					System.out.println("Size of vertices: " + vertices.size());
-					vertex.setLabel(event.getX(), event.getY(), valueText, "-fx-fill: yellow");
-					vertex.setIndex(indexVertex);
+					if(valueText == "") {
+						System.out.println("You just closed Popup");
+					} else {
+						vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
+						vertices.add(vertex);
+						indexVertex++;
+						System.out.println("Size of vertices: " + vertices.size());
+						vertex.setLabel(event.getX(), event.getY(), valueText, "-fx-fill: yellow");
+						vertex.setIndex(indexVertex);
+						// Setting the stroke width of the circle
+						rightPane.getChildren().add(vertex);
+						rightPane.getChildren().add(vertex.getLabel());
+					}
+					
 				} else {
 					// do nothing
 				}
-
-				// Setting the stroke width of the circle
-				rightPane.getChildren().add(vertex);
-				rightPane.getChildren().add(vertex.getLabel());
 			}
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {// get starting point
