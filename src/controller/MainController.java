@@ -240,6 +240,21 @@ public class MainController extends AbstractController implements Initializable 
 			if (isOnALabel(event.getX(), event.getY())) {
 				showChangeLabelPopupEdge(currentEdge);
 				System.out.println("New value of label: " + currentEdge.getTextWeight().getText());
+				String textWeight = currentEdge.getTextWeight().getText();
+				//do more code here
+				if(parentEdge.containsValue(currentEdge)) {
+					System.out.println("Update text weight to the intermediate edge! ");
+					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
+						if (map.getValue() == currentEdge) {//get map.getKey();
+							for(Edge edge: edges) {
+								if(edge.getV1() == map.getKey()) {
+									System.out.println("This is edge with value: " + edge.getTextWeight().getText());
+									edge.setTextWeight(textWeight);
+								}
+							}
+						}
+					}
+				}
 			}
 		} else if (eventOnLeftPane == StateOnLeftPane.MOVE_LABEL) {
 			if (isOnALabel(event.getX(), event.getY())) {
