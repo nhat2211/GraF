@@ -31,7 +31,7 @@ public class TikZData {
 			}
 		}
 
-		System.out.println("Size of edges: " + edges.size());
+		System.out.println("Size of edges when export tkz: " + edges.size());
 		for (Edge e : edges) {
 			if (e.getCircle() == null && e.getCurve() == null) {// draw the normal edge & segment edge
 				if (e.getV2().isIntermediatePoint() || e.getV2().isIntermediatePoint()) {//draw the segment edge

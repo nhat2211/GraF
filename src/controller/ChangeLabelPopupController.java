@@ -21,8 +21,8 @@ public class ChangeLabelPopupController extends AbstractController implements In
 	private Button btnChangeLabel;
 
 	private Stage stage = null;
-	private HashMap<Edge, String> result = new HashMap<Edge, String>();
 	private Edge edge;
+	private String value;
 
 	public ChangeLabelPopupController() {
 
@@ -39,7 +39,12 @@ public class ChangeLabelPopupController extends AbstractController implements In
 		ValidateInput.onlyUserInputNumerics(txtValueLabel);
 
 		btnChangeLabel.setOnAction((event) -> {
-			edge.setTextWeight(txtValueLabel.getText());
+			value = txtValueLabel.getText();
+			value.matches("^[a-zA-Z0-9]*$");
+			if (value.length() == 0) {
+				value = "0";//set the string is 0 when user input nothing
+			} 
+			edge.setTextWeight(value);
 			closeStage();
 		});
 
