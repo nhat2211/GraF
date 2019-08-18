@@ -482,8 +482,6 @@ public class MainController extends AbstractController implements Initializable 
 				System.out.println("is Clicked Inside Curve Point");
 				deltaX = event.getX() - currentCurvePoint.getCenterX();
 				deltaY = event.getY() - currentCurvePoint.getCenterY();
-				firstX = currentCurvePoint.getCenterX();// save first position of CurvePoint before moving
-				firstY = currentCurvePoint.getCenterY();
 			}
 
 		}
@@ -499,10 +497,12 @@ public class MainController extends AbstractController implements Initializable 
 			for (int i = 0; i < edges.size(); i ++) {
 				if (edges.get(i).getCurvePoint1().contains(xM, yM)) {
 					currentCurvePoint = edges.get(i).getCurvePoint1();
+					currentEdge = edges.get(i);
 					flag = true;
 					break;
 				} else if (edges.get(i).getCurvePoint2().contains(xM, yM)) {
 					currentCurvePoint = edges.get(i).getCurvePoint2();
+					currentEdge = edges.get(i);
 					flag = true;
 					break;
 				}
@@ -549,6 +549,7 @@ public class MainController extends AbstractController implements Initializable 
 			double y = event.getY() - deltaY;
 			currentCurvePoint.setCenterX(x);
 			currentCurvePoint.setCenterY(y);
+			currentEdge.updateEdge();
 			
 		}
 		if (isClickedInsideVertex) {

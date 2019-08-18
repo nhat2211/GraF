@@ -41,6 +41,7 @@ public class Edge extends Line {
 	private boolean isCurveEdgePoints = false;
 	private Circle curvePoint1 = new Circle();//save curve edge points to these circles
 	private Circle curvePoint2 = new Circle();
+	private Line2D curveLine = null;
 	//private Circle curvePoint3 = new Circle();
 	//private Circle curvePoint4 = new Circle();
 
@@ -112,6 +113,24 @@ public class Edge extends Line {
 			double length = Math.max(length1, length2)*3;
 			arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2, this.bendOfCurveEdgeInTikZData);
 			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length, this.bendOfCurveEdgeInTikZData);
+			if(curveLine == null) {//initialize it for the first time and save it
+				curveLine = arc2;
+				curvePoint1.setCenterX(arc2.x1);
+				curvePoint1.setCenterY(arc2.y1);
+				curvePoint2.setCenterX(arc2.x2);
+				curvePoint2.setCenterY(arc2.y2);
+				System.out.println("Only run this step one times");
+			}
+			if(isCurveEdgePoints) {
+				curveLine.setLine(arc2.x1, arc2.y1, arc2.x2, arc2.y2);
+				arc2.setLine((float)curvePoint1.getCenterX(), (float)curvePoint1.getCenterY(), (float)curvePoint2.getCenterX(), (float)curvePoint2.getCenterY());
+			} else {
+				float deltaX1 = arc2.x1 - curveLine.x1;
+				float deltaY1 = arc2.y1 - curveLine.y1;
+				float deltaX2 = arc2.x2 - curveLine.x2;
+				float deltaY2 = arc2.y2 - curveLine.y2;
+				arc2.setLine((float)curvePoint1.getCenterX() + deltaX1, (float)curvePoint1.getCenterY() + deltaY1, (float)curvePoint2.getCenterX() + deltaX2, (float)curvePoint2.getCenterY() + deltaY2);
+			}
 			curve.setStartX(arc1.x1);
 			curve.setStartY(arc1.y1);
 			curve.setControlX1(arc2.x1);
@@ -405,59 +424,7 @@ public class Edge extends Line {
 	public void setCurveEdgePoints(boolean isCurveEdgePoints) {
 		this.isCurveEdgePoints = isCurveEdgePoints;
 	}
-/*
-	public Circle getCurvePoint1() {
-		return curvePoint1;
-	}
 
-	public void setCurvePoint1() {//arc1.(x1,y1)
-		this.curvePoint1.setCenterX(arc1.x1);
-		this.curvePoint1.setCenterY(arc1.y1);
-		this.curvePoint1.setRadius(5);
-		this.curvePoint1.setStroke(Color.BLUEVIOLET);
-		this.curvePoint1.setFill(Color.HOTPINK);
-		this.curvePoint1.setStrokeWidth(2);
-	}
-
-	public Circle getCurvePoint2() {
-		return curvePoint2;
-	}
-
-	public void setCurvePoint2() {//arc2.(x1,y1)
-		this.curvePoint2.setCenterX(arc2.x1);
-		this.curvePoint2.setCenterY(arc2.y1);
-		this.curvePoint2.setRadius(5);
-		this.curvePoint2.setStroke(Color.BLUEVIOLET);
-		this.curvePoint2.setFill(Color.HOTPINK);
-		this.curvePoint2.setStrokeWidth(2);
-	}
-
-	public Circle getCurvePoint3() {
-		return curvePoint3;
-	}
-
-	public void setCurvePoint3() {//arc2.(x2,y2)
-		this.curvePoint3.setCenterX(arc2.x2);
-		this.curvePoint3.setCenterY(arc2.y2);
-		this.curvePoint3.setRadius(5);
-		this.curvePoint3.setStroke(Color.BLUEVIOLET);
-		this.curvePoint3.setFill(Color.HOTPINK);
-		this.curvePoint3.setStrokeWidth(2);
-	}
-
-	public Circle getCurvePoint4() {
-		return curvePoint4;
-	}
-
-	public void setCurvePoint4() {//arc1.(x2,y2)
-		this.curvePoint4.setCenterX(arc1.x2);
-		this.curvePoint4.setCenterY(arc1.y2);
-		this.curvePoint4.setRadius(5);
-		this.curvePoint4.setStroke(Color.BLUEVIOLET);
-		this.curvePoint4.setFill(Color.HOTPINK);
-		this.curvePoint4.setStrokeWidth(2);
-	}*/
-	
 	public Circle getCurvePoint1() {
 		return curvePoint1;
 	}
