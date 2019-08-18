@@ -16,7 +16,6 @@ public class Main extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/ui/HomePage.fxml"));
-			//Parent root = FXMLLoader.load(getClass().getResource("/ui/HomePage.fxml"));
 			MainController mainController = new MainController();
 			mainController.setMainApp(this);
 			loader.setController(mainController);

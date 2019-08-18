@@ -103,6 +103,7 @@ public class MainController extends AbstractController implements Initializable 
 	Image imageVertex;
 	Image imageEdge;
 	Image imageLabel;
+	private boolean displayCurveEdgePoints = false;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -127,46 +128,120 @@ public class MainController extends AbstractController implements Initializable 
 	public void handleFormEdgePress() {
 		System.out.println("Form of Edge is pressed");
 		eventOnLeftPane = StateOnLeftPane.FORM_EDGE;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleVertexPress() {
 		System.out.println("Vertex is pressed");
 		eventOnLeftPane = StateOnLeftPane.VERTEX;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
+	}
+	
+	public void handleVertexCustomTextPress() {
+		System.out.println("Create vertex custom text");
+		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleEdgePress() {
 		System.out.println("Edge is pressed");
 		eventOnLeftPane = StateOnLeftPane.EDGE;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleRemoveObjPress() {
 		System.out.println("Remove Object is pressed");
 		eventOnLeftPane = StateOnLeftPane.REMOVE;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleChangeLabelPress() {
 		System.out.println("Change Label is pressed");
 		eventOnLeftPane = StateOnLeftPane.CHANGE_LABEL;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleMoveLabelPress() {
 		System.out.println("Move Label is pressed");
 		eventOnLeftPane = StateOnLeftPane.MOVE_LABEL;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleRemoveIconPress() {
 		System.out.println("RemoveIconPress");
 		eventOnLeftPane = StateOnLeftPane.REMOVE_ICON;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 
 	public void handleVertexIconPress() {
 		System.out.println("VertexIconPress");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_ICON;
+		if (displayCurveEdgePoints) {
+			displayCurveEdgePoints = false;
+			hideCurveEdgePoints();
+		}
 	}
 	
 	public void handleCurveEdgePress() {
 		System.out.println("handle Curve Edge Press");
 		eventOnLeftPane = StateOnLeftPane.CURVE_EDGE;
+		displayCurveEdgePoints = true;
+		//set visible for curve edge points
+		for (Edge edge : edges) {
+			if(edge.isCurveEdge()) {
+				edge.setCurveEdgePoints(true);
+				//rightPane.getChildren().add(...);
+				edge.setCurvePoint1();
+				edge.setCurvePoint2();
+				edge.setCurvePoint3();
+				edge.setCurvePoint4();
+				rightPane.getChildren().add(edge.getCurvePoint1());
+				rightPane.getChildren().add(edge.getCurvePoint2());
+				rightPane.getChildren().add(edge.getCurvePoint3());
+				rightPane.getChildren().add(edge.getCurvePoint4());
+			}
+		}
+		
+	}
+	
+	public void hideCurveEdgePoints() {
+		System.out.println("hide Curve Edge Points ");
+		//set invisible for curve edge points
+		for (Edge edge : edges) {
+			if(edge.isCurveEdge()) {
+				edge.setCurveEdgePoints(false);
+				//rightPane.getChildren().remove(...);
+				rightPane.getChildren().remove(edge.getCurvePoint1());
+				rightPane.getChildren().remove(edge.getCurvePoint2());
+				rightPane.getChildren().remove(edge.getCurvePoint3());
+				rightPane.getChildren().remove(edge.getCurvePoint4());
+			}
+		}
+		
 	}
 
 	@FXML
@@ -938,12 +1013,6 @@ public class MainController extends AbstractController implements Initializable 
 			e.printStackTrace();
 		}
 		return addLabelToVertexPopupController.getResult();
-	}
-
-	public void handleVertexCustomTextPress() {
-		System.out.println("Create vertex custom text");
-		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
-
 	}
 
 	private void saveTextToFile(StringBuilder content, File file) {
