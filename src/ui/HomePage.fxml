@@ -40,6 +40,12 @@
                         <RadioButton fx:id="rbMoveLbl" mnemonicParsing="false" onAction="#handleMoveLabelPress" text="Move Label" toggleGroup="$group1" />
                         <Pane prefHeight="200.0" prefWidth="200.0" />
                         <RadioButton fx:id="formEdge" mnemonicParsing="false" onAction="#handleFormEdgePress" text="Change form of Edge" toggleGroup="$group1" />
+                        <Pane layoutX="10.0" layoutY="286.0" prefHeight="200.0" prefWidth="200.0" />
+                        <RadioButton fx:id="curveEdge" layoutX="10.0" layoutY="290.0" mnemonicParsing="false" onAction="#handleCurveEdgePress" text="Move curve edge" toggleGroup="$group1" />
+                           <toggleGroup>
+                              <ToggleGroup fx:id="group11" />
+                           </toggleGroup>
+                        </RadioButton>
                      </children>
                   </VBox>
                </children>

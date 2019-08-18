@@ -67,6 +67,8 @@ public class MainController extends AbstractController implements Initializable 
 	@FXML
 	private RadioButton formEdge;
 	@FXML
+	private RadioButton curveEdge;
+	@FXML
 	private RadioButton rbVertexIcon;
 	@FXML
 	private Button btnRemoveAll;
@@ -160,6 +162,11 @@ public class MainController extends AbstractController implements Initializable 
 	public void handleVertexIconPress() {
 		System.out.println("VertexIconPress");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_ICON;
+	}
+	
+	public void handleCurveEdgePress() {
+		System.out.println("handle Curve Edge Press");
+		eventOnLeftPane = StateOnLeftPane.CURVE_EDGE;
 	}
 
 	@FXML
