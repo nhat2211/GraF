@@ -34,6 +34,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -104,6 +105,8 @@ public class MainController extends AbstractController implements Initializable 
 	Image imageEdge;
 	Image imageLabel;
 	private boolean displayCurveEdgePoints = false;
+	private Circle currentCurvePoint = null;
+	private boolean isClickedInsideCurvePoint = false;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -142,7 +145,7 @@ public class MainController extends AbstractController implements Initializable 
 			hideCurveEdgePoints();
 		}
 	}
-	
+
 	public void handleVertexCustomTextPress() {
 		System.out.println("Create vertex custom text");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
@@ -205,43 +208,43 @@ public class MainController extends AbstractController implements Initializable 
 			hideCurveEdgePoints();
 		}
 	}
-	
+
 	public void handleCurveEdgePress() {
 		System.out.println("handle Curve Edge Press");
 		eventOnLeftPane = StateOnLeftPane.CURVE_EDGE;
 		displayCurveEdgePoints = true;
-		//set visible for curve edge points
+		// set visible for curve edge points
 		for (Edge edge : edges) {
-			if(edge.isCurveEdge()) {
+			if (edge.isCurveEdge()) {
 				edge.setCurveEdgePoints(true);
-				//rightPane.getChildren().add(...);
+				// rightPane.getChildren().add(...);
 				edge.setCurvePoint1();
 				edge.setCurvePoint2();
-				edge.setCurvePoint3();
-				edge.setCurvePoint4();
+				//edge.setCurvePoint3();
+				//edge.setCurvePoint4();
 				rightPane.getChildren().add(edge.getCurvePoint1());
 				rightPane.getChildren().add(edge.getCurvePoint2());
-				rightPane.getChildren().add(edge.getCurvePoint3());
-				rightPane.getChildren().add(edge.getCurvePoint4());
+				//rightPane.getChildren().add(edge.getCurvePoint3());
+				//rightPane.getChildren().add(edge.getCurvePoint4());
 			}
 		}
-		
+
 	}
-	
+
 	public void hideCurveEdgePoints() {
 		System.out.println("hide Curve Edge Points ");
-		//set invisible for curve edge points
+		// set invisible for curve edge points
 		for (Edge edge : edges) {
-			if(edge.isCurveEdge()) {
+			if (edge.isCurveEdge()) {
 				edge.setCurveEdgePoints(false);
-				//rightPane.getChildren().remove(...);
+				// rightPane.getChildren().remove(...);
 				rightPane.getChildren().remove(edge.getCurvePoint1());
 				rightPane.getChildren().remove(edge.getCurvePoint2());
-				rightPane.getChildren().remove(edge.getCurvePoint3());
-				rightPane.getChildren().remove(edge.getCurvePoint4());
+				//rightPane.getChildren().remove(edge.getCurvePoint3());
+				//rightPane.getChildren().remove(edge.getCurvePoint4());
 			}
 		}
-		
+
 	}
 
 	@FXML
@@ -273,7 +276,7 @@ public class MainController extends AbstractController implements Initializable 
 
 				} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_CUSTOM_TEXT) {
 					String valueText = showAddLabelPopupVertex();
-					if(valueText == "") {
+					if (valueText == "") {
 						System.out.println("You just closed Popup");
 					} else {
 						vertex = new Vertex(event.getX(), event.getY(), radius, Color.CADETBLUE);
@@ -286,7 +289,7 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().add(vertex);
 						rightPane.getChildren().add(vertex.getLabel());
 					}
-					
+
 				} else {
 					// do nothing
 				}
@@ -323,13 +326,13 @@ public class MainController extends AbstractController implements Initializable 
 				showChangeLabelPopupEdge(currentEdge);
 				System.out.println("New value of label: " + currentEdge.getTextWeight().getText());
 				String textWeight = currentEdge.getTextWeight().getText();
-				//do more code here
-				if(parentEdge.containsValue(currentEdge)) {
+				// do more code here
+				if (parentEdge.containsValue(currentEdge)) {
 					System.out.println("Update text weight to the intermediate edge! ");
 					for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
-						if (map.getValue() == currentEdge) {//get map.getKey();
-							for(Edge edge: edges) {
-								if(edge.getV1() == map.getKey()) {
+						if (map.getValue() == currentEdge) {// get map.getKey();
+							for (Edge edge : edges) {
+								if (edge.getV1() == map.getKey()) {
 									System.out.println("This is edge with value: " + edge.getTextWeight().getText());
 									edge.setTextWeight(textWeight);
 								}
@@ -458,11 +461,11 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 			if (e != null) {
-				if(!e.isCurveEdge()) {//if straight edge -> set curve(right)
+				if (!e.isCurveEdge()) {// if straight edge -> set curve(right)
 					e.setCurve("right");
 					rightPane.getChildren().add(e.getCurve());
 					e.setVisibleMainEdge(false);
-				} else if (e.getBendOfCurveEdgeInTikZData() == "right") {//if curve(right) -> set curve(left)
+				} else if (e.getBendOfCurveEdgeInTikZData() == "right") {// if curve(right) -> set curve(left)
 					rightPane.getChildren().remove(e.getCurve());
 					e.setCurve("left");
 					rightPane.getChildren().add(e.getCurve());
@@ -473,6 +476,16 @@ public class MainController extends AbstractController implements Initializable 
 				}
 				e.updateEdge();
 			}
+		} else if (eventOnLeftPane == StateOnLeftPane.CURVE_EDGE) {
+			if (isOnCurvePoint(event.getX(), event.getY())) {// move curve points
+				isClickedInsideCurvePoint = true;
+				System.out.println("is Clicked Inside Curve Point");
+				deltaX = event.getX() - currentCurvePoint.getCenterX();
+				deltaY = event.getY() - currentCurvePoint.getCenterY();
+				firstX = currentCurvePoint.getCenterX();// save first position of CurvePoint before moving
+				firstY = currentCurvePoint.getCenterY();
+			}
+
 		}
 
 		else {
@@ -480,6 +493,24 @@ public class MainController extends AbstractController implements Initializable 
 		}
 	}
 
+	public boolean isOnCurvePoint(double xM, double yM) {
+		boolean flag = false;
+		if(edges.size() > 0) {
+			for (int i = 0; i < edges.size(); i ++) {
+				if (edges.get(i).getCurvePoint1().contains(xM, yM)) {
+					currentCurvePoint = edges.get(i).getCurvePoint1();
+					flag = true;
+					break;
+				} else if (edges.get(i).getCurvePoint2().contains(xM, yM)) {
+					currentCurvePoint = edges.get(i).getCurvePoint2();
+					flag = true;
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+	
 	public boolean isOnAVertex(double xM, double yM) {
 		boolean flag = false;
 		if (vertices.size() > 0) {
@@ -512,7 +543,14 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	@FXML
-	public void moveVertex(MouseEvent event) {
+	public void moveMouse(MouseEvent event) {
+		if (isClickedInsideCurvePoint) {
+			double x = event.getX() - deltaX;
+			double y = event.getY() - deltaY;
+			currentCurvePoint.setCenterX(x);
+			currentCurvePoint.setCenterY(y);
+			
+		}
 		if (isClickedInsideVertex) {
 			double x = event.getX() - deltaX;
 			double y = event.getY() - deltaY;
@@ -529,6 +567,7 @@ public class MainController extends AbstractController implements Initializable 
 		if (isMovingLabel) {
 			currentEdge.setDeltaText(event.getX(), event.getY());
 		}
+		
 	}
 
 	public Edge getExistEdge(Edge E) {
@@ -549,6 +588,7 @@ public class MainController extends AbstractController implements Initializable 
 
 	public void releaseMouse(MouseEvent event) {
 		isClickedInsideVertex = false;
+		isClickedInsideCurvePoint = false;
 
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 
@@ -614,7 +654,7 @@ public class MainController extends AbstractController implements Initializable 
 							currentEdge.updateEdge();
 							currentEdge.setVisibleMainEdge(false);// set invisible
 						}
-						if(parentEdge.containsValue(edge) ) {
+						if (parentEdge.containsValue(edge)) {
 							System.out.println("Update the text weight for intermediate edge");
 							edge.setTextWeight(currentEdge.getTextWeight().getText());
 							edge.updateEdge();
@@ -662,7 +702,14 @@ public class MainController extends AbstractController implements Initializable 
 			}
 			currentEdge = null; // remove it after we don't use it anymore.
 
-		} else {
+		} else if (eventOnLeftPane == StateOnLeftPane.CURVE_EDGE) {
+			//do more code here
+			
+			
+		}
+		
+		
+		else {
 			// do nothing
 		}
 	}
@@ -766,7 +813,7 @@ public class MainController extends AbstractController implements Initializable 
 		if (!v.isIntermediatePoint()) {
 			boolean isIntermediateEdge;
 			do {
-				isIntermediateEdge = false; //remove all intermediate edges that related
+				isIntermediateEdge = false; // remove all intermediate edges that related
 				for (Entry<Vertex, Edge> map : parentEdge.entrySet()) {
 					if (map.getValue().getV1() == v || map.getValue().getV2() == v) {
 						// here we find out the father edge and intermediate point.
@@ -1041,6 +1088,14 @@ public class MainController extends AbstractController implements Initializable 
 
 	public void setCurrentEdge(Edge currentEdge) {
 		this.currentEdge = currentEdge;
+	}
+
+	public Circle getCurrentCurvePoint() {
+		return currentCurvePoint;
+	}
+
+	public void setCurrentCurvePoint(Circle currentCurvePoint) {
+		this.currentCurvePoint = currentCurvePoint;
 	}
 
 }

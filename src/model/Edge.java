@@ -39,10 +39,10 @@ public class Edge extends Line {
 	private Line2D arc2 = new Line2D();
 	private String bendOfCurveEdgeInTikZData = "";
 	private boolean isCurveEdgePoints = false;
-	private Circle curvePoint1 = null;//save curve edge points to these circles
-	private Circle curvePoint2 = null;
-	private Circle curvePoint3 = null;
-	private Circle curvePoint4 = null;
+	private Circle curvePoint1 = new Circle();//save curve edge points to these circles
+	private Circle curvePoint2 = new Circle();
+	//private Circle curvePoint3 = new Circle();
+	//private Circle curvePoint4 = new Circle();
 
 	public Edge() {
 
@@ -405,13 +405,15 @@ public class Edge extends Line {
 	public void setCurveEdgePoints(boolean isCurveEdgePoints) {
 		this.isCurveEdgePoints = isCurveEdgePoints;
 	}
-
+/*
 	public Circle getCurvePoint1() {
 		return curvePoint1;
 	}
 
 	public void setCurvePoint1() {//arc1.(x1,y1)
-		this.curvePoint1 = new Circle(arc1.x1, arc1.y1, 5);
+		this.curvePoint1.setCenterX(arc1.x1);
+		this.curvePoint1.setCenterY(arc1.y1);
+		this.curvePoint1.setRadius(5);
 		this.curvePoint1.setStroke(Color.BLUEVIOLET);
 		this.curvePoint1.setFill(Color.HOTPINK);
 		this.curvePoint1.setStrokeWidth(2);
@@ -422,7 +424,9 @@ public class Edge extends Line {
 	}
 
 	public void setCurvePoint2() {//arc2.(x1,y1)
-		this.curvePoint2 = new Circle(arc2.x1, arc2.y1, 5);
+		this.curvePoint2.setCenterX(arc2.x1);
+		this.curvePoint2.setCenterY(arc2.y1);
+		this.curvePoint2.setRadius(5);
 		this.curvePoint2.setStroke(Color.BLUEVIOLET);
 		this.curvePoint2.setFill(Color.HOTPINK);
 		this.curvePoint2.setStrokeWidth(2);
@@ -433,7 +437,9 @@ public class Edge extends Line {
 	}
 
 	public void setCurvePoint3() {//arc2.(x2,y2)
-		this.curvePoint3 = new Circle(arc2.x2, arc2.y2, 5);
+		this.curvePoint3.setCenterX(arc2.x2);
+		this.curvePoint3.setCenterY(arc2.y2);
+		this.curvePoint3.setRadius(5);
 		this.curvePoint3.setStroke(Color.BLUEVIOLET);
 		this.curvePoint3.setFill(Color.HOTPINK);
 		this.curvePoint3.setStrokeWidth(2);
@@ -444,9 +450,37 @@ public class Edge extends Line {
 	}
 
 	public void setCurvePoint4() {//arc1.(x2,y2)
-		this.curvePoint4 = new Circle(arc1.x2, arc1.y2, 5);
+		this.curvePoint4.setCenterX(arc1.x2);
+		this.curvePoint4.setCenterY(arc1.y2);
+		this.curvePoint4.setRadius(5);
 		this.curvePoint4.setStroke(Color.BLUEVIOLET);
 		this.curvePoint4.setFill(Color.HOTPINK);
 		this.curvePoint4.setStrokeWidth(2);
+	}*/
+	
+	public Circle getCurvePoint1() {
+		return curvePoint1;
+	}
+
+	public void setCurvePoint1() {//arc2.(x1,y1)
+		this.curvePoint1.setCenterX(arc2.x1);
+		this.curvePoint1.setCenterY(arc2.y1);
+		this.curvePoint1.setRadius(5);
+		this.curvePoint1.setStroke(Color.BLUEVIOLET);
+		this.curvePoint1.setFill(Color.HOTPINK);
+		this.curvePoint1.setStrokeWidth(2);
+	}
+
+	public Circle getCurvePoint2() {
+		return curvePoint2;
+	}
+
+	public void setCurvePoint2() {//arc2.(x2,y2)
+		this.curvePoint2.setCenterX(arc2.x2);
+		this.curvePoint2.setCenterY(arc2.y2);
+		this.curvePoint2.setRadius(5);
+		this.curvePoint2.setStroke(Color.BLUEVIOLET);
+		this.curvePoint2.setFill(Color.HOTPINK);
+		this.curvePoint2.setStrokeWidth(2);
 	}
 }

@@ -46,7 +46,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-          <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveVertex" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" style="-fx-background-color: white;" />
+          <AnchorPane fx:id="rightPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#clickMouse" onMouseDragged="#moveMouse" onMousePressed="#pressMouse" onMouseReleased="#releaseMouse" prefHeight="598.0" prefWidth="513.0" style="-fx-background-color: white;" />
         </items>
       </SplitPane>
       <MenuBar fx:id="menuBar" layoutY="-2.0" prefHeight="32.0" prefWidth="997.0">
