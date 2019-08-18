@@ -72,10 +72,16 @@ public class Calculate {
 		return thePoint;
 	}
 
-	public static Line2D getNewArc(double x1, double y1, double x2, double y2, double length1, double length2) {
+	public static Line2D getNewArc(double x1, double y1, double x2, double y2, double length1, double length2, String bendTikz) {
 		Line2D newArc = new Line2D();
-		Point2D p1 = getNewPoint(x1, y1, x2, y2, true, length1);
-		Point2D p2 = getNewPoint(x2, y2, x1, y1, false, length2);
+		Point2D p1, p2;
+		if (bendTikz == "left") {
+			p1 = getNewPoint(x1, y1, x2, y2, true, length1);
+			p2 = getNewPoint(x2, y2, x1, y1, false, length2);
+		} else {//bendTikz = right
+			p1 = getNewPoint(x1, y1, x2, y2, false, length1);
+			p2 = getNewPoint(x2, y2, x1, y1, true, length2);
+		}
 		newArc.setLine((float)p2.getX(), (float)p2.getY(), (float)p1.getX(), (float)p1.getY());
 		return newArc;
 	}

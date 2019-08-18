@@ -20,7 +20,6 @@ public class Edge extends Line {
 	private double x2;
 	private double y2;
 	private Paint color;
-	private double weight;
 	private Text textWeight = new Text();
 	private Point2D deltaText = new Point2D.Double(0, 0);
 	private Circle circleLabel = new Circle();// is the new position of the Label
@@ -38,6 +37,7 @@ public class Edge extends Line {
 	private boolean isCurveEdge = false;
 	private Line2D arc1 = new Line2D();
 	private Line2D arc2 = new Line2D();
+	private String bendOfCurveEdgeInTikZData = "";
 
 	public Edge() {
 
@@ -105,8 +105,8 @@ public class Edge extends Line {
 				length2 = length2/2;
 			}
 			double length = Math.max(length1, length2)*3;
-			arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2);
-			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length);
+			arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2, this.bendOfCurveEdgeInTikZData);
+			arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length, this.bendOfCurveEdgeInTikZData);
 			curve.setStartX(arc1.x1);
 			curve.setStartY(arc1.y1);
 			curve.setControlX1(arc2.x1);
@@ -178,19 +178,11 @@ public class Edge extends Line {
 	public void setTextWeight(String text) {
 		this.textWeight.setText(text);
 		this.textWeight.setStyle("-fx-fill: red; -fx-font-weight: bold;");
-		setWeight(Integer.valueOf(text));
+//		setWeight(Integer.valueOf(text));
 	}
 
 	public Text getTextWeight() {
 		return textWeight;
-	}
-
-	public void setWeight(double weight) {
-		this.weight = weight;
-	}
-
-	public double getWeight() {
-		return weight;
 	}
 
 	public void setDirection(boolean directed) {
@@ -361,9 +353,11 @@ public class Edge extends Line {
 	public void setNullCurveEdge() {//we use it for change the form of the edge, use later
 		this.isCurveEdge = false;
 		this.curve = null;
+		this.bendOfCurveEdgeInTikZData = "";
 	}
 
-	public void setCurve() {
+	public void setCurve(String bendTikz) {
+		this.bendOfCurveEdgeInTikZData = bendTikz;//update the bend of Curve Edge is left or right
 		double length1 = 20;
 		if(v2.isIntermediatePoint()) {
 			length1 = length1/2;
@@ -373,8 +367,8 @@ public class Edge extends Line {
 			length2 = length2/2;
 		}
 		double length = Math.max(length1, length2)*3;
-		arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2);
-		arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length);
+		arc1 = Calculate.getNewArc(x1, y1, x2, y2, length1, length2, bendTikz);
+		arc2 = Calculate.getNewArc(arc1.x1, arc1.y1, arc1.x2, arc1.y2, length, length, bendTikz);
 		this.curve = new CubicCurve( arc1.x1, arc1.y1, arc2.x1, arc2.y1, arc2.x2, arc2.y2, arc1.x2, arc1.y2);
 		this.curve.setStroke(Color.BLUEVIOLET);
         this.curve.setStrokeWidth(2);
@@ -389,5 +383,13 @@ public class Edge extends Line {
 		}else {//invisible
 			super.setStroke(Color.TRANSPARENT);//set the color is invisible
 		}
+	}
+
+	public String getBendOfCurveEdgeInTikZData() {
+		return bendOfCurveEdgeInTikZData;
+	}
+
+	public void setBendOfCurveEdgeInTikZData(String bendOfCurveEdgeInTikZData) {
+		this.bendOfCurveEdgeInTikZData = bendOfCurveEdgeInTikZData;
 	}
 }

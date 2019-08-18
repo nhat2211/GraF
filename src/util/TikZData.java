@@ -50,7 +50,7 @@ public class TikZData {
 			} else if (e.getCurve() == null) {// draw the circle (loop edge)
 				drawLoopEdge(e.getDirection(), e.getV1().getIndex(), e.getTextWeight());
 			} else { // draw the curve edge
-				drawCurveEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
+				drawCurveEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight(), e.getBendOfCurveEdgeInTikZData());
 			}
 		}
 
@@ -86,12 +86,23 @@ public class TikZData {
 	}
 
 	// \draw[->] (g) to [bend left] node [midway,fill=red!20] {8} (h);
-	private static void drawCurveEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
+	private static void drawCurveEdge(boolean directed, int indexV1, int indexV2, Text textWeight, String bend) {
 		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
-					+ textWeight.getText() + "} (" + indexV2 + "); \n");
+			if(bend == "right") {
+				sb.append("		\\draw [->] (" + indexV1 + ") to [bend right] node[midway,fill=red!20] {"
+						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+			} else {
+				sb.append("		\\draw [->] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
+						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+			}
 		} else {	
-			sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] (" + indexV2 + "); \n");
+			if(bend == "right") {
+				sb.append("		\\draw [-] (" + indexV1 + ") to [bend right] node[midway,fill=red!20] {"
+						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+			} else {
+				sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
+						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+			}
 		}
 	}
 

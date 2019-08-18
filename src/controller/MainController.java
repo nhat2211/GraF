@@ -376,14 +376,18 @@ public class MainController extends AbstractController implements Initializable 
 				}
 			}
 			if (e != null) {
-				if (e.isCurveEdge()) {
+				if(!e.isCurveEdge()) {//if straight edge -> set curve(right)
+					e.setCurve("right");
+					rightPane.getChildren().add(e.getCurve());
+					e.setVisibleMainEdge(false);
+				} else if (e.getBendOfCurveEdgeInTikZData() == "right") {//if curve(right) -> set curve(left)
+					rightPane.getChildren().remove(e.getCurve());
+					e.setCurve("left");
+					rightPane.getChildren().add(e.getCurve());
+				} else {// if curve(left) -> set straight edge
 					rightPane.getChildren().remove(e.getCurve());
 					e.setVisibleMainEdge(true);
 					e.setNullCurveEdge();
-				} else {
-					e.setCurve();
-					rightPane.getChildren().add(e.getCurve());
-					e.setVisibleMainEdge(false);
 				}
 				e.updateEdge();
 			}
@@ -523,7 +527,7 @@ public class MainController extends AbstractController implements Initializable 
 						// set the form of currentEdge similar to existEdge
 						if (edge.isCurveEdge()) {
 							System.out.println("Set this edge is curve edge");
-							currentEdge.setCurve();
+							currentEdge.setCurve("left");
 							rightPane.getChildren().add(currentEdge.getCurve());
 							currentEdge.updateEdge();
 							currentEdge.setVisibleMainEdge(false);// set invisible
@@ -543,12 +547,12 @@ public class MainController extends AbstractController implements Initializable 
 							System.out.println("=> two edges between two vertices");
 							System.out.println("=> Change the form of edges to curve edges!");
 							// Change the form of exist edge
-							existEdge.setCurve();
+							existEdge.setCurve("left");
 							rightPane.getChildren().add(existEdge.getCurve());
 							existEdge.updateEdge();
 							existEdge.setVisibleMainEdge(false);// set invisible
 							// Change the form of current edge
-							currentEdge.setCurve();
+							currentEdge.setCurve("left");
 							rightPane.getChildren().add(currentEdge.getCurve());
 							currentEdge.updateEdge();
 							currentEdge.setVisibleMainEdge(false);// set invisible
