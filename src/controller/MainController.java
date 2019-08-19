@@ -129,7 +129,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleFormEdgePress() {
-		System.out.println("Form of Edge is pressed");
+		System.out.println("\nForm of Edge is pressed");
 		eventOnLeftPane = StateOnLeftPane.FORM_EDGE;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -138,7 +138,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleVertexPress() {
-		System.out.println("Vertex is pressed");
+		System.out.println("\nVertex is pressed");
 		eventOnLeftPane = StateOnLeftPane.VERTEX;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -147,7 +147,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleVertexCustomTextPress() {
-		System.out.println("Create vertex custom text");
+		System.out.println("\nCreate vertex custom text");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_CUSTOM_TEXT;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -156,7 +156,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleEdgePress() {
-		System.out.println("Edge is pressed");
+		System.out.println("\nEdge is pressed");
 		eventOnLeftPane = StateOnLeftPane.EDGE;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -165,7 +165,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleRemoveObjPress() {
-		System.out.println("Remove Object is pressed");
+		System.out.println("\nRemove Object is pressed");
 		eventOnLeftPane = StateOnLeftPane.REMOVE;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -174,7 +174,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleChangeLabelPress() {
-		System.out.println("Change Label is pressed");
+		System.out.println("\nChange Label is pressed");
 		eventOnLeftPane = StateOnLeftPane.CHANGE_LABEL;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -183,7 +183,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleMoveLabelPress() {
-		System.out.println("Move Label is pressed");
+		System.out.println("\nMove Label is pressed");
 		eventOnLeftPane = StateOnLeftPane.MOVE_LABEL;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -192,7 +192,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleRemoveIconPress() {
-		System.out.println("RemoveIconPress");
+		System.out.println("\nRemoveIconPress");
 		eventOnLeftPane = StateOnLeftPane.REMOVE_ICON;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -201,7 +201,7 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleVertexIconPress() {
-		System.out.println("VertexIconPress");
+		System.out.println("\nVertexIconPress");
 		eventOnLeftPane = StateOnLeftPane.VERTEX_ICON;
 		if (displayCurveEdgePoints) {
 			displayCurveEdgePoints = false;
@@ -210,41 +210,32 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	public void handleCurveEdgePress() {
-		System.out.println("handle Curve Edge Press");
+		System.out.println("\nhandle Curve Edge Press");
 		eventOnLeftPane = StateOnLeftPane.CURVE_EDGE;
 		displayCurveEdgePoints = true;
 		// set visible for curve edge points
 		for (Edge edge : edges) {
 			if (edge.isCurveEdge()) {
 				edge.setCurveEdgePoints(true);
-				// rightPane.getChildren().add(...);
 				edge.setCurvePoint1();
 				edge.setCurvePoint2();
-				//edge.setCurvePoint3();
-				//edge.setCurvePoint4();
 				rightPane.getChildren().add(edge.getCurvePoint1());
 				rightPane.getChildren().add(edge.getCurvePoint2());
-				//rightPane.getChildren().add(edge.getCurvePoint3());
-				//rightPane.getChildren().add(edge.getCurvePoint4());
 			}
 		}
 
 	}
 
 	public void hideCurveEdgePoints() {
-		System.out.println("hide Curve Edge Points ");
+		System.out.println("\nHide Curve Edge Points ");
 		// set invisible for curve edge points
 		for (Edge edge : edges) {
 			if (edge.isCurveEdge()) {
 				edge.setCurveEdgePoints(false);
-				// rightPane.getChildren().remove(...);
 				rightPane.getChildren().remove(edge.getCurvePoint1());
 				rightPane.getChildren().remove(edge.getCurvePoint2());
-				//rightPane.getChildren().remove(edge.getCurvePoint3());
-				//rightPane.getChildren().remove(edge.getCurvePoint4());
 			}
 		}
-
 	}
 
 	@FXML
@@ -315,7 +306,7 @@ public class MainController extends AbstractController implements Initializable 
 
 		else if (eventOnLeftPane == StateOnLeftPane.REMOVE) {// remove all
 			removeObject(event.getX(), event.getY());
-			System.out.println("Size of parentEdge: " + parentEdge.size());
+			System.out.println("\nSize of parentEdge: " + parentEdge.size());
 			System.out.println("Size of invisibleEdges: " + invisibleEdges.size());
 			System.out.println("Size of vertices: " + vertices.size());
 			System.out.println("Size of edges: " + edges.size());
