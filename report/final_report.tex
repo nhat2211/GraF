@@ -4,7 +4,7 @@
 \usepackage{lipsum}
 \usepackage[margin=1in,includefoot]{geometry}
 \usepackage[hidelinks]{hyperref} % allows clickable references
-
+\usepackage{tikz}
 % Graphics preamble
 \usepackage{graphicx} %Allows you to import images
 \usepackage{float} % Allows for control of float positions
@@ -528,13 +528,7 @@ Remark : I propose that you provide a toolbar on the left side of the window to 
 For each version, you may also provide the tkz version of the drawing, using a menu for the export.
 \subsection{Architecture} 
 We use Model-View-Controller in the application development.
-\begin{figure}[H]
-		\centering
-		\includegraphics[height = 3in]{mvc.png}
-		\caption[Optional caption]{Model-View-Controller}
-		\label{fig:Repository}
-	\end{figure}
-	%Figure \ref{fig:gitImage} The Graph
+
 \paragraph{}
 1. After that the user see on \textbf{VIEW}
 \paragraph{}
@@ -810,7 +804,52 @@ Exit Conditions: & The application is now in a new state. \\
 
 \end{tabular}
 	\paragraph{}
+\subsection{TikZ package} 
+\textbf{Source Reference: www.overleaf.com/learn/latex/} \\
+Tikz is probably the most complex and powerful tool to create graphic elements in LATEX. In this article some of the basics will be explained: lines, dots, curves, circles, rectangles, etc by means of simple examples.
 
+\subsubsection{Introduction}
+We can create graphic elements easily by defining some of their key properties.
+First, you declare a tikzpicture environment, before this you must include the line  usepackage{tikz} in the preamble of your document.
+
+\subsubsection{Basic geometric shapes: Circles, ellipses and polygons}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{tkz_01.png}
+		\caption[Optional caption]{}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+
+\paragraph{}
+
+\subsubsection{Diagrams}
+The nodes are probably the most versatile elements in Tikz. We've already used one node in the introduction to add some text to the figure. In the next example nodes will be used to create a diagram.
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{graph_tkz.png}
+		\caption[Optional caption]{The Graph be drawed by GraF application}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{tikz_code_export.png}
+		\caption[Optional caption]{TikZ Generate export code in latex}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{tikz_graph_image.png}
+		\caption[Optional caption]{Generate The Graph By TikZ}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
 \newpage
 \addcontentsline{toc}{section}{\numberline{}References}
 \printbibliography
