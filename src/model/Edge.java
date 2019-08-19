@@ -131,6 +131,11 @@ public class Edge extends Line {
 				float deltaY2 = arc2.y2 - curveLine.y2;
 				arc2.setLine((float)curvePoint1.getCenterX() + deltaX1, (float)curvePoint1.getCenterY() + deltaY1, (float)curvePoint2.getCenterX() + deltaX2, (float)curvePoint2.getCenterY() + deltaY2);
 			}
+			//calculate again position for arc1(x1, y1)&(x2, y2) because when we move the curve edge so this point should move around the circle of the vertex
+			Point2D arcP1 = Calculate.getPoint(arc2.x1, arc2.y1, x1, y1, v1.getR());
+			Point2D arcP2 = Calculate.getPoint(arc2.x2, arc2.y2, x2, y2, v2.getR());
+			arc1.setLine((float)arcP1.getX(), (float)arcP1.getY(), (float)arcP2.getX(), (float)arcP2.getY());
+			//draw the curve edge
 			curve.setStartX(arc1.x1);
 			curve.setStartY(arc1.y1);
 			curve.setControlX1(arc2.x1);
