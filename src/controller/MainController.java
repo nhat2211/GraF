@@ -96,6 +96,7 @@ public class MainController extends AbstractController implements Initializable 
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent Edge
 	HashMap<Edge, Vertex> invisibleEdges = new HashMap<Edge, Vertex>();// invisible edges
+	//private List<Edge> invisibleEdges = new ArrayList<>();//TODO tomorrow
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -337,7 +338,7 @@ public class MainController extends AbstractController implements Initializable 
 				isMovingLabel = true;
 				System.out.println("You just clicked inside the Label!");
 			}
-		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {
+		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {//INTERMEDIATE POINT
 			if (isOnAVertex(event.getX(), event.getY())) {// move vertices (include intermediate point)
 				isClickedInsideVertex = true;
 				deltaX = event.getX() - currentVertex.getX();
@@ -372,11 +373,11 @@ public class MainController extends AbstractController implements Initializable 
 						indexVertex++;
 						vertex.setIndex(indexVertex);
 						rightPane.getChildren().add(vertex);
-						invisibleEdges.put(e, vertex);
 
 						// map points: list intermediate points of the edge
 						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
 							parentEdge.put(vertex, e);
+							invisibleEdges.put(e, vertex);//invisible the father edge (this is normal edge)
 						} else {
 							Edge fatherEdge = new Edge();
 							for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
@@ -403,7 +404,7 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().add(edge1);
 						edge1.updateEdge();
 
-						// add the first edge to intermediate point
+						// add the second edge to intermediate point
 						Edge edge2 = new Edge(vertex.getX(), vertex.getY(), e.getX2(), e.getY2(), Color.BLUEVIOLET);
 						if (e.getDirection()) {
 							edge2.setDirection(true);
@@ -423,6 +424,9 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().remove(e);
 						rightPane.getChildren().remove(e.getArrow1());
 						rightPane.getChildren().remove(e.getArrow2());
+						if (e.getV1().isIntermediatePoint() || e.getV2().isIntermediatePoint()) {//remove intermediate edge
+							edges.remove(e);
+						}
 					}
 				}
 
@@ -706,7 +710,7 @@ public class MainController extends AbstractController implements Initializable 
 		}
 	}
 
-	public void movingTheEdges(double newX, double newY) {// TODO
+	public void movingTheEdges(double newX, double newY) {
 		for (Edge edge : edges) {
 			if (firstX == edge.getX1() && firstY == edge.getY1()) {
 				edge.setEdge(newX, newY, edge.getX2(), edge.getY2());
@@ -727,7 +731,38 @@ public class MainController extends AbstractController implements Initializable 
 			for (Vertex v : vertices) {
 				if (v.contains(cX, cY)) {
 					if (v.isIntermediatePoint()) {
-						removeIntermediatePoint(v);
+						//removeIntermediatePoint(v);
+						//Vertex v1 = new Vertex();
+						//Vertex v2 = new Vertex();
+						Edge e1 = new Edge();
+						Edge e2 = new Edge();
+						//Make the father edge for intermediate point before remove this point
+						for (Edge edge : edges) {
+							if(edge.getV1() == v) {
+								//v2 = edge.getV2();
+								e2 = edge;
+							} else if (edge.getV2() == v) {
+								//v1 = edge.getV1();
+								e1 = edge;
+							}
+						}
+						if(!e1.getV1().isIntermediatePoint() && !e2.getV2().isIntermediatePoint()) {
+							removeIntermediatePoint(v);//remove it when father edge is normal edge
+						} else {
+							//set right edge to the father edge
+							e2.setX1(e1.getX1());
+							e2.setY1(e1.getY1());
+							e2.setV1(e1.getV1());
+							//remove left edge (e1)
+							rightPane.getChildren().remove(e1);
+							edges.remove(e1);
+							rightPane.getChildren().remove(v);
+							vertices.remove(v);
+							//TODO
+							//invisibleEdges.remove(parentEdge.get(v), v);
+							parentEdge.remove(v);//remove the parent of point v out of the HashMap
+							e2.updateEdge();
+						}
 					} else {
 						removeVertex(v);
 					}

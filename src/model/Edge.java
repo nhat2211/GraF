@@ -42,8 +42,6 @@ public class Edge extends Line {
 	private Circle curvePoint1 = new Circle();//save curve edge points to these circles
 	private Circle curvePoint2 = new Circle();
 	private Line2D curveLine = null;
-	//private Circle curvePoint3 = new Circle();
-	//private Circle curvePoint4 = new Circle();
 
 	public Edge() {
 
