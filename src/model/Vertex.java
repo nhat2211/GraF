@@ -104,7 +104,6 @@ public class Vertex extends Circle{
 		this.label.setX(xText);
 		this.label.setY(yText);
 		this.label.setText(Integer.toString(index));
-		//this.label.setStyle(color);
 		this.label.setStyle(color+ ";"+" -fx-font-weight: bold;");
 	}
 	
@@ -112,7 +111,6 @@ public class Vertex extends Circle{
 		this.label.setX(xText);
 		this.label.setY(yText);
 		this.label.setText(value);
-		//this.label.setStyle(color);
 		this.label.setStyle(color+ ";"+" -fx-font-weight: bold;");
 	}
 	

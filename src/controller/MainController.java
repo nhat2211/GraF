@@ -95,7 +95,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent Edge
-	private List<Edge> invisibleEdges = new ArrayList<>();//TODO tomorrow
+	private List<Edge> invisibleEdges = new ArrayList<>();// TODO tomorrow
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -336,7 +336,7 @@ public class MainController extends AbstractController implements Initializable 
 				isMovingLabel = true;
 				System.out.println("You just clicked inside the Label!");
 			}
-		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {//INTERMEDIATE POINT
+		} else if (eventOnLeftPane == StateOnLeftPane.VERTEX_ICON) {// INTERMEDIATE POINT
 			if (isOnAVertex(event.getX(), event.getY())) {// move vertices (include intermediate point)
 				isClickedInsideVertex = true;
 				deltaX = event.getX() - currentVertex.getX();
@@ -374,7 +374,7 @@ public class MainController extends AbstractController implements Initializable 
 						// map points: list intermediate points of the edge
 						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
 							parentEdge.put(vertex, e);
-							if(!invisibleEdges.contains(e)) {
+							if (!invisibleEdges.contains(e)) {
 								invisibleEdges.add(e);
 							}
 						} else {
@@ -423,7 +423,8 @@ public class MainController extends AbstractController implements Initializable 
 						rightPane.getChildren().remove(e);
 						rightPane.getChildren().remove(e.getArrow1());
 						rightPane.getChildren().remove(e.getArrow2());
-						if (e.getV1().isIntermediatePoint() || e.getV2().isIntermediatePoint()) {//remove intermediate edge
+						if (e.getV1().isIntermediatePoint() || e.getV2().isIntermediatePoint()) {// remove intermediate
+																									// edge
 							edges.remove(e);
 						}
 					}
@@ -487,8 +488,8 @@ public class MainController extends AbstractController implements Initializable 
 
 	public boolean isOnCurvePoint(double xM, double yM) {
 		boolean flag = false;
-		if(edges.size() > 0) {
-			for (int i = 0; i < edges.size(); i ++) {
+		if (edges.size() > 0) {
+			for (int i = 0; i < edges.size(); i++) {
 				if (edges.get(i).getCurvePoint1().contains(xM, yM)) {
 					currentCurvePoint = edges.get(i).getCurvePoint1();
 					currentEdge = edges.get(i);
@@ -504,7 +505,7 @@ public class MainController extends AbstractController implements Initializable 
 		}
 		return flag;
 	}
-	
+
 	public boolean isOnAVertex(double xM, double yM) {
 		boolean flag = false;
 		if (vertices.size() > 0) {
@@ -544,7 +545,7 @@ public class MainController extends AbstractController implements Initializable 
 			currentCurvePoint.setCenterX(x);
 			currentCurvePoint.setCenterY(y);
 			currentEdge.updateEdge();
-			
+
 		}
 		if (isClickedInsideVertex) {
 			double x = event.getX() - deltaX;
@@ -562,7 +563,7 @@ public class MainController extends AbstractController implements Initializable 
 		if (isMovingLabel) {
 			currentEdge.setDeltaText(event.getX(), event.getY());
 		}
-		
+
 	}
 
 	public Edge getExistEdge(Edge E) {
@@ -589,8 +590,8 @@ public class MainController extends AbstractController implements Initializable 
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
 			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {
-				// && currentVertex != firstVertex ->cancel this is on a vertex 
-				//-> set the ending point of edge is the central of Vertex
+				// && currentVertex != firstVertex ->cancel this is on a vertex
+				// -> set the ending point of edge is the central of Vertex
 				resultMap = showPopupEdge();
 				typeEdge = (String) resultMap.get("typeEdge");
 				weightEdge = (String) resultMap.get("weight");
@@ -697,9 +698,9 @@ public class MainController extends AbstractController implements Initializable 
 			currentEdge = null; // remove it after we don't use it anymore.
 
 		} else if (eventOnLeftPane == StateOnLeftPane.CURVE_EDGE) {
-	
+
 		}
-		
+
 		else {
 			// do nothing
 		}
@@ -728,27 +729,27 @@ public class MainController extends AbstractController implements Initializable 
 					if (v.isIntermediatePoint()) {
 						Edge e1 = new Edge();
 						Edge e2 = new Edge();
-						//Make the father edge for intermediate point before remove this point
+						// Make the father edge for intermediate point before remove this point
 						for (Edge edge : edges) {
-							if(edge.getV1() == v) {
+							if (edge.getV1() == v) {
 								e2 = edge;
 							} else if (edge.getV2() == v) {
 								e1 = edge;
 							}
 						}
-						if(!e1.getV1().isIntermediatePoint() && !e2.getV2().isIntermediatePoint()) {
-							removeIntermediatePoint(v);//remove it when father edge is normal edge
+						if (!e1.getV1().isIntermediatePoint() && !e2.getV2().isIntermediatePoint()) {
+							removeIntermediatePoint(v);// remove it when father edge is normal edge
 						} else {
-							//set right edge to the father edge
+							// set right edge to the father edge
 							e2.setX1(e1.getX1());
 							e2.setY1(e1.getY1());
 							e2.setV1(e1.getV1());
-							//remove left edge (e1)
+							// remove left edge (e1)
 							rightPane.getChildren().remove(e1);
 							edges.remove(e1);
 							rightPane.getChildren().remove(v);
 							vertices.remove(v);
-							parentEdge.remove(v);//remove the parent of point v out of the HashMap
+							parentEdge.remove(v);// remove the parent of point v out of the HashMap
 							e2.updateEdge();
 						}
 					} else {
@@ -769,10 +770,31 @@ public class MainController extends AbstractController implements Initializable 
 							edge.getCurve().getControlY2());
 				}
 
-				if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
-					System.out.println("You select the line with the distance to the edge is: " + distance);
-					hasPoints.add(edges.indexOf(edge));// save index of edge in edges
-					currentEdge = edge;
+				if ((edge.getCircle() == null && distance <= distanceToDeleteEdge)
+						|| edge.getCurve().contains(cX, cY)) {
+					// check normal edge and cubic edge between two vertices is parallel or not?
+					double corner1, corner2;
+					corner1 = 0;
+					corner2 = 0;
+					int corner = 0;
+					if ((edge.getCurve()!= null) && (!edge.getCurve().contains(cX, cY))) {
+						if (edge.getY1() != edge.getY2()) {
+							corner1 = ((edge.getX2() - edge.getX1()) / (edge.getY2() - edge.getY1()));
+							System.out.println("Corner of original edge: " + corner1);
+						}
+						if (edge.getCurve().getControlY1() != edge.getCurve().getControlY2()) {
+							corner2 = ((edge.getCurve().getControlX2() - edge.getCurve().getControlX1())
+									/ (edge.getCurve().getControlY2() - edge.getCurve().getControlY1()));
+							System.out.println("Corner of curve edge:" + corner2);
+						}
+						corner = (int) (corner2 - corner1);
+						System.out.println("Compare two corners: " + corner);
+					}
+					if (corner == 0) {
+						System.out.println("You select the line with the distance to the edge is: " + distance);
+						hasPoints.add(edges.indexOf(edge));// save index of edge in edges
+						currentEdge = edge;
+					}
 				}
 				if (edge.getCircle() != null && edge.getCircle().contains(cX, cY)) {
 					System.out.println("Delete the circle Edge!");
@@ -821,7 +843,7 @@ public class MainController extends AbstractController implements Initializable 
 		rightPane.getChildren().add(fatherEdge);
 		rightPane.getChildren().add(fatherEdge.getArrow1());
 		rightPane.getChildren().add(fatherEdge.getArrow2());
-		invisibleEdges.remove(fatherEdge);//remove father edge from the list of invisible edges
+		invisibleEdges.remove(fatherEdge);// remove father edge from the list of invisible edges
 	}
 
 	private void removeVertex(Vertex v) {
