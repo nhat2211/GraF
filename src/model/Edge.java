@@ -208,7 +208,11 @@ public class Edge extends Line {
 	public void setTextWeight(String text) {
 		this.textWeight.setText(text);
 		this.textWeight.setStyle("-fx-fill: red; -fx-font-weight: bold;");
-//		setWeight(Integer.valueOf(text));
+	}
+	
+	public void setPositionOfTextWeight(double x, double y) {
+		this.textWeight.setX(x);
+		this.textWeight.setY(y);
 	}
 
 	public Text getTextWeight() {

@@ -1,6 +1,7 @@
 package util;
 
 import java.util.List;
+
 import javafx.scene.text.Text;
 import model.Edge;
 import model.Vertex;
@@ -19,7 +20,7 @@ public class TikZData {
 		sb.append("\\begin{tikzpicture} \n");
 		// START THE CODE FOR EXPORT GRAPH
 		sb.append(
-				"[bigNode/.style={circle, draw=green!60, fill=green!5, thick, minimum size=7mm}, smallNode/.style={circle, draw=blue!60, fill=blue!20, thick, minimum size=3mm},] \n");
+				"[bigNode/.style={circle, draw=green!60, fill=green!5, thick, minimum size=7mm}, smallNode/.style={circle, draw=red!20, fill=red!20, thick, minimum size=3mm}, squareNode/.style={rectangle, draw=blue!20, fill=blue!15, thick, minimum size=3mm}] \n");
 
 		System.out.println("Size of vertices: " + vertices.size());
 		for (Vertex v : vertices) {
@@ -38,7 +39,7 @@ public class TikZData {
 						if(!e.getV2().isIntermediatePoint()) {
 							drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
 						} else {
-							drawSegmentEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
+							drawSegmentEdge(e.getV1().getIndex(), e.getV2().getIndex());
 						}
 					}
 				} else {// draw normal edge and only invisible father edge that have intermediate points
@@ -61,6 +62,13 @@ public class TikZData {
 
 	}
 
+	//\node[squarednode] at ( 5.9875, 4.25) {1}; 
+	private static void squareNode(Text textWeight, double x, double y) {
+		x = x/80;
+		y = 10 - y/80;
+		sb.append("		\\node[squareNode] at ( " + x + ", " + y + ")" + " {" + textWeight.getText() + "}; \n");
+	}
+	
 	private static void bigNode(int index, double x, double y) {
 		x = x/80;
 		y = 10 - y/80;
@@ -76,11 +84,11 @@ public class TikZData {
 	// \draw[->] (e) to [loop above] node [midway,fill=red!20] {5} (e);
 	private static void drawLoopEdge(boolean directed, int indexV1, Text textWeight) {
 		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") to [loop above] node[midway,fill=red!20] {"
-					+ textWeight.getText() + "} (" + indexV1 + "); \n");
+			sb.append("		\\draw [->] (" + indexV1 + ") to [loop above] (" + indexV1 + "); \n");
+			squareNode(textWeight, textWeight.getX(), textWeight.getY());
 		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") to [loop above] node[midway,fill=red!20] {"
-					+ textWeight.getText() + "} (" + indexV1 + "); \n");	
+			sb.append("		\\draw [-] (" + indexV1 + ") to [loop above] (" + indexV1 + "); \n");
+			squareNode(textWeight, textWeight.getX(), textWeight.getY());
 		}
 	}
 
@@ -88,38 +96,34 @@ public class TikZData {
 	private static void drawCurveEdge(boolean directed, int indexV1, int indexV2, Text textWeight, String bend) {
 		if (directed) {
 			if(bend == "right") {
-				sb.append("		\\draw [->] (" + indexV1 + ") to [bend right] node[midway,fill=red!20] {"
-						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+				sb.append("		\\draw [->] (" + indexV1 + ") to [bend right] (" + indexV2 + "); \n");
+				squareNode(textWeight, textWeight.getX(), textWeight.getY());
 			} else {
-				sb.append("		\\draw [->] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
-						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+				sb.append("		\\draw [->] (" + indexV1 + ") to [bend left] (" + indexV2 + "); \n");
+				squareNode(textWeight, textWeight.getX(), textWeight.getY());
 			}
 		} else {	
 			if(bend == "right") {
-				sb.append("		\\draw [-] (" + indexV1 + ") to [bend right] node[midway,fill=red!20] {"
-						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+				sb.append("		\\draw [-] (" + indexV1 + ") to [bend right] (" + indexV2 + "); \n");
+				squareNode(textWeight, textWeight.getX(), textWeight.getY());
 			} else {
-				sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] node[midway,fill=red!20] {"
-						+ textWeight.getText() + "} (" + indexV2 + "); \n");
+				sb.append("		\\draw [-] (" + indexV1 + ") to [bend left] (" + indexV2 + "); \n");
+				squareNode(textWeight, textWeight.getX(), textWeight.getY());
 			}
 		}
 	}
 
 	private static void drawNormalEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
 		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=red!20] {"
-					+ textWeight.getText() + "}; \n");
+			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + "); \n");
+			squareNode(textWeight, textWeight.getX(), textWeight.getY());
 		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[midway,fill=red!20] {"
-					+ textWeight.getText() + "}; \n");
+			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + "); \n");
+			squareNode(textWeight, textWeight.getX(), textWeight.getY());
 		}
 	}
 
-	private static void drawSegmentEdge(boolean directed, int indexV1, int indexV2, Text textWeight) {
-		if (directed) {
-			sb.append("		\\draw [->] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {}; \n");
-		} else {
-			sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + ") node[fill=red!20] {}; \n");
-		}
+	private static void drawSegmentEdge(int indexV1, int indexV2) {
+		sb.append("		\\draw [-] (" + indexV1 + ") -- (" + indexV2 + "); \n");
 	}
 }

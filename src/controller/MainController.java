@@ -445,6 +445,9 @@ public class MainController extends AbstractController implements Initializable 
 						distance = Calculate.heightOfTriangle(event.getX(), event.getY(),
 								edge.getCurve().getControlX1(), edge.getCurve().getControlY1(),
 								edge.getCurve().getControlX2(), edge.getCurve().getControlY2());
+						if(edge.getCurve().contains(event.getX(), event.getY())) {
+							distance = 0;
+						}
 					}
 					if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
 						if (distance < smallestDistance) {
@@ -771,7 +774,7 @@ public class MainController extends AbstractController implements Initializable 
 				}
 
 				if ((edge.getCircle() == null && distance <= distanceToDeleteEdge)
-						|| edge.getCurve().contains(cX, cY)) {
+						|| ((edge.getCurve()!= null) && (edge.getCurve().contains(cX, cY)))) {
 					// check normal edge and cubic edge between two vertices is parallel or not?
 					double corner1, corner2;
 					corner1 = 0;
@@ -1043,10 +1046,23 @@ public class MainController extends AbstractController implements Initializable 
 		File file = fileChooser.showSaveDialog(main.getPrimaryStage());
 		if (file != null) {
 			System.out.println("Start Save text to file tiKZ");
+			updatePositionOfLabelToSegmentEdge();
 			this.saveTextToFile(TikZData.handlerData(vertices, edges, invisibleEdges), file);
 			System.out.println("End Save text to file tiKZ");
 		}
 
+	}
+	
+	public void updatePositionOfLabelToSegmentEdge() {//update position of Label to the segment edge
+		for (Edge edge : edges) {
+			if(edge.getV1().isIntermediatePoint()) {
+				currentEdge = parentEdge.get(edge.getV1());
+				edge.setPositionOfTextWeight(currentEdge.getTextWeight().getX(), currentEdge.getTextWeight().getY());
+			} else if (edge.getV2().isIntermediatePoint()) {
+				currentEdge = parentEdge.get(edge.getV2());
+				edge.setPositionOfTextWeight(currentEdge.getTextWeight().getX(), currentEdge.getTextWeight().getY());
+			}
+		}
 	}
 
 	private String showAddLabelPopupVertex() {
