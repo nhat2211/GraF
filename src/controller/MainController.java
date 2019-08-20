@@ -95,8 +95,7 @@ public class MainController extends AbstractController implements Initializable 
 	private List<Integer> hasPoints = new ArrayList<>();
 	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the parent Edge
-	HashMap<Edge, Vertex> invisibleEdges = new HashMap<Edge, Vertex>();// invisible edges
-	//private List<Edge> invisibleEdges = new ArrayList<>();//TODO tomorrow
+	private List<Edge> invisibleEdges = new ArrayList<>();//TODO tomorrow
 	String typeEdge = "";
 	String weightEdge = "";
 	HashMap<String, Object> resultMap = null;
@@ -298,8 +297,7 @@ public class MainController extends AbstractController implements Initializable 
 				currentEdge = edge;
 				rightPane.getChildren().add(currentEdge);
 				isDrawingEdge = true;// this one,we have to put here in the end of this function because we want to
-										// save FirstVertex.
-				// firstVertex = currentVertex;// save the first Vertex for comparing later
+										// save FirstVertex
 			} else {
 				System.out.println("You should click inside the Vertex for drawing the line");
 			}
@@ -349,7 +347,7 @@ public class MainController extends AbstractController implements Initializable 
 				Edge e = null;
 				int smallestDistance = 1000;
 				for (Edge edge : edges) {
-					if (invisibleEdges.get(edge) == null && !edge.isCurveEdge()) {
+					if (invisibleEdges.contains(edge) == false && !edge.isCurveEdge()) {
 						int distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(),
 								edge.getY1(), edge.getX2(), edge.getY2());
 						if (edge.getCircle() == null && distance <= distanceToDeleteEdge) {
@@ -358,7 +356,6 @@ public class MainController extends AbstractController implements Initializable 
 								smallestDistance = distance;
 								System.out.println("Smallest distance: " + distance);
 							}
-							// break;
 						}
 					}
 				}
@@ -377,7 +374,9 @@ public class MainController extends AbstractController implements Initializable 
 						// map points: list intermediate points of the edge
 						if (!e.getV1().isIntermediatePoint() && !e.getV2().isIntermediatePoint()) {
 							parentEdge.put(vertex, e);
-							invisibleEdges.put(e, vertex);//invisible the father edge (this is normal edge)
+							if(!invisibleEdges.contains(e)) {
+								invisibleEdges.add(e);
+							}
 						} else {
 							Edge fatherEdge = new Edge();
 							for (Entry<Vertex, Edge> map : parentEdge.entrySet()) { //
@@ -436,7 +435,7 @@ public class MainController extends AbstractController implements Initializable 
 			Edge e = null;
 			int smallestDistance = 1000;
 			for (Edge edge : edges) {
-				if (invisibleEdges.get(edge) == null) {
+				if (!invisibleEdges.contains(edge)) {
 					int distance;
 					if (edge.getCurve() == null) {// Calculate distance of Main Edge
 						distance = Calculate.heightOfTriangle(event.getX(), event.getY(), edge.getX1(), edge.getY1(),
@@ -589,10 +588,9 @@ public class MainController extends AbstractController implements Initializable 
 		if (eventOnLeftPane == StateOnLeftPane.VERTEX) {
 
 		} else if (eventOnLeftPane == StateOnLeftPane.EDGE) {
-			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {// && currentVertex !=
-																									// firstVertex
-																									// ->cancel this
-				// is on a vertex -> set the ending point of edge is the central of Vertex
+			if (isOnAVertex(event.getX(), event.getY()) && !currentVertex.isIntermediatePoint()) {
+				// && currentVertex != firstVertex ->cancel this is on a vertex 
+				//-> set the ending point of edge is the central of Vertex
 				resultMap = showPopupEdge();
 				typeEdge = (String) resultMap.get("typeEdge");
 				weightEdge = (String) resultMap.get("weight");
@@ -699,11 +697,8 @@ public class MainController extends AbstractController implements Initializable 
 			currentEdge = null; // remove it after we don't use it anymore.
 
 		} else if (eventOnLeftPane == StateOnLeftPane.CURVE_EDGE) {
-			//do more code here
-			
-			
+	
 		}
-		
 		
 		else {
 			// do nothing
@@ -731,18 +726,13 @@ public class MainController extends AbstractController implements Initializable 
 			for (Vertex v : vertices) {
 				if (v.contains(cX, cY)) {
 					if (v.isIntermediatePoint()) {
-						//removeIntermediatePoint(v);
-						//Vertex v1 = new Vertex();
-						//Vertex v2 = new Vertex();
 						Edge e1 = new Edge();
 						Edge e2 = new Edge();
 						//Make the father edge for intermediate point before remove this point
 						for (Edge edge : edges) {
 							if(edge.getV1() == v) {
-								//v2 = edge.getV2();
 								e2 = edge;
 							} else if (edge.getV2() == v) {
-								//v1 = edge.getV1();
 								e1 = edge;
 							}
 						}
@@ -758,8 +748,6 @@ public class MainController extends AbstractController implements Initializable 
 							edges.remove(e1);
 							rightPane.getChildren().remove(v);
 							vertices.remove(v);
-							//TODO
-							//invisibleEdges.remove(parentEdge.get(v), v);
 							parentEdge.remove(v);//remove the parent of point v out of the HashMap
 							e2.updateEdge();
 						}
@@ -833,6 +821,7 @@ public class MainController extends AbstractController implements Initializable 
 		rightPane.getChildren().add(fatherEdge);
 		rightPane.getChildren().add(fatherEdge.getArrow1());
 		rightPane.getChildren().add(fatherEdge.getArrow2());
+		invisibleEdges.remove(fatherEdge);//remove father edge from the list of invisible edges
 	}
 
 	private void removeVertex(Vertex v) {
@@ -879,21 +868,6 @@ public class MainController extends AbstractController implements Initializable 
 		vertices.remove(v);// remove Vertex on the list (note: Vertex include label inside)
 		rightPane.getChildren().remove(v);// remove Vertex on the rightPane
 		rightPane.getChildren().remove(v.getLabel());// remove Label of Vertex on rightPane
-
-		// remove vertex in the HashMap of invisibleEdge
-		boolean isExistVertex = false;
-		for (Entry<Edge, Vertex> map : invisibleEdges.entrySet()) { //
-			if (map.getValue() == v) {
-				isExistVertex = true;
-				currentEdge = map.getKey();
-				break;
-			}
-		}
-		if (isExistVertex) {
-			boolean status = invisibleEdges.remove(currentEdge, v);
-			System.out.println("Status of removing in invisibleEdges: " + status);
-			System.out.println("Current size of invisibleEdges: " + invisibleEdges.size());
-		}
 	}
 
 	private void removeEdge(Edge edge) {
@@ -953,7 +927,6 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	private Edge showChangeLabelPopupEdge(Edge edge) {
-		// HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/ui/ChangeLabelPopup.fxml"));
 		// initializing the controller
@@ -1017,11 +990,6 @@ public class MainController extends AbstractController implements Initializable 
 
 	public void addImageToSnapshotArea(Node root, File file) {
 		SnapshotParameters params = new SnapshotParameters();
-		/*
-		 * params.setViewport( new Rectangle2D( rightPane.getScene().getX(),
-		 * rightPane.getScene().getY(), rightPane.getScene().getWidth(),
-		 * rightPane.getScene().getHeight()));
-		 */
 		WritableImage image = rightPane.snapshot(params, null);
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
@@ -1047,8 +1015,6 @@ public class MainController extends AbstractController implements Initializable 
 		System.out.println("Open Dialog File chooser Export TikiZ");
 		FileChooser fileChooser = new FileChooser();
 		// Set extension filter
-		// fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png
-		// files (*.png)", "*.png"));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tikz files (*.tex)", "*.tex"));
 		configuringDirectoryChooser(fileChooser);
 		// Show save file dialog
@@ -1062,7 +1028,6 @@ public class MainController extends AbstractController implements Initializable 
 	}
 
 	private String showAddLabelPopupVertex() {
-		// HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/ui/AddLabelToVertexPopup.fxml"));
 		// initializing the controller
@@ -1099,30 +1064,6 @@ public class MainController extends AbstractController implements Initializable 
 			ex.printStackTrace();
 
 		}
-	}
-
-	public Vertex getCurrentVertex() {
-		return currentVertex;
-	}
-
-	public void setCurrentVertex(Vertex currentVertex) {
-		this.currentVertex = currentVertex;
-	}
-
-	public Edge getCurrentEdge() {
-		return currentEdge;
-	}
-
-	public void setCurrentEdge(Edge currentEdge) {
-		this.currentEdge = currentEdge;
-	}
-
-	public Circle getCurrentCurvePoint() {
-		return currentCurvePoint;
-	}
-
-	public void setCurrentCurvePoint(Circle currentCurvePoint) {
-		this.currentCurvePoint = currentCurvePoint;
 	}
 
 }

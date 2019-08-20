@@ -1,6 +1,5 @@
 package util;
 
-import java.util.HashMap;
 import java.util.List;
 import javafx.scene.text.Text;
 import model.Edge;
@@ -9,7 +8,7 @@ import model.Vertex;
 public class TikZData {
 	private static StringBuilder sb = new StringBuilder();
 
-	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges, HashMap<Edge, Vertex> invisibleEdges) {
+	public static StringBuilder handlerData(List<Vertex> vertices, List<Edge> edges, List<Edge> invisibleEdges) {
 		sb.delete(0, sb.length());
 		sb.append("\\documentclass{article} \n");
 		sb.append("\\usepackage[utf8]{inputenc} \n");
@@ -35,7 +34,7 @@ public class TikZData {
 		for (Edge e : edges) {
 			if (e.getCircle() == null && e.getCurve() == null) {// draw the normal edge & segment edge
 				if (e.getV2().isIntermediatePoint() || e.getV2().isIntermediatePoint()) {//draw the segment edge
-					if(invisibleEdges.get(e) == null) {
+					if(!invisibleEdges.contains(e)) {
 						if(!e.getV2().isIntermediatePoint()) {
 							drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
 						} else {
@@ -43,7 +42,7 @@ public class TikZData {
 						}
 					}
 				} else {// draw normal edge and only invisible father edge that have intermediate points
-					if(invisibleEdges.get(e) == null) {
+					if(!invisibleEdges.contains(e)) {
 						drawNormalEdge(e.getDirection(), e.getV1().getIndex(), e.getV2().getIndex(), e.getTextWeight());
 					}
 				}
