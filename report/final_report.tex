@@ -803,7 +803,237 @@ Exit Conditions: & The application is now in a new state. \\
 \hline
 
 \end{tabular}
+
+\subsubsection{Change Label}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Change Label\\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose Change Label option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press left mouse on a label of edge which user want to change \\
+& 4. System will show the popup change label \\
+& 5. User input a new value \\
+& 6. User click change button \\
+& 7. System will change new value of the label \\
+& 8. System will display new value of the label on UI \\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{changeLabelFunction.png}
+		\caption[Optional caption]{Change Label}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{changeLabelFunction2.png}
+		\caption[Optional caption]{Change Label}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
 	\paragraph{}
+
+\subsubsection{Move Label}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Move Label \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose Move Label option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press left mouse and hold on the label which user want to move \\
+& 4. User hold the left mouse and drag to be able to move the label\\
+& 5. User release the left mouse on the new position\\
+& 6. System will display new postion of the label on UI \\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{moveLabel.png}
+		\caption[Optional caption]{Move Label}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\subsubsection{Change Form Of Edge}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Change Form Of Edge \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose Change Form Of Edge option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. User press left mouse on the edge that user want to change form \\
+& 4. System will change form of the current edge from straight line to the curve\\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{changeForm.png}
+		\caption[Optional caption]{Change Form Of The Edge}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+
+\subsubsection{Move Curve Edge}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Move Curve Edge \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose Move Curve Edge option on left pane. \\
+& 2. System remember the type which user chose.  \\
+& 3. System will show two points at around of first and last position of every curve edge \\
+& 4. User press the left mouse and hold press on the first point or the second point\\
+& 5. User move the mouse to move the curve edge to the position which user want\\
+\\
+& 6. System move the curve edge to new position on UI\\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{moveCurveEdge1.png}
+		\caption[Optional caption]{Move Curve Edge Step 1}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{moveCurveEdge2.png}
+		\caption[Optional caption]{Move Curve Edge Step 2}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{moveCurveEdge3.png}
+		\caption[Optional caption]{Move Curve Edge Step 3}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}	
+	\subsubsection{Export To Image}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Export To Image \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose File on Menu bar \\
+& 2. User choose Save Image  \\
+& 3. System will show the choose file popup for selecting directories \\
+& 4. User choose the directories which user want\\
+& 5. User input the name of file(System support two types image file is png and jpeg so User can select type of image which user want at Save as type)\\
+\\
+& 6. User click save button to export image for the Graph\\
+& 7. System export the image of the graph in the directory which user have chosen\\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{saveImage.png}
+		\caption[Optional caption]{Save Image}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{saveImage2.png}
+		\caption[Optional caption]{Save Image}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}	
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{imageGraph3.png}
+		\caption[Optional caption]{Save Image}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\subsubsection{Export To TikZ}
+	\begin{tabular}{|r|l|}
+\hline
+Name: & Export To TikZ \\
+\hline
+Actor & User \\
+\hline
+Entry Conditions: & Existing at least one object on right pane. \\
+\hline
+Flow of Events: & 1. User choose File on Menu bar \\
+& 2. User choose Export To TikZ  \\
+& 3. System will show the choose file popup for selecting directories \\
+& 4. User choose the directories which user want\\
+& 5. User input the name of file\\
+\\
+& 6. User click save button to export to tikZ file for the Graph\\
+& 7. System export the latex file of the graph in the directory which user have chosen\\
+\\
+\hline
+Exit Conditions: & The application is now in a new state. \\
+\hline
+
+\end{tabular}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{tikzFunc1.png}
+		\caption[Optional caption]{Save Image}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
+\begin{figure}[H]
+		\centering
+		\includegraphics[height = 3in]{tikzFunc2.png}
+		\caption[Optional caption]{Save Image}
+		\label{fig:Repository}
+	\end{figure}
+	%Figure \ref{fig:gitImage} The Graph
+\paragraph{}
 \subsection{TikZ package} 
 \textbf{Source Reference: www.overleaf.com/learn/latex/} \\
 Tikz is probably the most complex and powerful tool to create graphic elements in LATEX. In this article some of the basics will be explained: lines, dots, curves, circles, rectangles, etc by means of simple examples.
@@ -829,7 +1059,7 @@ The nodes are probably the most versatile elements in Tikz. We've already used o
 \begin{figure}[H]
 		\centering
 		\includegraphics[height = 3in]{graph_tkz.png}
-		\caption[Optional caption]{The Graph be drawed by GraF application}
+		\caption[Optional caption]{The Graph be drawn by GraF application}
 		\label{fig:Repository}
 	\end{figure}
 	%Figure \ref{fig:gitImage} The Graph
