@@ -11,28 +11,12 @@ import org.junit.Test;
 
 import controller.MainController;
 import enums.StateOnLeftPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import model.Edge;
 import model.Vertex;
 
 public class UITest {
 	MainController controller;
-	private List<Edge> edges = new ArrayList<>();
-	private StateOnLeftPane eventOnLeftPane = StateOnLeftPane.VERTEX;
-	private boolean isClickedInsideVertex = false;
-	private boolean isMovingLabel = false;
-	private Vertex firstVertex = null;
-	private Vertex currentVertex = null;
-	private Edge currentEdge = null;
-	private Edge existEdge = null;
-	private int indexVertex = -1;
-	private int distanceToDeleteEdge = 15;// the limit of distance when click to delete the edge
-	private boolean isDrawingEdge = false;
-	private double deltaX, deltaY;// use to move the Vertex
-	private double firstX, firstY;// save the first position of the Vertex before moving the Vertex
-	private List<Integer> hasPoints = new ArrayList<>();
-	private int radius = 20;// radius of Vertex
 	HashMap<Vertex, Edge> parentEdge = new HashMap<Vertex, Edge>();// save the
 	String typeEdge = "";
 	String weightEdge = "";
@@ -61,30 +45,6 @@ public class UITest {
 		assertTrue(createEdge(state, x, y) != null);
 
 	}
-	
-	@Test
-	public void removeEdgeTest() {
-		
-
-	}
-	
-	@Test
-	public void removeVertexTest() {
-		
-
-	}
-	
-	@Test
-	public void changeLabelTest() {
-		
-
-	}
-	
-	@Test
-	public void moveLabelTest() {
-		
-
-	}
 
 	public Vertex createVertice(StateOnLeftPane state, double x, double y) {
 		Vertex vertex = null; // vertice
@@ -100,10 +60,10 @@ public class UITest {
 		if (controller.isOnAVertex(x, y)) {// if mouse click inside the vertice then move when drag else
 											// create a new vertice
 			isClickedInsideVertex = true;
-			deltaX = x - controller.getCurrentVertex().getX();
-			deltaY = y - controller.getCurrentVertex().getY();
-			firstX = controller.getCurrentVertex().getX();// save the first position of Vertex before moving
-			firstY = controller.getCurrentVertex().getY();
+			deltaX = x - 10;
+			deltaY = y - 20;
+			firstX = 10;// save the first position of Vertex before moving
+			firstY = 20;
 		} else {
 			if (state == StateOnLeftPane.VERTEX) {
 				vertex = new Vertex(x, y, radius, Color.CADETBLUE);
