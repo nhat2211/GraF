@@ -99,7 +99,7 @@ public class Edge extends Line {
 			}
 			updatePositionOfTextWeight();
 			calculateArrow();
-		} else {//update the curve edge
+		} else {//update the cubic curve edge
 			double length1 = 20;
 			if(v2.isIntermediatePoint()) {
 				length1 = length1/2;
@@ -168,12 +168,15 @@ public class Edge extends Line {
 
 	public void setDeltaText(double x, double y) {
 		double xDeltaText = 0, yDeltaText = 0;
-		if (circle == null) {//update for line
+		if (circle == null && curve == null) {// update for line
 			xDeltaText = x - (x1 + x2) / 2;
 			yDeltaText = y - (y1 + y2) / 2;
-		} else {//update for curve edge
+		} else if(curve == null) {// update for circle edge
 			xDeltaText = x - circle.getCenterX() + r;
 			yDeltaText = y - circle.getCenterY() + r;
+		} else {//update for cubic curve edge
+			xDeltaText = x - ((arc2.x1 + arc2.x2) / 2);
+			yDeltaText = y - ((arc2.y1 + arc2.y2) / 2);
 		}
 		this.deltaText.setLocation(xDeltaText, yDeltaText);
 		updatePositionOfTextWeight();
@@ -184,7 +187,7 @@ public class Edge extends Line {
 		if (circle == null && curve == null) {// update for line
 			x = ((x1 + x2) / 2) + deltaText.getX();
 			y = ((y1 + y2) / 2) + deltaText.getY();
-		} else if(curve == null) {// update for curve edge
+		} else if(curve == null) {// update for circle edge
 			x = circle.getCenterX() - r + deltaText.getX();
 			y = circle.getCenterY() - r + deltaText.getY();
 		} else {
